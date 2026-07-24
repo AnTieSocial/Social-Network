@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>✨ Super Fancy Feed</title>
+    <!-- Fixed favicon (no more 404) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✨</text></svg>">
     <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,7 +38,6 @@
             width: 100%;
         }
 
-        /* Header */
         .header {
             display: flex;
             justify-content: space-between;
@@ -62,7 +63,6 @@
             filter: drop-shadow(0 0 8px rgba(167, 139, 250, 0.3));
         }
 
-        /* Create Post Card */
         .create-post {
             background: rgba(255, 255, 255, 0.04);
             backdrop-filter: blur(20px);
@@ -134,14 +134,12 @@
             transform: none;
         }
 
-        /* Feed List */
         .feed-list {
             display: flex;
             flex-direction: column;
             gap: 1.25rem;
         }
 
-        /* Individual Post Card */
         .post-card {
             background: rgba(255, 255, 255, 0.04);
             backdrop-filter: blur(20px);
@@ -289,7 +287,6 @@
             cursor: default;
         }
 
-        /* Loading Skeleton */
         .skeleton {
             background: rgba(255, 255, 255, 0.04);
             border-radius: 24px;
@@ -323,7 +320,6 @@
             opacity: 0.3;
         }
 
-        /* Scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
         }
@@ -342,13 +338,11 @@
 <body>
 
 <div class="app-container">
-    <!-- Header -->
     <div class="header">
         <h1><i class="fas fa-bolt" style="margin-right: 8px; -webkit-text-fill-color: #a78bfa;"></i> Pulse</h1>
         <i class="fas fa-circle-nodes"></i>
     </div>
 
-    <!-- Create Post -->
     <div class="create-post">
         <textarea id="postInput" placeholder="What's on your mind, superstar? ✨" rows="2"></textarea>
         <div class="post-actions">
@@ -357,18 +351,16 @@
         </div>
     </div>
 
-    <!-- Feed -->
-    <div id="feedContainer" class="feed-list">
-        <!-- Skeletons will be injected here -->
-    </div>
+    <div id="feedContainer" class="feed-list"></div>
 </div>
 
 <script>
     (function() {
-        // --------------------------------------------------------------
-        // 1. CONFIGURE SUPABASE (Replace the URL!)
-        // --------------------------------------------------------------
-        const SUPABASE_URL = "YOUR_SUPABASE_URL"; // ⚠️ CHANGE THIS
+        // ==============================================================
+        //  ⚠️  ONLY CHANGE THIS ONE LINE – replace with your Supabase URL
+        // ==============================================================
+        const SUPABASE_URL = "YOUR_SUPABASE_URL";   // <-- CHANGE THIS
+        // ==============================================================
         const SUPABASE_KEY = "sb_publishable_ypObXvuLKlTXutfClJfwJQ_rqaG2mRi";
 
         if (SUPABASE_URL === "YOUR_SUPABASE_URL") {
@@ -384,18 +376,13 @@
 
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // DOM refs
         const feedContainer = document.getElementById('feedContainer');
         const postInput = document.getElementById('postInput');
         const publishBtn = document.getElementById('publishBtn');
 
-        // State
         let posts = [];
         let isSubmitting = false;
 
-        // --------------------------------------------------------------
-        // 2. HELPERS
-        // --------------------------------------------------------------
         function getTimeAgo(dateString) {
             const now = new Date();
             const past = new Date(dateString);
@@ -426,9 +413,12 @@
             return `hsl(${hue}, 70%, 55%)`;
         }
 
-        // --------------------------------------------------------------
-        // 3. RENDER
-        // --------------------------------------------------------------
+        function escapeHTML(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
         function renderPosts(postData) {
             if (!postData || postData.length === 0) {
                 feedContainer.innerHTML = `
@@ -468,21 +458,11 @@
             });
 
             feedContainer.innerHTML = html;
-
-            // Attach like listeners
             document.querySelectorAll('.like-btn').forEach(btn => {
                 btn.addEventListener('click', handleLike);
             });
         }
 
-        // Simple escape to prevent XSS
-        function escapeHTML(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        // Show skeletons
         function showSkeletons(count = 3) {
             let skelHtml = '';
             for (let i = 0; i < count; i++) {
@@ -498,9 +478,6 @@
             feedContainer.innerHTML = skelHtml;
         }
 
-        // --------------------------------------------------------------
-        // 4. CRUD OPERATIONS
-        // --------------------------------------------------------------
         async function fetchFeed() {
             showSkeletons(3);
             try {
@@ -508,7 +485,6 @@
                     .from('posts')
                     .select('*')
                     .order('created_at', { ascending: false });
-
                 if (error) throw error;
                 posts = data || [];
                 renderPosts(posts);
@@ -535,15 +511,11 @@
                     user_email: `user_${Math.floor(Math.random() * 10000)}@pulse.local`,
                     likes_count: 0,
                 };
-
                 const { data, error } = await supabase
                     .from('posts')
                     .insert([newPost])
                     .select();
-
                 if (error) throw error;
-
-                // Optimistically add to front (if realtime isn't instant)
                 if (data && data.length > 0) {
                     posts.unshift(data[0]);
                     renderPosts(posts);
@@ -566,19 +538,14 @@
             const icon = btn.querySelector('i');
             const currentLikes = parseInt(likeSpan.textContent, 10) || 0;
 
-            // Optimistic UI
             const isLiked = btn.classList.toggle('liked');
             const newLikeCount = isLiked ? currentLikes + 1 : currentLikes - 1;
             likeSpan.textContent = newLikeCount;
             icon.className = isLiked ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
 
-            // Update global posts array state (for consistency)
             const postIndex = posts.findIndex(p => String(p.id) === String(postId));
-            if (postIndex !== -1) {
-                posts[postIndex].likes_count = newLikeCount;
-            }
+            if (postIndex !== -1) posts[postIndex].likes_count = newLikeCount;
 
-            // Fire and forget update to Supabase
             try {
                 const { error } = await supabase
                     .from('posts')
@@ -587,13 +554,9 @@
                 if (error) console.error('Like update error:', error);
             } catch (err) {
                 console.error('Like fetch error:', err);
-                // Revert optimistic if needed? We'll let it slide for UX.
             }
         }
 
-        // --------------------------------------------------------------
-        // 5. REALTIME SUBSCRIPTION (Super Fancy!)
-        // --------------------------------------------------------------
         function subscribeToNewPosts() {
             const channel = supabase
                 .channel('public:posts')
@@ -601,7 +564,6 @@
                     { event: 'INSERT', schema: 'public', table: 'posts' },
                     (payload) => {
                         const newPost = payload.new;
-                        // Prevent duplicates if we just inserted locally
                         if (posts.some(p => p.id === newPost.id)) return;
                         posts.unshift(newPost);
                         renderPosts(posts);
@@ -612,9 +574,6 @@
                 });
         }
 
-        // --------------------------------------------------------------
-        // 6. EVENT LISTENERS
-        // --------------------------------------------------------------
         publishBtn.addEventListener('click', async () => {
             const content = postInput.value.trim();
             if (!content) {
@@ -633,12 +592,8 @@
             }
         });
 
-        // --------------------------------------------------------------
-        // 7. INIT
-        // --------------------------------------------------------------
         fetchFeed();
         subscribeToNewPosts();
-
     })();
 </script>
 

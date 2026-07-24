@@ -1,578 +1,1302 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>✨ World Forum Pulse</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✨</text></svg>">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>✨ Pulse – Admin Upload All Files</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✨</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
+  <style>
+    /* ===== Same styles as before (unchanged) ===== */
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family:"Inter",sans-serif;
+      background:#0b0d15;
+      color:#eef2ff;
+      display:flex;
+      justify-content:center;
+      padding:2rem 1rem;
+      min-height:100vh;
+      background-image:radial-gradient(circle at 10% 20%,rgba(120,119,198,0.15)0%,transparent 50%),
+                       radial-gradient(circle at 90% 80%,rgba(255,119,198,0.15)0%,transparent 50%);
+    }
+    .app-container { max-width:780px; width:100%; }
 
-    <style>
-        :root {
-            --bg: #0b0d15; --bg-card: rgba(255,255,255,0.04); --border: rgba(255,255,255,0.08);
-            --text: #eef2ff; --text-secondary: #94a3b8; --input-bg: rgba(0,0,0,0.3);
-            --shadow: 0 20px 40px -12px rgba(0,0,0,0.6);
-            --admin-color: #ff0033; --mod-color: #ff8800; --unverified-color: #aaa;
-        }
-        [data-theme="light"] {
-            --bg: #f1f5f9; --bg-card: rgba(255,255,255,0.7); --border: rgba(0,0,0,0.08);
-            --text: #0b0d15; --text-secondary: #475569; --input-bg: rgba(255,255,255,0.7);
-        }
-        * { margin:0; padding:0; box-sizing:border-box; }
-        
-        body { 
-            font-family:"Inter",sans-serif; 
-            background:var(--bg); 
-            color:var(--text); 
-            display:flex; 
-            justify-content:center; 
-            padding:2rem 1rem; 
-            min-height:100vh; 
-            transition:background 0.3s, color 0.3s; 
-            overflow: hidden; /* Prevents scrolling while intro plays */
-        }
-        .app-container { max-width:720px; width:100%; }
+    /* Splash */
+    #splash-screen {
+      position:fixed; top:0; left:0; width:100%; height:100%;
+      background:#0b0d15; z-index:9999;
+      display:flex; flex-direction:column;
+      justify-content:center; align-items:center;
+      transition:opacity 0.8s ease;
+    }
+    #splash-screen.hidden { opacity:0; pointer-events:none; }
+    .splash-title {
+      font-size:3rem; font-weight:700;
+      background:linear-gradient(135deg,#a78bfa,#f472b6);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      margin-bottom:1.5rem;
+    }
+    .splash-progress-bar {
+      width:200px; height:6px; background:#1e293b; border-radius:10px;
+      overflow:hidden; margin-bottom:1rem;
+    }
+    .splash-progress-fill {
+      height:100%; width:0%; background:linear-gradient(90deg,#a78bfa,#f472b6);
+      transition:width 0.3s ease;
+    }
+    .splash-message { color:#94a3b8; font-size:0.9rem; }
 
-        /* ==========================================
-           PREMIUM INTRO SEQUENCE
-           ========================================== */
-        .intro-overlay {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: #000000;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            z-index: 9999;
-            animation: fadeOutContainer 0.6s ease-in-out forwards 2.6s;
-        }
-        .intro-logo {
-            font-size: 4rem; font-weight: 800; letter-spacing: 2px;
-            background: linear-gradient(90deg, #a78bfa, #f472b6, #34d399);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            background-size: 200% 200%;
-            animation: zoomIn 1.2s ease-out forwards 0.2s, rainbow 4s ease infinite;
-            opacity: 0; transform: scale(0.8);
-        }
-        .intro-text {
-            font-size: 1.1rem; color: #9ca3af; margin-top: 16px; font-weight: 500;
-            opacity: 0; transform: translateY(20px);
-            animation: slideUp 0.8s ease-out forwards 1.0s;
-        }
-        @keyframes zoomIn { to { opacity: 1; transform: scale(1); } }
-        @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeOutContainer { to { opacity: 0; visibility: hidden; pointer-events: none; } }
-        @keyframes rainbow { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+    /* Header */
+    .header {
+      display:flex; flex-wrap:wrap; align-items:center; gap:0.75rem;
+      margin-bottom:1.5rem; padding:0 0.5rem;
+    }
+    .header h1 {
+      font-size:1.8rem; font-weight:700;
+      background:linear-gradient(135deg,#a78bfa,#f472b6);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      margin-right:auto;
+    }
+    .header-controls {
+      display:flex; align-items:center; gap:0.5rem;
+      flex-wrap:wrap;
+    }
+    .header-controls input[type="search"] {
+      background:rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:40px; padding:0.5rem 1rem 0.5rem 2.5rem;
+      color:#eef2ff; font-family:Inter; font-size:0.9rem;
+      outline:none; width:180px; transition:border 0.2s, width 0.3s;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
+      background-repeat:no-repeat; background-position:0.75rem center;
+      background-size:16px;
+    }
+    .header-controls input[type="search"]:focus {
+      border-color:#a78bfa; width:220px;
+    }
+    .header-controls select {
+      background:rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:40px; padding:0.5rem 1rem;
+      color:#eef2ff; font-family:Inter; font-size:0.9rem;
+      outline:none; cursor:pointer;
+    }
 
-        /* Main content fades in as intro fades out */
-        .app-container {
-            opacity: 0;
-            animation: fadeInContent 0.6s ease-out forwards 2.6s;
-        }
-        @keyframes fadeInContent { to { opacity: 1; } }
+    /* Create Post */
+    .create-post {
+      background:rgba(255,255,255,0.04);
+      backdrop-filter:blur(20px);
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:24px; padding:1.5rem;
+      margin-bottom:2rem;
+      box-shadow:0 20px 40px -12px rgba(0,0,0,0.6);
+    }
+    .create-post .form-row {
+      display:flex; gap:0.75rem; margin-bottom:0.75rem;
+      flex-wrap:wrap;
+    }
+    .create-post .form-row input,
+    .create-post .form-row select {
+      flex:1; min-width:120px;
+      background:rgba(0,0,0,0.3);
+      border:1px solid rgba(255,255,255,0.06);
+      border-radius:12px; padding:0.6rem 1rem;
+      color:#eef2ff; font-family:Inter; font-size:0.9rem;
+      outline:none; transition:border 0.2s;
+    }
+    .create-post .form-row input:focus {
+      border-color:#a78bfa;
+    }
+    .create-post textarea {
+      width:100%; background:rgba(0,0,0,0.3);
+      border:1px solid rgba(255,255,255,0.06);
+      border-radius:16px; padding:1rem;
+      color:#eef2ff; font-size:0.95rem; font-family:Inter;
+      resize:vertical; min-height:80px; outline:none;
+      transition:border 0.2s;
+    }
+    .create-post textarea:focus { border-color:#a78bfa; }
 
-        /* ==========================================
-           APP STYLES
-           ========================================== */
-        .stats-marquee { overflow:hidden; white-space:nowrap; background:rgba(167,139,250,0.08); border:1px solid var(--border); padding:0.6rem 0; margin-bottom:1rem; border-radius:40px; position:relative; }
-        .marquee-content { display:inline-block; animation: scroll 25s linear infinite; color:var(--text-secondary); font-size:0.85rem; font-weight:600; }
-        .marquee-content span { margin:0 2rem; }
-        @keyframes scroll { 0%{transform:translateX(100%)} 100%{transform:translateX(-100%)} }
-        
-        .header { display:flex; flex-wrap:wrap; align-items:center; gap:0.75rem; margin-bottom:1.5rem; }
-        .header h1 { font-size:1.8rem; font-weight:800; margin-right:auto; background:linear-gradient(90deg, #a78bfa, #f472b6); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-        .header-controls { display:flex; gap:0.5rem; }
-        .header-controls input, .header-controls select, .btn-icon { background:var(--input-bg); border:1px solid var(--border); border-radius:40px; padding:0.5rem 1rem; color:var(--text); font-family:Inter; outline:none; transition:0.2s; }
-        .header-controls input:focus { border-color:#a78bfa; }
-        .btn-icon { cursor:pointer; padding:0.5rem 0.8rem; }
-        .btn-icon:hover { background:var(--border); }
+    /* Upload row – hidden by default */
+    .upload-row {
+      display:none;
+      gap:0.75rem;
+      margin-bottom:0.75rem;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .upload-row.visible { display:flex; }
 
-        .create-post { background:var(--bg-card); backdrop-filter:blur(24px); border:1px solid var(--border); border-radius:24px; padding:1.5rem; margin-bottom:2rem; box-shadow:var(--shadow); }
-        .create-post textarea { width:100%; background:var(--input-bg); border:1px solid var(--border); border-radius:16px; padding:1rem; color:var(--text); resize:vertical; min-height:80px; outline:none; font-family:Inter; }
-        .create-post textarea:focus { border-color:#a78bfa; box-shadow:0 0 0 4px rgba(167,139,250,0.15); }
-        .post-options { display:flex; gap:1rem; margin-top:1rem; flex-wrap:wrap; font-size:0.85rem; color:var(--text-secondary); align-items:center; }
-        .post-options label { display:flex; align-items:center; gap:6px; cursor:pointer; }
-        .post-options input[type="number"], .post-options input[type="password"] { background:var(--input-bg); border:1px solid var(--border); border-radius:8px; padding:4px 8px; color:var(--text); outline:none; }
-        .post-actions { display:flex; justify-content:flex-end; margin-top:1rem; gap:1rem; }
-        .publish-btn { background:linear-gradient(135deg,#7c3aed,#db2777); border:none; padding:0.6rem 1.8rem; border-radius:40px; color:white; font-weight:600; cursor:pointer; transition:0.2s; display:flex; align-items:center; gap:8px; }
-        .publish-btn:hover { transform:scale(1.03); box-shadow:0 8px 25px rgba(124,58,237,0.5); }
-        .publish-btn:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
+    .upload-row .file-upload {
+      position:relative;
+      flex:2;
+      min-width:150px;
+    }
+    .upload-row .file-upload input[type="file"] {
+      position:absolute; opacity:0; width:100%; height:100%; cursor:pointer;
+    }
+    .upload-row .file-upload .file-label {
+      background:rgba(167,139,250,0.15);
+      border:1px dashed rgba(167,139,250,0.3);
+      border-radius:40px; padding:0.4rem 1.2rem;
+      color:#a78bfa; font-size:0.85rem; cursor:pointer;
+      display:flex; align-items:center; gap:6px;
+      transition:all 0.2s ease;
+    }
+    .upload-row .file-upload .file-label:hover {
+      background:rgba(167,139,250,0.25);
+    }
+    .upload-row .file-upload .file-label i { font-size:1rem; }
+    .upload-row .image-preview {
+      max-width:100px; max-height:60px; object-fit:contain;
+      border-radius:8px; border:1px solid rgba(255,255,255,0.1);
+      display:none;
+    }
+    .upload-row .upload-hint {
+      color:#64748b;
+      font-size:0.8rem;
+      margin-left:0.25rem;
+      flex:0 0 auto;
+    }
+    .upload-row .blur-check {
+      display:flex; align-items:center; gap:6px;
+      color:#94a3b8; font-size:0.85rem; cursor:pointer;
+    }
+    .upload-row .blur-check input[type="checkbox"] {
+      width:18px; height:18px; accent-color:#a78bfa;
+      cursor:pointer;
+    }
 
-        .feed-list { display:flex; flex-direction:column; gap:1.25rem; }
-        .post-card { background:var(--bg-card); backdrop-filter:blur(24px); border:1px solid var(--border); border-radius:24px; padding:1.5rem; transition:all 0.3s cubic-bezier(0.2,0,0,1); box-shadow:var(--shadow); animation:fadeUp 0.4s ease forwards; opacity:0; position:relative; overflow:hidden; }
-        .post-card:hover { transform:translateY(-6px) scale(1.01); box-shadow:0 20px 40px -12px rgba(167,139,250,0.3); border-color:rgba(167,139,250,0.4); }
-        @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    .create-post .form-actions {
+      display:flex; justify-content:space-between; align-items:center;
+      margin-top:1rem; gap:1rem; flex-wrap:wrap;
+    }
+    .create-post .form-actions .left {
+      display:flex; align-items:center; gap:1rem; flex-wrap:wrap;
+    }
+    .create-post .form-actions button {
+      background:linear-gradient(135deg,#7c3aed,#db2777);
+      border:none; padding:0.6rem 1.8rem; border-radius:40px;
+      color:white; font-weight:600; font-size:0.9rem;
+      cursor:pointer; transition:all 0.2s ease;
+      box-shadow:0 4px 15px rgba(124,58,237,0.3);
+      display:flex; align-items:center; gap:8px;
+    }
+    .create-post .form-actions button:hover { transform:scale(1.03); }
+    .create-post .form-actions button:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
 
-        .post-card.role-admin { border: 2px solid var(--admin-color); box-shadow: 0 0 30px rgba(255,0,51,0.2); }
-        .post-card.role-admin .post-user { color: var(--admin-color); }
-        .post-card.role-mod { border: 2px solid var(--mod-color); box-shadow: 0 0 30px rgba(255,136,0,0.2); }
-        .post-card.role-mod .post-user { color: var(--mod-color); }
-        .post-card.role-unverified { border: 2px solid rgba(255,255,255,0.2); box-shadow: 0 0 30px rgba(255,255,255,0.05); }
-        .post-card.role-unverified .post-user { color: var(--unverified-color); }
+    /* Feed styles – same as before */
+    .feed-list { display:flex; flex-direction:column; gap:1.25rem; }
+    .post-card {
+      background:rgba(255,255,255,0.04);
+      backdrop-filter:blur(20px);
+      border:1px solid rgba(255,255,255,0.06);
+      border-radius:24px; padding:1.5rem;
+      transition:all 0.25s cubic-bezier(0.2,0,0,1);
+      box-shadow:0 10px 30px -10px rgba(0,0,0,0.4);
+      animation:fadeSlideUp 0.4s ease forwards;
+      opacity:0;
+      position:relative;
+      overflow:hidden;
+    }
+    .post-card:hover {
+      transform:translateY(-2px);
+      box-shadow:0 20px 40px -12px rgba(0,0,0,0.7);
+    }
+    @keyframes fadeSlideUp {
+      from { opacity:0; transform:translateY(20px); }
+      to { opacity:1; transform:translateY(0); }
+    }
+    .post-card.tint-admin { border-left:6px solid #ef4444; }
+    .post-card.tint-mod { border-left:6px solid #f97316; }
+    .post-card.tint-bot { border-left:6px solid #eab308; }
+    .post-card.tint-nouser { border-left:6px solid #22c55e; }
+    .post-card.tint-first { border-left:6px solid #3b82f6; }
+    .post-card.tint-repeat { border-left:6px solid #a855f7; }
+    .post-card.tint-blurred { border-left:6px solid #ec4899; }
 
-        .post-header { display:flex; align-items:center; gap:0.75rem; margin-bottom:0.75rem; }
-        .avatar { width:40px; height:40px; border-radius:40px; background:linear-gradient(135deg,#4f46e5,#a78bfa); display:flex; align-items:center; justify-content:center; font-weight:600; color:white; flex-shrink:0; }
-        .post-user { font-weight:700; font-size:0.95rem; display:flex; align-items:center; gap:8px; }
-        .badge { font-size:0.6rem; font-weight:700; padding:0.15rem 0.5rem; border-radius:40px; text-transform:uppercase; }
-        .badge-admin { background:var(--admin-color); color:#fff; }
-        .badge-mod { background:var(--mod-color); color:#000; }
-        .badge-unverified { background:transparent; border:1px solid var(--unverified-color); color:var(--unverified-color); }
-        .post-time { margin-left:auto; font-size:0.75rem; color:var(--text-secondary); background:rgba(0,0,0,0.15); padding:4px 10px; border-radius:40px; }
-        
-        .post-content { font-size:1rem; line-height:1.6; color:var(--text); margin-bottom:1rem; word-wrap:break-word; }
-        .post-content .hashtag { color:#a78bfa; cursor:pointer; font-weight:600; }
-        
-        .post-image { 
-            width: 100%; height: auto; max-height: 500px; 
-            object-fit: contain;
-            border-radius: 16px; margin: 0.5rem 0 1rem 0; 
-            border: 1px solid var(--border); background: rgba(0,0,0,0.1); 
-            cursor: zoom-in; transition: transform 0.2s; 
-        }
-        .post-image:hover { transform: scale(1.01); }
-        .image-blur { filter: blur(20px); transition: filter 0.3s; }
-        .image-blur.unblurred { filter: none; }
+    .tint-badge {
+      display:inline-block; font-size:0.6rem; font-weight:600;
+      padding:0.1rem 0.6rem; border-radius:40px;
+      margin-left:8px; text-transform:uppercase;
+      letter-spacing:0.5px;
+    }
+    .tint-badge.admin { background:#ef4444; color:white; }
+    .tint-badge.mod { background:#f97316; color:white; }
+    .tint-badge.bot { background:#eab308; color:#0b0d15; }
+    .tint-badge.nouser { background:#22c55e; color:#0b0d15; }
+    .tint-badge.first { background:#3b82f6; color:white; }
+    .tint-badge.repeat { background:#a855f7; color:white; }
+    .tint-badge.blurred { background:#ec4899; color:white; }
 
-        .lock-overlay, .age-overlay {
-            position:absolute; inset:0; background:rgba(11,13,21,0.85); backdrop-filter:blur(12px);
-            display:flex; flex-direction:column; align-items:center; justify-content:center;
-            z-index:10; border-radius:24px; text-align:center; padding:2rem;
-        }
-        .lock-overlay i, .age-overlay i { font-size:2.5rem; color:var(--text-secondary); margin-bottom:1rem; }
-        .lock-overlay input, .age-overlay input {
-            background:var(--input-bg); border:1px solid var(--border); border-radius:40px;
-            padding:0.6rem 1.2rem; color:var(--text); text-align:center; margin-bottom:1rem; outline:none; width:200px;
-        }
-        .unlock-btn { background:#a78bfa; border:none; padding:0.5rem 1.5rem; border-radius:40px; color:#fff; font-weight:600; cursor:pointer; }
+    .post-header {
+      display:flex; align-items:center; gap:0.75rem; margin-bottom:0.5rem;
+    }
+    .avatar {
+      width:40px; height:40px; border-radius:40px;
+      background:linear-gradient(135deg,#4f46e5,#a78bfa);
+      display:flex; align-items:center; justify-content:center;
+      font-weight:600; font-size:1rem; color:white; flex-shrink:0;
+    }
+    .post-user { font-weight:600; font-size:0.95rem; }
+    .post-user span { color:#94a3b8; font-weight:400; margin-left:6px; font-size:0.8rem; }
+    .post-title {
+      font-size:1.2rem; font-weight:700; margin:0.25rem 0 0.5rem 0;
+      color:#f1f5f9;
+    }
+    .post-time {
+      margin-left:auto; font-size:0.75rem; color:#64748b;
+      background:rgba(0,0,0,0.2); padding:4px 10px; border-radius:40px;
+    }
+    .post-content {
+      font-size:1rem; line-height:1.6; color:#f1f5f9;
+      margin-bottom:0.75rem; word-wrap:break-word;
+    }
+    .post-content .hashtag { color:#a78bfa; cursor:pointer; }
+    .post-tags {
+      display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.75rem;
+    }
+    .post-tags .tag-pill {
+      background:rgba(167,139,250,0.15);
+      padding:0.2rem 0.7rem; border-radius:40px;
+      font-size:0.7rem; color:#a78bfa;
+    }
 
-        .post-footer { display:flex; align-items:center; gap:1.5rem; padding-top:0.75rem; border-top:1px solid var(--border); }
-        .post-footer button { background:none; border:none; color:var(--text-secondary); font-size:0.9rem; cursor:pointer; display:flex; align-items:center; gap:6px; transition:0.2s; }
-        .post-footer button:hover { color:var(--text); }
-        .post-footer button.liked { color:#f472b6; }
-        .post-footer button.liked i { animation: pop 0.3s ease; }
-        @keyframes pop { 50%{transform:scale(1.5)} }
+    .post-image-wrapper {
+      position:relative; margin:0.5rem 0 1rem 0;
+      border-radius:16px; overflow:hidden;
+      border:1px solid rgba(255,255,255,0.05);
+      background:rgba(0,0,0,0.2);
+    }
+    .post-image-wrapper img {
+      width:100%; height:auto; display:block; transition:filter 0.3s ease;
+    }
+    .post-image-wrapper video {
+      width:100%; height:auto; display:block; transition:filter 0.3s ease;
+    }
+    .post-image-wrapper.blurred img,
+    .post-image-wrapper.blurred video {
+      filter:blur(12px);
+    }
+    .post-image-wrapper .blur-badge {
+      position:absolute; top:12px; right:12px;
+      background:rgba(236,72,153,0.9);
+      color:white; font-size:0.7rem; font-weight:600;
+      padding:0.3rem 0.8rem; border-radius:40px;
+      display:flex; align-items:center; gap:6px;
+      backdrop-filter:blur(4px);
+      border:1px solid rgba(255,255,255,0.1);
+    }
+    .post-image-wrapper .blur-badge i { font-size:0.8rem; }
 
-        .replies-container { margin-top:1rem; padding-top:1rem; border-top:1px dashed var(--border); display:none; }
-        .replies-container.open { display:block; animation: fadeUp 0.3s ease; }
-        .reply-item { display:flex; gap:0.75rem; margin-bottom:1rem; padding:0.75rem; background:rgba(255,255,255,0.02); border-radius:16px; }
-        .reply-form { display:flex; gap:0.5rem; margin-top:1rem; }
-        .reply-form input { flex:1; background:var(--input-bg); border:1px solid var(--border); border-radius:40px; padding:0.5rem 1rem; color:var(--text); outline:none; }
+    .post-footer {
+      display:flex; align-items:center; gap:1.5rem;
+      padding-top:0.75rem; border-top:1px solid rgba(255,255,255,0.05);
+      flex-wrap:wrap;
+    }
+    .post-footer button {
+      background:none; border:none; color:#94a3b8;
+      font-size:0.9rem; cursor:pointer; padding:4px 8px;
+      border-radius:40px; transition:all 0.15s ease;
+      font-family:Inter; display:flex; align-items:center; gap:6px;
+    }
+    .post-footer button i { font-size:1.1rem; transition:transform 0.2s ease; }
+    .post-footer button.liked { color:#f472b6; }
+    .post-footer button.liked i { font-weight:900; transform:scale(1.1); animation:pop 0.3s ease; }
+    @keyframes pop {
+      0% { transform:scale(1); }
+      50% { transform:scale(1.5); }
+      100% { transform:scale(1.1); }
+    }
+    .post-footer button:hover { color:#eef2ff; }
+    .post-footer button.liked:hover { color:#ec4899; }
+    .post-footer button.bookmarked { color:#fbbf24; }
+    .post-footer button.bookmarked i { font-weight:900; }
+    .post-footer .comment-toggle { color:#94a3b8; cursor:pointer; }
+    .post-footer .comment-toggle:hover { color:#eef2ff; }
+    .post-footer .blur-toggle { color:#94a3b8; cursor:pointer; }
+    .post-footer .blur-toggle:hover { color:#eef2ff; }
+    .badge-new {
+      background:#f472b6; color:#0b0d15; font-size:0.6rem;
+      font-weight:700; padding:0.15rem 0.5rem; border-radius:40px;
+      margin-left:0.5rem; text-transform:uppercase;
+    }
 
-        .lightbox-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(8px);
-            display: none; justify-content: center; align-items: center; z-index: 3000;
-            cursor: zoom-out;
-        }
-        .lightbox-overlay.open { display: flex; }
-        .lightbox-img {
-            max-width: 90vw; max-height: 90vh; object-fit: contain; border-radius: 8px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
-        }
+    .comments-section {
+      margin-top:1rem;
+      border-top:1px solid rgba(255,255,255,0.06);
+      padding-top:1rem;
+      display:none;
+    }
+    .comments-section.open { display:block; }
+    .comment-item {
+      display:flex; gap:0.75rem; margin-bottom:0.75rem; align-items:flex-start;
+    }
+    .comment-avatar {
+      width:28px; height:28px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-weight:600; font-size:0.7rem; color:white;
+      flex-shrink:0; background:#4f46e5;
+    }
+    .comment-body {
+      background:rgba(255,255,255,0.04);
+      border-radius:12px; padding:0.5rem 0.75rem; flex:1;
+    }
+    .comment-body .comment-user {
+      font-weight:500; font-size:0.8rem; color:#cbd5e1;
+    }
+    .comment-body .comment-user span {
+      color:#64748b; font-weight:400; margin-left:4px; font-size:0.7rem;
+    }
+    .comment-body .comment-text {
+      font-size:0.9rem; margin-top:2px; color:#e2e8f0;
+    }
+    .comment-form {
+      display:flex; gap:0.5rem; margin-top:0.75rem;
+    }
+    .comment-form input {
+      flex:1; background:rgba(0,0,0,0.3);
+      border:1px solid rgba(255,255,255,0.06);
+      border-radius:40px; padding:0.5rem 1rem;
+      color:#eef2ff; font-family:Inter; font-size:0.85rem;
+      outline:none; transition:border 0.2s;
+    }
+    .comment-form input:focus { border-color:#a78bfa; }
+    .comment-form button {
+      background:rgba(167,139,250,0.2);
+      border:1px solid rgba(167,139,250,0.3);
+      border-radius:40px; padding:0.5rem 1.2rem;
+      color:#a78bfa; font-weight:600; font-size:0.8rem;
+      cursor:pointer; transition:all 0.2s ease;
+      white-space:nowrap;
+    }
+    .comment-form button:hover { background:rgba(167,139,250,0.35); }
+    .comment-form button:disabled { opacity:0.5; cursor:not-allowed; }
 
-        .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.8); backdrop-filter:blur(12px); display:none; justify-content:center; align-items:center; z-index:2000; }
-        .modal-overlay.open { display:flex; }
-        .modal-content { background:var(--bg); padding:2rem; border-radius:24px; max-width:500px; width:90%; border:1px solid var(--border); max-height:90vh; overflow-y:auto; }
-        .modal-content h2 { font-size:1.5rem; margin-bottom:1rem; background:linear-gradient(90deg, #a78bfa, #f472b6); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-        .processor-select { width:100%; background:var(--input-bg); border:1px solid var(--border); border-radius:12px; padding:0.8rem; color:var(--text); margin-bottom:1rem; font-family:Inter; }
-        .pay-btn { width:100%; padding:1rem; border-radius:12px; border:none; font-weight:700; font-size:1.1rem; cursor:pointer; transition:0.3s; display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:1.5rem; }
-        .crypto-box { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:12px; padding:1rem; margin-top:1rem; }
-        .crypto-addr { display:flex; align-items:center; gap:0.5rem; background:var(--input-bg); padding:0.5rem; border-radius:8px; margin:0.5rem 0; font-family:monospace; font-size:0.85rem; word-break:break-all; }
-        .copy-btn { background:#a78bfa; border:none; color:#fff; padding:0.3rem 0.8rem; border-radius:6px; cursor:pointer; font-size:0.8rem; }
-        .disclaimer { font-size:0.75rem; color:var(--text-secondary); margin-top:1rem; line-height:1.4; }
-        .modal-close { margin-top:1.5rem; width:100%; padding:0.8rem; background:var(--input-bg); border:1px solid var(--border); border-radius:40px; color:var(--text); cursor:pointer; font-weight:600; }
+    .load-more-container { text-align:center; margin-top:1.5rem; }
+    .load-more-btn {
+      background:#334155; border:none; color:white;
+      padding:0.8rem 2rem; border-radius:40px;
+      cursor:pointer; font-family:Inter; font-weight:600;
+      transition:all 0.2s ease;
+    }
+    .load-more-btn:hover { background:#475569; }
+    .load-more-btn:disabled { opacity:0.5; cursor:not-allowed; }
+    .loading-more { color:#64748b; display:none; }
 
-        ::-webkit-scrollbar { width:6px; }
-        ::-webkit-scrollbar-thumb { background:#334155; border-radius:10px; }
-    </style>
+    .skeleton {
+      background:rgba(255,255,255,0.04); border-radius:24px;
+      padding:1.5rem; border:1px solid rgba(255,255,255,0.04);
+      animation:pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100% { opacity:0.4; } 50% { opacity:0.7; } }
+    .skeleton .line {
+      height:14px; background:rgba(255,255,255,0.06);
+      border-radius:10px; margin-bottom:10px;
+    }
+    .skeleton .line.short { width:40%; }
+    .skeleton .line.long { width:100%; }
+
+    .modal-overlay {
+      position:fixed; top:0; left:0; width:100%; height:100%;
+      background:rgba(0,0,0,0.7); backdrop-filter:blur(8px);
+      display:none; justify-content:center; align-items:center;
+      z-index:1000;
+    }
+    .modal-overlay.open { display:flex; }
+    .modal-content {
+      background:#1e293b; padding:2rem; border-radius:24px;
+      max-width:500px; width:90%; box-shadow:0 40px 80px rgba(0,0,0,0.8);
+      border:1px solid rgba(255,255,255,0.06);
+    }
+    .modal-content h2 {
+      font-size:1.5rem; margin-bottom:1rem;
+      background:linear-gradient(135deg,#a78bfa,#f472b6);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    }
+    .modal-content .shortcut-grid {
+      display:grid; grid-template-columns:1fr 2fr; gap:0.5rem 1rem;
+      font-size:0.9rem;
+    }
+    .modal-content .shortcut-grid .key { color:#94a3b8; text-align:right; }
+    .modal-content .shortcut-grid .desc { color:#eef2ff; }
+    .modal-close {
+      margin-top:1.5rem; padding:0.5rem 1.5rem;
+      background:#475569; border:none; border-radius:40px;
+      color:white; cursor:pointer; font-weight:600;
+      transition:background 0.2s;
+    }
+    .modal-close:hover { background:#64748b; }
+
+    .empty-state { text-align:center; padding:3rem 1rem; color:#64748b; }
+    .empty-state i { font-size:3rem; margin-bottom:1rem; opacity:0.3; }
+
+    ::-webkit-scrollbar { width:6px; }
+    ::-webkit-scrollbar-track { background:transparent; }
+    ::-webkit-scrollbar-thumb { background:#334155; border-radius:10px; }
+    ::-webkit-scrollbar-thumb:hover { background:#475569; }
+
+    @media (max-width:600px) {
+      .create-post .form-row { flex-direction:column; }
+      .upload-row { flex-direction:column; align-items:stretch; }
+      .create-post .form-actions { flex-direction:column; align-items:stretch; }
+      .create-post .form-actions .left { justify-content:center; }
+      .post-footer { flex-wrap:wrap; gap:0.75rem; }
+    }
+  </style>
 </head>
 <body>
 
-    <!-- PREMIUM INTRO SEQUENCE -->
-    <div class="intro-overlay" id="introOverlay">
-        <div class="intro-logo">✨ PULSE</div>
-        <div class="intro-text">Designing the future of web experiences</div>
+<!-- Splash -->
+<div id="splash-screen">
+  <div class="splash-title">✨ Pulse</div>
+  <div class="splash-progress-bar">
+    <div id="splashProgress" class="splash-progress-fill" style="width:0%;"></div>
+  </div>
+  <div id="splashMessage" class="splash-message">Initializing...</div>
+</div>
+
+<!-- Shortcuts Modal -->
+<div id="shortcutsModal" class="modal-overlay">
+  <div class="modal-content">
+    <h2><i class="fas fa-keyboard"></i> Keyboard Shortcuts</h2>
+    <div class="shortcut-grid">
+      <span class="key"><kbd>?</kbd></span><span class="desc">Toggle help</span>
+      <span class="key"><kbd>Esc</kbd></span><span class="desc">Close modal / search</span>
+      <span class="key"><kbd>⌘K</kbd> or <kbd>Ctrl+K</kbd></span><span class="desc">Focus search</span>
+      <span class="key"><kbd>j</kbd> / <kbd>k</kbd></span><span class="desc">Navigate posts</span>
+      <span class="key"><kbd>n</kbd></span><span class="desc">New post focus</span>
+    </div>
+    <button class="modal-close" id="modalCloseBtn">Close</button>
+  </div>
+</div>
+
+<!-- App -->
+<div class="app-container">
+  <div class="header">
+    <h1><i class="fas fa-bolt" style="margin-right:8px;"></i> Pulse</h1>
+    <div class="header-controls">
+      <input type="search" id="searchInput" placeholder="Search posts..." />
+      <select id="sortSelect">
+        <option value="new">Newest</option>
+        <option value="trending">Trending</option>
+        <option value="random">Random</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="create-post">
+    <div class="form-row">
+      <input type="text" id="titleInput" placeholder="Post title..." style="flex:1.5;" />
+      <input type="text" id="usernameInput" placeholder="Username (optional)" style="flex:1;" />
+    </div>
+    <textarea id="postInput" placeholder="What's on your mind? Use #hashtags ✨" rows="2"></textarea>
+
+    <!-- Upload row – hidden until username is typed -->
+    <div class="upload-row" id="uploadRow">
+      <div class="file-upload">
+        <input type="file" id="mediaFileInput" accept="image/*" />
+        <label for="mediaFileInput" class="file-label">
+          <i class="fas fa-upload"></i> <span id="fileLabelText">Choose Image</span>
+        </label>
+        <img id="imagePreview" class="image-preview" alt="Preview" />
+      </div>
+      <label class="blur-check">
+        <input type="checkbox" id="blurToggle" />
+        <i class="fas fa-eye-slash"></i> Blur
+      </label>
+      <span class="upload-hint" id="uploadHint"></span>
     </div>
 
-    <!-- LIGHTBOX -->
-    <div id="lightbox" class="lightbox-overlay" onclick="closeLightbox()">
-        <img id="lightboxImg" class="lightbox-img" src="" alt="Full resolution">
+    <div class="form-actions">
+      <div class="left">
+        <span style="font-size:0.8rem;color:#475569;">
+          <i class="fas fa-lock"></i> anon
+        </span>
+      </div>
+      <button id="publishBtn"><i class="fas fa-paper-plane"></i> Publish</button>
     </div>
+  </div>
 
-    <!-- PAYMENT MODAL -->
-    <div id="paymentModal" class="modal-overlay">
-        <div class="modal-content">
-            <h2><i class="fas fa-crown"></i> Vetted Member Access</h2>
-            <select id="processorSelect" class="processor-select"></select>
-            <button id="dynamicPayBtn" class="pay-btn" style="background:#003087;color:#fff;"><i class="fab fa-paypal"></i> Pay with PayPal</button>
-            <div class="crypto-box">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
-                    <span style="font-weight:600;"><i class="fab fa-bitcoin" style="color:#f7931a;"></i> Bitcoin (BTC)</span>
-                    <span style="font-size:0.8rem;color:var(--text-secondary);">Network: BTC</span>
-                </div>
-                <div class="crypto-addr">
-                    <span id="btcAddr">bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh</span>
-                    <button class="copy-btn" onclick="copyBTC()"><i class="fas fa-copy"></i> Copy</button>
-                </div>
-                <div class="disclaimer">
-                    <strong>EN:</strong> FIAT terminated. BTC transactions are immutable and zero-refund.<br>
-                    <strong>PT:</strong> FIAT encerrado. Transações BTC são imutáveis e sem reembolso.<br>
-                    <strong>ZH:</strong> 法币已终止。BTC交易不可逆且不予退款。
-                </div>
-            </div>
-            <button class="modal-close" onclick="togglePaymentModal(false)">Close</button>
-        </div>
-    </div>
+  <div id="feedContainer" class="feed-list"></div>
 
-    <!-- MAIN APP CONTENT -->
-    <div class="app-container">
-        <div class="stats-marquee">
-            <div class="marquee-content">
-                <span><i class="fas fa-bolt"></i> Welcome to World Forum Pulse</span>
-                <span><i class="fas fa-users"></i> <strong>1,240</strong> Active</span>
-                <span><i class="fas fa-shield-alt"></i> <strong>12</strong> Admins Online</span>
-                <span><i class="fas fa-lock"></i> End-to-End Privacy Enabled</span>
-            </div>
-        </div>
-
-        <div class="header">
-            <h1>✨ Pulse</h1>
-            <div class="header-controls">
-                <input type="search" id="searchInput" placeholder="Search...">
-                <button class="btn-icon" onclick="togglePaymentModal(true)" title="Support"><i class="fas fa-crown" style="color:#fbbf24;"></i></button>
-                <button class="btn-icon" id="themeToggle"><i class="fas fa-moon"></i></button>
-            </div>
-        </div>
-
-        <div class="create-post">
-            <textarea id="postInput" placeholder="What's on your mind? Use #hashtags"></textarea>
-            <div class="post-options">
-                <label><input type="file" id="fileInput" accept="image/*" style="display:none;"><i class="fas fa-image"></i> Image</label>
-                <label><input type="checkbox" id="blurCheck"> Blur Image</label>
-                <label><input type="number" id="ageCheck" placeholder="Age Gate (e.g. 18)" style="width:80px;"> Age</label>
-                <label><input type="password" id="passCheck" placeholder="Lock Password" style="width:120px;"> Lock</label>
-            </div>
-            <div class="post-actions">
-                <button class="publish-btn" id="publishBtn"><i class="fas fa-paper-plane"></i> Publish</button>
-            </div>
-        </div>
-
-        <div id="feedContainer" class="feed-list"></div>
-    </div>
+  <div class="load-more-container">
+    <button id="loadMoreBtn" class="load-more-btn" style="display:none;">Load More</button>
+    <div id="loadingMore" class="loading-more"><i class="fas fa-spinner fa-spin"></i> Loading more...</div>
+  </div>
+</div>
 
 <script>
-const SUPABASE_URL = "https://bkvvvlaibtbrrkbuxnke.supabase.co";
-const SUPABASE_KEY = "sb_publishable_ypObXvuLKlTXutfClJfwJQ_rqaG2mRi";
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  (function() {
+    // Supabase config
+    const SUPABASE_URL = "https://bkvvvlaibtbrrkbuxnke.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_ypObXvuLKlTXutfClJfwJQ_rqaG2mRi";
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-let posts = [];
-let currentUser = { id: 'user_' + Math.floor(Math.random()*10000), name: 'Anonymous', role: 'unverified' };
+    const feed = document.getElementById('feedContainer');
+    const titleInput = document.getElementById('titleInput');
+    const usernameInput = document.getElementById('usernameInput');
+    const postInput = document.getElementById('postInput');
+    const mediaFileInput = document.getElementById('mediaFileInput');
+    const imagePreview = document.getElementById('imagePreview');
+    const blurToggle = document.getElementById('blurToggle');
+    const publishBtn = document.getElementById('publishBtn');
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+    const loadingMore = document.getElementById('loadingMore');
+    const searchInput = document.getElementById('searchInput');
+    const sortSelect = document.getElementById('sortSelect');
+    const uploadRow = document.getElementById('uploadRow');
+    const fileLabelText = document.getElementById('fileLabelText');
+    const uploadHint = document.getElementById('uploadHint');
 
-function triggerHaptics() { if(navigator.vibrate) navigator.vibrate(10); }
-function playPopSound() {
-    try {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain); gain.connect(ctx.destination);
-        osc.frequency.value = 800; gain.gain.value = 0.1;
-        osc.start(); osc.stop(ctx.currentTime + 0.05);
-    } catch(e){}
-}
+    // State
+    let posts = [];
+    let lastId = null;
+    let hasMore = true;
+    const PAGE_SIZE = 20;
+    let isSubmitting = false;
+    let searchTerm = '';
+    let currentSort = 'new';
+    const commentsMap = new Map();
+    const openComments = new Set();
+    let selectedFile = null;
 
-async function sha256(message) {
-    const msgBuffer = new TextEncoder().encode(message);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-    return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
-}
+    // ----- Conditional upload visibility -----
+    function updateUploadVisibility() {
+      const username = usernameInput.value.trim();
+      const isAdmin = username.toLowerCase() === 'admin';
+      const hasUsername = username.length > 0;
 
-function getTimeAgo(dateString) {
-    const diff = Date.now() - new Date(dateString).getTime();
-    const mins = Math.floor(diff / 60000);
-    if (mins < 1) return 'just now';
-    if (mins < 60) return mins + 'm ago';
-    const hrs = Math.floor(mins / 60);
-    if (hrs < 24) return hrs + 'h ago';
-    return Math.floor(hrs / 24) + 'd ago';
-}
-
-async function loadFeed() {
-    try {
-        const { data, error } = await supabase
-            .from('posts')
-            .select('*')
-            .order('created_at', { ascending: false })
-            .limit(20);
-            
-        if (error) {
-            console.error('Feed load error:', error);
-            document.getElementById('feedContainer').innerHTML = `
-                <div style="text-align:center;padding:3rem 1rem;color:#f87171;">
-                    <i class="fas fa-exclamation-triangle" style="font-size:2rem;margin-bottom:1rem;"></i>
-                    <p style="font-weight:600;">Could not load feed</p>
-                    <p style="font-size:0.85rem;color:var(--text-secondary);margin-top:0.5rem;">
-                        ${error.message || 'Check console for details'}
-                    </p>
-                    <button onclick="loadFeed()" style="margin-top:1rem;background:#a78bfa;border:none;padding:0.5rem 1.5rem;border-radius:40px;color:#fff;cursor:pointer;font-weight:600;">
-                        <i class="fas fa-redo"></i> Retry
-                    </button>
-                </div>
-            `;
-            return;
+      if (hasUsername) {
+        uploadRow.classList.add('visible');
+        if (isAdmin) {
+          // Remove accept attribute to allow any file type
+          mediaFileInput.removeAttribute('accept');
+          fileLabelText.textContent = 'Upload Any File (Image/Video/Archive...)';
+          uploadHint.textContent = 'Admin: all file types allowed';
+        } else {
+          mediaFileInput.accept = 'image/*';
+          fileLabelText.textContent = 'Choose Image';
+          uploadHint.textContent = 'Images only';
         }
-        
-        posts = data || [];
-        renderPosts(posts);
-    } catch (err) {
-        console.error('Feed exception:', err);
-        document.getElementById('feedContainer').innerHTML = `
-            <div style="text-align:center;padding:3rem 1rem;color:#f87171;">
-                <i class="fas fa-circle-exclamation" style="font-size:2rem;margin-bottom:1rem;"></i>
-                <p style="font-weight:600;">Connection error</p>
-                <button onclick="loadFeed()" style="margin-top:1rem;background:#a78bfa;border:none;padding:0.5rem 1.5rem;border-radius:40px;color:#fff;cursor:pointer;font-weight:600;">
-                    <i class="fas fa-redo"></i> Retry
-                </button>
-            </div>
-        `;
+      } else {
+        uploadRow.classList.remove('visible');
+        // Reset file input and preview
+        mediaFileInput.value = '';
+        selectedFile = null;
+        imagePreview.style.display = 'none';
+        uploadHint.textContent = '';
+      }
     }
-}
 
-function renderPosts(data) {
-    const container = document.getElementById('feedContainer');
-    container.innerHTML = '';
-    
-    if (!data || data.length === 0) {
-        container.innerHTML = `
-            <div style="text-align:center;padding:3rem 1rem;color:var(--text-secondary);">
-                <i class="fas fa-feather-pointed" style="font-size:3rem;margin-bottom:1rem;opacity:0.3;"></i>
-                <p>No posts yet. Be the first to shine! ✨</p>
-            </div>
-        `;
+    usernameInput.addEventListener('input', updateUploadVisibility);
+    // Initial state
+    updateUploadVisibility();
+
+    // File preview (works for images; for other files, just show the name)
+    mediaFileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        selectedFile = file;
+        // If image, show preview; else show file name
+        if (file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = (ev) => {
+            imagePreview.src = ev.target.result;
+            imagePreview.style.display = 'block';
+          };
+          reader.readAsDataURL(file);
+        } else {
+          imagePreview.style.display = 'none';
+          // Optionally show file name in label
+          fileLabelText.textContent = file.name;
+        }
+      } else {
+        selectedFile = null;
+        imagePreview.style.display = 'none';
+      }
+    });
+
+    // ----- Splash -----
+    const splash = (() => {
+      const progress = document.getElementById('splashProgress');
+      const msg = document.getElementById('splashMessage');
+      let width = 0, idx = 0;
+      const msgs = ['Loading...', 'Summoning posts...', 'Almost ready...'];
+      const interval = setInterval(() => {
+        width += Math.floor(Math.random() * 8) + 2;
+        if (width > 90) width = 90;
+        progress.style.width = width + '%';
+        msg.textContent = msgs[idx % msgs.length];
+        idx++;
+        if (width >= 90) clearInterval(interval);
+      }, 200);
+      return {
+        done: () => {
+          clearInterval(interval);
+          progress.style.width = '100%';
+          msg.textContent = 'Ready!';
+          setTimeout(() => document.getElementById('splash-screen').classList.add('hidden'), 500);
+        }
+      };
+    })();
+
+    // ----- Helpers -----
+    function timeAgo(date) {
+      const diff = (new Date() - new Date(date)) / 60000;
+      if (diff < 1) return 'just now';
+      if (diff < 60) return Math.floor(diff) + 'm ago';
+      const hrs = Math.floor(diff / 60);
+      if (hrs < 24) return hrs + 'h ago';
+      const days = Math.floor(hrs / 24);
+      if (days < 7) return days + 'd ago';
+      return new Date(date).toLocaleDateString('en-US', { month:'short', day:'numeric' });
+    }
+    function getInitials(name) {
+      if (!name) return '?';
+      const parts = name.split(/[._-]/);
+      if (parts.length === 1) return parts[0].substring(0,2).toUpperCase();
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    function getColor(name) {
+      if (!name) return '#4f46e5';
+      let h = 0;
+      for (let i=0; i<name.length; i++) h = name.charCodeAt(i) + ((h << 5) - h);
+      return 'hsl(' + (Math.abs(h % 360)) + ',70%,55%)';
+    }
+    function escapeHTML(text) {
+      if (!text) return '';
+      const d = document.createElement('div');
+      d.textContent = text;
+      return d.innerHTML;
+    }
+    function extractHashtags(text) {
+      const m = text.match(/#[\w]+/g);
+      return m ? m.map(t => t.slice(1)) : [];
+    }
+
+    // Determine post tint
+    function getPostTint(post, allPosts) {
+      const username = post.username || '';
+      const blurred = post.blurred || false;
+
+      if (username.toLowerCase().includes('admin')) return { tint: 'admin', badge: 'Admin', emoji: '👑' };
+      if (username.toLowerCase().includes('mod')) return { tint: 'mod', badge: 'Mod', emoji: '🛡️' };
+      if (username.toLowerCase().includes('bot')) return { tint: 'bot', badge: 'Bot', emoji: '🤖' };
+      if (blurred && post.image_url) return { tint: 'blurred', badge: 'Blurred', emoji: '🌫️' };
+      if (!username || username.trim() === '') return { tint: 'nouser', badge: 'Anonymous', emoji: '👤' };
+
+      const count = allPosts.filter(p => (p.username || '').toLowerCase() === username.toLowerCase()).length;
+      if (count > 1) return { tint: 'repeat', badge: 'Regular', emoji: '💜' };
+      return { tint: 'first', badge: 'First Time', emoji: '💙' };
+    }
+
+    // ----- Notifications & Confetti -----
+    function requestNotify() {
+      if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission();
+    }
+    function notifyNew(content) {
+      if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification('New post!', { body: content.slice(0,60)+'…' });
+      }
+    }
+    function fireConfetti() {
+      const canvas = document.createElement('canvas');
+      canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:99999;';
+      document.body.appendChild(canvas);
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const particles = [];
+      const colors = ['#f472b6','#a78bfa','#34d399','#fbbf24','#ef4444','#3b82f6'];
+      for (let i=0; i<80; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height - canvas.height,
+          vx: (Math.random() - 0.5) * 6,
+          vy: Math.random() * 4 + 2,
+          size: Math.random() * 6 + 2,
+          color: colors[Math.floor(Math.random() * colors.length)],
+        });
+      }
+      let frame;
+      (function anim() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let alive = false;
+        for (let p of particles) {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.1;
+          if (p.y < canvas.height + 50) alive = true;
+          ctx.fillStyle = p.color;
+          ctx.fillRect(p.x - p.size/2, p.y - p.size/2, p.size, p.size);
+        }
+        if (alive) requestAnimationFrame(anim);
+        else canvas.remove();
+      })();
+    }
+
+    // ----- Upload file to Supabase Storage -----
+    async function uploadFile(file) {
+      if (!file) return null;
+      const fileName = `post_${Date.now()}_${file.name}`;
+      const { data, error } = await supabase.storage
+        .from('post-images')
+        .upload(fileName, file);
+      if (error) {
+        console.error('Upload error:', error);
+        return null;
+      }
+      const { data: urlData } = supabase.storage
+        .from('post-images')
+        .getPublicUrl(fileName);
+      return urlData.publicUrl;
+    }
+
+    // ----- Fetch comments -----
+    async function fetchComments(postIds) {
+      if (!postIds?.length) return;
+      const { data, error } = await supabase
+        .from('comments')
+        .select('*')
+        .in('post_id', postIds)
+        .order('created_at', { ascending: true });
+      if (error) { console.error(error); return; }
+      const grouped = {};
+      data.forEach(c => { if (!grouped[c.post_id]) grouped[c.post_id] = []; grouped[c.post_id].push(c); });
+      postIds.forEach(id => commentsMap.set(id, grouped[id] || []));
+    }
+
+    // ----- Render posts (with media support: image, video, or other) -----
+    function renderPosts(postData, append = false) {
+      if (!postData?.length) {
+        if (!append) feed.innerHTML = '<div class="empty-state"><i class="fas fa-feather-pointed"></i><p>No posts yet. Be the first to shine! ✨</p></div>';
         return;
-    }
-    
-    data.forEach(post => {
-        const roleClass = `role-${post.author_role || 'unverified'}`;
-        const badgeHtml = post.author_role === 'admin' ? '<span class="badge badge-admin">Admin</span>' : 
-                          post.author_role === 'mod' ? '<span class="badge badge-mod">Mod</span>' : 
-                          post.author_role === 'unverified' ? '<span class="badge badge-unverified">Unverified</span>' : '';
-        
-        const isLocked = post.password_hash && !localStorage.getItem(`unlocked_${post.id}`);
-        const isAgeGated = post.age_required && !localStorage.getItem(`age_verified_${post.id}`);
-        const blurClass = post.is_blurred && !localStorage.getItem(`unblurred_${post.id}`) ? 'image-blur' : '';
+      }
+      let html = '';
+      const now = Date.now();
+      const allPostsForTint = posts;
+      postData.forEach(post => {
+        const username = post.username || '';
+        const displayName = username || 'Anonymous';
+        const initials = getInitials(displayName);
+        const color = getColor(displayName);
+        const likeCount = post.likes_count || 0;
+        const bookmarksCount = post.bookmarks_count || 0;
+        const tags = post.tags || [];
+        const isNew = (now - new Date(post.created_at).getTime()) < 3600000;
+        const commentCount = commentsMap.get(post.id)?.length || 0;
+        const isOpen = openComments.has(post.id);
+        const title = post.title || '';
 
-        let contentHtml = DOMPurify.sanitize(post.content).replace(/#(\w+)/g, '<span class="hashtag">#$1</span>');
+        const tintInfo = getPostTint(post, allPostsForTint);
+        const tintClass = 'tint-' + tintInfo.tint;
 
-        const card = document.createElement('div');
-        card.className = `post-card ${roleClass}`;
-        card.innerHTML = `
-            ${isLocked ? `<div class="lock-overlay"><i class="fas fa-lock"></i><p>Thread Locked</p><input type="password" id="pass-${post.id}" placeholder="Enter password"><button class="unlock-btn" onclick="unlockPost('${post.id}', '${post.password_hash}')">Unlock</button></div>` : ''}
-            ${isAgeGated && !isLocked ? `<div class="age-overlay"><i class="fas fa-exclamation-triangle"></i><p>Age Verification Required (18+)</p><input type="number" id="age-${post.id}" placeholder="Your Age"><button class="unlock-btn" onclick="verifyAge('${post.id}')">Verify</button></div>` : ''}
-            
+        let content = DOMPurify.sanitize(post.content || '', { ALLOWED_TAGS: ['b','i','u','a','br','p','em','strong'] });
+        content = content.replace(/#(\w+)/g, '<span class="hashtag">#$1</span>');
+
+        let mediaHtml = '';
+        if (post.image_url) {
+          const url = post.image_url;
+          // Check if it's a video (by extension or MIME type, but we only have URL)
+          const ext = url.split('.').pop().toLowerCase();
+          const isVideo = ['mp4','webm','ogv','mov','avi','mkv','m4v','wmv','flv'].includes(ext);
+          const isAudio = ['mp3','wav','ogg','aac','flac'].includes(ext);
+          const blurClass = post.blurred ? 'blurred' : '';
+          if (isVideo) {
+            mediaHtml = `
+              <div class="post-image-wrapper ${blurClass}" id="mediaWrapper-${post.id}">
+                <video controls src="${escapeHTML(url)}" onerror="this.style.display='none'"></video>
+                ${post.blurred ? `<div class="blur-badge"><i class="fas fa-eye-slash"></i> Blurred</div>` : ''}
+              </div>
+            `;
+          } else if (isAudio) {
+            mediaHtml = `
+              <div class="post-image-wrapper" id="mediaWrapper-${post.id}">
+                <audio controls src="${escapeHTML(url)}" style="width:100%;"></audio>
+                ${post.blurred ? `<div class="blur-badge"><i class="fas fa-eye-slash"></i> Blurred</div>` : ''}
+              </div>
+            `;
+          } else if (['pdf','doc','docx','txt','zip','rar','7z'].includes(ext)) {
+            // For documents, show a download link
+            mediaHtml = `
+              <div class="post-image-wrapper" id="mediaWrapper-${post.id}" style="padding:0.5rem;text-align:center;">
+                <a href="${escapeHTML(url)}" target="_blank" rel="noopener noreferrer" style="color:#a78bfa;text-decoration:underline;">
+                  <i class="fas fa-file"></i> Download ${ext.toUpperCase()} file
+                </a>
+                ${post.blurred ? `<div class="blur-badge"><i class="fas fa-eye-slash"></i> Blurred</div>` : ''}
+              </div>
+            `;
+          } else {
+            // Default: image
+            mediaHtml = `
+              <div class="post-image-wrapper ${blurClass}" id="mediaWrapper-${post.id}">
+                <img src="${escapeHTML(url)}" alt="Post media" loading="lazy" onerror="this.style.display='none'" />
+                ${post.blurred ? `<div class="blur-badge"><i class="fas fa-eye-slash"></i> Blurred</div>` : ''}
+              </div>
+            `;
+          }
+        }
+
+        html += `
+          <div class="post-card ${tintClass}" data-id="${post.id}" id="post-${post.id}">
             <div class="post-header">
-                <div class="avatar">${(post.user_email || 'A')[0].toUpperCase()}</div>
-                <div class="post-user">${post.user_email?.split('@')[0] || 'Anonymous'} ${badgeHtml}</div>
-                <div class="post-time">${getTimeAgo(post.created_at)}</div>
+              <div class="avatar" style="background:${color};">${initials}</div>
+              <div class="post-user">
+                ${escapeHTML(displayName)}
+                <span>· ${post.user_email || 'anon'}</span>
+                <span class="tint-badge ${tintInfo.tint}">${tintInfo.emoji} ${tintInfo.badge}</span>
+                ${isNew ? '<span class="badge-new">New</span>' : ''}
+              </div>
+              <div class="post-time">${timeAgo(post.created_at)}</div>
             </div>
-            <div class="post-content">${contentHtml}</div>
-            ${post.image_url ? `<img src="${post.image_url}" class="post-image ${blurClass}" onclick="handleImageClick(event, '${post.id}', '${post.image_url}', this)" loading="lazy">` : ''}
+            ${title ? `<div class="post-title">${escapeHTML(title)}</div>` : ''}
+            <div class="post-content">${content}</div>
+            ${tags.length ? `<div class="post-tags">${tags.map(t => `<span class="tag-pill">#${escapeHTML(t)}</span>`).join('')}</div>` : ''}
+            ${mediaHtml}
             <div class="post-footer">
-                <button onclick="likePost('${post.id}', this)"><i class="fa-regular fa-heart"></i> <span>${post.likes_count || 0}</span></button>
-                <button onclick="toggleReplies('${post.id}')"><i class="fa-regular fa-comment"></i> Reply</button>
-                <button onclick="togglePaymentModal(true)"><i class="fas fa-crown" style="color:#fbbf24;"></i> Support</button>
+              <button class="like-btn" data-id="${post.id}">
+                <i class="fa-regular fa-heart"></i> <span class="like-count">${likeCount}</span>
+              </button>
+              <button class="bookmark-btn" data-id="${post.id}">
+                <i class="fa-regular fa-bookmark"></i> <span class="bookmark-count">${bookmarksCount}</span>
+              </button>
+              ${post.image_url ? `<button class="blur-toggle" data-id="${post.id}" title="Toggle Blur">
+                <i class="fas ${post.blurred ? 'fa-eye' : 'fa-eye-slash'}"></i>
+              </button>` : ''}
+              <button class="comment-toggle" data-id="${post.id}">
+                <i class="fa-regular fa-comment"></i> <span class="comment-count">${commentCount}</span>
+              </button>
             </div>
-            <div id="replies-${post.id}" class="replies-container">
-                <div class="reply-form">
-                    <input type="text" id="reply-input-${post.id}" placeholder="Write a reply...">
-                    <button class="unlock-btn" onclick="submitReply('${post.id}')">Send</button>
-                </div>
-                <div id="reply-list-${post.id}"></div>
+            <div class="comments-section ${isOpen ? 'open' : ''}" id="comments-${post.id}">
+              <div id="commentList-${post.id}">${renderComments(post.id)}</div>
+              <div class="comment-form">
+                <input type="text" placeholder="Write a reply..." id="commentInput-${post.id}" />
+                <button data-post="${post.id}" class="comment-submit">Reply</button>
+              </div>
             </div>
+          </div>
         `;
-        container.appendChild(card);
+      });
+
+      if (append) feed.insertAdjacentHTML('beforeend', html);
+      else feed.innerHTML = html;
+
+      // Attach events
+      feed.querySelectorAll('.like-btn').forEach(b => b.addEventListener('click', handleLike));
+      feed.querySelectorAll('.bookmark-btn').forEach(b => b.addEventListener('click', handleBookmark));
+      feed.querySelectorAll('.blur-toggle').forEach(b => b.addEventListener('click', toggleBlur));
+      feed.querySelectorAll('.comment-toggle').forEach(b => b.addEventListener('click', toggleComments));
+      feed.querySelectorAll('.comment-submit').forEach(b => b.addEventListener('click', handleCommentSubmit));
+      feed.querySelectorAll('.comment-form input').forEach(i => i.addEventListener('keydown', e => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          i.parentElement.querySelector('.comment-submit')?.click();
+        }
+      }));
+    }
+
+    function renderComments(postId) {
+      const comments = commentsMap.get(postId) || [];
+      if (!comments.length) return '<div style="color:#64748b;font-size:0.85rem;padding:0.25rem 0;">No replies yet.</div>';
+      return comments.map(c => {
+        const name = c.user_email?.split('@')[0] || 'Anonymous';
+        return `
+          <div class="comment-item">
+            <div class="comment-avatar" style="background:${getColor(name)};">${getInitials(name)}</div>
+            <div class="comment-body">
+              <div class="comment-user">${escapeHTML(name)} <span>${timeAgo(c.created_at)}</span></div>
+              <div class="comment-text">${escapeHTML(c.content)}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ----- Toggle Blur -----
+    async function toggleBlur(e) {
+      const btn = e.currentTarget;
+      const postId = Number(btn.dataset.id);
+      const postIndex = posts.findIndex(p => p.id === postId);
+      if (postIndex === -1) return;
+      const post = posts[postIndex];
+      const newBlur = !post.blurred;
+
+      post.blurred = newBlur;
+      updatePostUI(postId, newBlur);
+
+      try {
+        const { error } = await supabase
+          .from('posts')
+          .update({ blurred: newBlur })
+          .eq('id', postId);
+        if (error) throw error;
+      } catch (err) {
+        console.error('Toggle blur error:', err);
+        post.blurred = !newBlur;
+        updatePostUI(postId, !newBlur);
+        alert('Failed to toggle blur. Please try again.');
+      }
+    }
+
+    function updatePostUI(postId, blurred) {
+      const postCard = document.getElementById(`post-${postId}`);
+      if (!postCard) return;
+      const wrapper = document.getElementById(`mediaWrapper-${postId}`);
+      if (wrapper) {
+        wrapper.classList.toggle('blurred', blurred);
+        let badge = wrapper.querySelector('.blur-badge');
+        if (blurred) {
+          if (!badge) {
+            badge = document.createElement('div');
+            badge.className = 'blur-badge';
+            badge.innerHTML = '<i class="fas fa-eye-slash"></i> Blurred';
+            wrapper.appendChild(badge);
+          }
+        } else {
+          if (badge) badge.remove();
+        }
+      }
+      const toggleBtn = postCard.querySelector('.blur-toggle');
+      if (toggleBtn) {
+        const icon = toggleBtn.querySelector('i');
+        icon.className = blurred ? 'fas fa-eye' : 'fas fa-eye-slash';
+      }
+      const updatedPost = posts.find(p => p.id === postId);
+      if (updatedPost) {
+        const tintInfo = getPostTint(updatedPost, posts);
+        postCard.className = postCard.className.split(' ').filter(c => !c.startsWith('tint-')).join(' ');
+        postCard.classList.add('tint-' + tintInfo.tint);
+        const badgeSpan = postCard.querySelector('.tint-badge');
+        if (badgeSpan) {
+          badgeSpan.textContent = `${tintInfo.emoji} ${tintInfo.badge}`;
+          badgeSpan.className = `tint-badge ${tintInfo.tint}`;
+        }
+      }
+    }
+
+    // ----- Toggle comments -----
+    async function toggleComments(e) {
+      const btn = e.currentTarget;
+      const postId = Number(btn.dataset.id);
+      const section = document.getElementById(`comments-${postId}`);
+      if (!section) return;
+      const isOpen = section.classList.toggle('open');
+      if (isOpen) {
+        openComments.add(postId);
+        const input = document.getElementById(`commentInput-${postId}`);
+        if (input) input.focus();
+        if (!commentsMap.has(postId) || commentsMap.get(postId).length === 0) {
+          await fetchComments([postId]);
+          const list = document.getElementById(`commentList-${postId}`);
+          if (list) {
+            list.innerHTML = renderComments(postId);
+            const countSpan = btn.querySelector('.comment-count');
+            if (countSpan) countSpan.textContent = commentsMap.get(postId).length;
+          }
+        }
+      } else {
+        openComments.delete(postId);
+      }
+    }
+
+    // ----- Comment submit -----
+    async function handleCommentSubmit(e) {
+      const btn = e.currentTarget;
+      const postId = Number(btn.dataset.post);
+      const input = document.getElementById(`commentInput-${postId}`);
+      const content = input.value.trim();
+      if (!content) { input.focus(); input.style.borderColor = '#f87171'; setTimeout(() => input.style.borderColor = '', 1500); return; }
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
+      try {
+        const newComment = {
+          post_id: postId,
+          user_email: 'user_' + Math.floor(Math.random()*10000) + '@pulse.local',
+          content
+        };
+        const { data, error } = await supabase.from('comments').insert([newComment]).select();
+        if (error) throw error;
+        if (data?.length) {
+          if (!commentsMap.has(postId)) commentsMap.set(postId, []);
+          commentsMap.get(postId).push(data[0]);
+          const list = document.getElementById(`commentList-${postId}`);
+          if (list) list.innerHTML = renderComments(postId);
+          const toggleBtn = document.querySelector(`.comment-toggle[data-id="${postId}"]`);
+          if (toggleBtn) {
+            const countSpan = toggleBtn.querySelector('.comment-count');
+            if (countSpan) countSpan.textContent = commentsMap.get(postId).length;
+          }
+          input.value = '';
+        }
+      } catch (err) { console.error(err); alert('Comment failed'); }
+      finally { btn.disabled = false; btn.textContent = 'Reply'; }
+    }
+
+    // ----- Like handler -----
+    async function handleLike(e) {
+      const btn = e.currentTarget;
+      const postId = btn.dataset.id;
+      const span = btn.querySelector('.like-count');
+      const icon = btn.querySelector('i');
+      const cur = parseInt(span.textContent) || 0;
+      const isLiked = btn.classList.toggle('liked');
+      const newVal = isLiked ? cur + 1 : cur - 1;
+      span.textContent = newVal;
+      icon.className = isLiked ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
+      const idx = posts.findIndex(p => String(p.id) === String(postId));
+      if (idx !== -1) posts[idx].likes_count = newVal;
+      try {
+        const { error } = await supabase.from('posts').update({ likes_count: newVal }).eq('id', postId);
+        if (error) throw error;
+      } catch (err) { console.error(err); }
+    }
+
+    // ----- Bookmark handler -----
+    async function handleBookmark(e) {
+      const btn = e.currentTarget;
+      const postId = btn.dataset.id;
+      const span = btn.querySelector('.bookmark-count');
+      const icon = btn.querySelector('i');
+      const cur = parseInt(span.textContent) || 0;
+      const isBookmarked = btn.classList.toggle('bookmarked');
+      const newVal = isBookmarked ? cur + 1 : cur - 1;
+      span.textContent = newVal;
+      icon.className = isBookmarked ? 'fa-solid fa-bookmark' : 'fa-regular fa-bookmark';
+      const idx = posts.findIndex(p => String(p.id) === String(postId));
+      if (idx !== -1) posts[idx].bookmarks_count = newVal;
+      try {
+        const { error } = await supabase.from('posts').update({ bookmarks_count: newVal }).eq('id', postId);
+        if (error) throw error;
+      } catch (err) { console.error(err); }
+    }
+
+    // ----- Load more, init, search, sort -----
+    async function loadPosts(cursor = null) {
+      if (!hasMore) return;
+      addSkeleton();
+      loadMoreBtn.disabled = true;
+      let query = supabase.from('posts').select('*').order('id', { ascending: false }).limit(PAGE_SIZE);
+      if (cursor) query = query.lt('id', cursor);
+      const { data, error } = await query;
+      removeSkeleton();
+      loadMoreBtn.disabled = false;
+      if (error) { console.error(error); return; }
+      if (data.length < PAGE_SIZE) hasMore = false;
+      if (!data.length) { updateLoadMoreUI(); return; }
+      const newPosts = data;
+      posts = posts.concat(newPosts);
+      const ids = newPosts.map(p => p.id);
+      await fetchComments(ids);
+      renderPosts(newPosts, true);
+      lastId = newPosts[newPosts.length - 1].id;
+      updateLoadMoreUI();
+    }
+
+    function updateLoadMoreUI() {
+      if (hasMore && posts.length && !searchTerm) loadMoreBtn.style.display = 'inline-block';
+      else loadMoreBtn.style.display = 'none';
+    }
+
+    function addSkeleton() {
+      feed.insertAdjacentHTML('beforeend', `<div class="skeleton"><div class="line short"></div><div class="line long"></div><div class="line long" style="width:80%;"></div><div class="line short" style="width:30%;"></div></div>`);
+    }
+    function removeSkeleton() {
+      const sk = feed.querySelector('.skeleton:last-child');
+      if (sk) sk.remove();
+    }
+    function showSkeletons(n=3) {
+      feed.innerHTML = Array(n).fill(0).map(() =>
+        `<div class="skeleton"><div class="line short"></div><div class="line long"></div><div class="line long" style="width:80%;"></div><div class="line short" style="width:30%;"></div></div>`
+      ).join('');
+    }
+
+    async function initFeed() {
+      showSkeletons(3);
+      loadMoreBtn.style.display = 'none';
+      try {
+        const { data, error } = await supabase.from('posts').select('*').order('id', { ascending: false }).limit(PAGE_SIZE);
+        if (error) throw error;
+        if (data.length < PAGE_SIZE) hasMore = false;
+        posts = data || [];
+        const ids = posts.map(p => p.id);
+        if (ids.length) await fetchComments(ids);
+        renderPosts(posts, false);
+        if (data.length) lastId = data[data.length-1].id;
+        updateLoadMoreUI();
+        splash.done();
+        requestNotify();
+      } catch (err) {
+        console.error(err);
+        feed.innerHTML = '<div class="empty-state" style="color:#f87171;"><i class="fas fa-circle-exclamation"></i><p>Failed to load feed</p></div>';
+        splash.done();
+      }
+    }
+
+    // Search
+    let searchTimeout;
+    searchInput.addEventListener('input', function() {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => {
+        const term = this.value.trim().toLowerCase();
+        searchTerm = term;
+        if (!term) { renderPosts(posts, false); updateLoadMoreUI(); return; }
+        const filtered = posts.filter(p => (p.content || '').toLowerCase().includes(term) || (p.title || '').toLowerCase().includes(term));
+        renderPosts(filtered, false);
+        loadMoreBtn.style.display = 'none';
+      }, 300);
     });
-}
 
-function handleImageClick(event, postId, imageUrl, imgElement) {
-    if (imgElement.classList.contains('image-blur') && !imgElement.classList.contains('unblurred')) {
-        event.stopPropagation();
-        imgElement.classList.add('unblurred');
-        localStorage.setItem(`unblurred_${postId}`, 'true');
-    } else {
-        openLightbox(imageUrl);
+    // Sort
+    function applySort(type) {
+      currentSort = type;
+      let arr = searchTerm ? posts.filter(p => (p.content || '').toLowerCase().includes(searchTerm) || (p.title || '').toLowerCase().includes(searchTerm)) : [...posts];
+      if (type === 'trending') arr.sort((a,b) => (b.likes_count||0) - (a.likes_count||0));
+      else if (type === 'random') arr.sort(() => Math.random() - 0.5);
+      else arr.sort((a,b) => b.id - a.id);
+      renderPosts(arr, false);
+      if (searchTerm) loadMoreBtn.style.display = 'none';
+      else updateLoadMoreUI();
     }
-}
+    sortSelect.addEventListener('change', e => applySort(e.target.value));
 
-function openLightbox(src) {
-    const lightbox = document.getElementById('lightbox');
-    const lightboxImg = document.getElementById('lightboxImg');
-    lightboxImg.src = src;
-    lightbox.classList.add('open');
-    document.body.style.overflow = 'hidden';
-}
+    // ----- Create post with conditional media upload -----
+    async function createPost() {
+      if (isSubmitting) return;
+      const title = titleInput.value.trim();
+      const username = usernameInput.value.trim();
+      const content = postInput.value.trim();
+      const blurred = blurToggle.checked;
 
-function closeLightbox() {
-    const lightbox = document.getElementById('lightbox');
-    lightbox.classList.remove('open');
-    document.body.style.overflow = 'auto';
-}
+      if (!content) { postInput.focus(); postInput.style.borderColor = '#f87171'; setTimeout(() => postInput.style.borderColor = '', 1500); return; }
 
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeLightbox();
-});
+      isSubmitting = true;
+      publishBtn.disabled = true;
+      publishBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
 
-async function unlockPost(postId, correctHash) {
-    const input = document.getElementById(`pass-${postId}`).value;
-    const hash = await sha256(input);
-    if (hash === correctHash) {
-        localStorage.setItem(`unlocked_${postId}`, 'true');
-        loadFeed();
-    } else {
-        alert('Incorrect password');
+      try {
+        let mediaUrl = null;
+        // Only upload if username is not empty (upload row visible)
+        if (username.length > 0 && selectedFile) {
+          mediaUrl = await uploadFile(selectedFile);
+          if (!mediaUrl) {
+            alert('Failed to upload file. Please try again.');
+            isSubmitting = false;
+            publishBtn.disabled = false;
+            publishBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Publish';
+            return;
+          }
+        }
+
+        const tags = extractHashtags(content);
+        const newPost = {
+          title: title || null,
+          username: username || null,
+          content: content,
+          user_email: 'user_' + Math.floor(Math.random()*10000) + '@pulse.local',
+          likes_count: 0,
+          bookmarks_count: 0,
+          tags: tags.length ? tags : null,
+          image_url: mediaUrl,
+          blurred: blurred && mediaUrl ? blurred : false
+        };
+        const { data, error } = await supabase.from('posts').insert([newPost]).select();
+        if (error) throw error;
+        if (data?.length) {
+          posts.unshift(data[0]);
+          commentsMap.set(data[0].id, []);
+          renderPosts(posts, false);
+          fireConfetti();
+          titleInput.value = '';
+          usernameInput.value = '';
+          postInput.value = '';
+          mediaFileInput.value = '';
+          selectedFile = null;
+          imagePreview.style.display = 'none';
+          blurToggle.checked = false;
+          // Hide upload row again (since username cleared)
+          updateUploadVisibility();
+          notifyNew(content);
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Publish failed: ' + err.message);
+      } finally {
+        isSubmitting = false;
+        publishBtn.disabled = false;
+        publishBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Publish';
+      }
     }
-}
 
-function verifyAge(postId) {
-    const age = parseInt(document.getElementById(`age-${postId}`).value);
-    if (age >= 18) {
-        localStorage.setItem(`age_verified_${postId}`, 'true');
-        loadFeed();
-    } else {
-        alert('You must be 18 or older.');
-    }
-}
+    publishBtn.addEventListener('click', createPost);
+    postInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); createPost(); } });
 
-async function likePost(postId, btn) {
-    triggerHaptics();
-    playPopSound();
-    const icon = btn.querySelector('i');
-    const span = btn.querySelector('span');
-    const isLiked = btn.classList.toggle('liked');
-    
-    icon.className = isLiked ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
-    span.textContent = parseInt(span.textContent) + (isLiked ? 1 : -1);
-    
-    const newCount = parseInt(span.textContent);
-    await supabase.from('posts').update({ likes_count: newCount }).eq('id', postId);
-}
-
-function toggleReplies(postId) {
-    const el = document.getElementById(`replies-${postId}`);
-    el.classList.toggle('open');
-    if (el.classList.contains('open')) loadReplies(postId);
-}
-
-async function loadReplies(postId) {
-    const { data } = await supabase.from('replies').select('*').eq('post_id', postId).order('created_at', {ascending: true});
-    const list = document.getElementById(`reply-list-${postId}`);
-    list.innerHTML = '';
-    data.forEach(r => {
-        list.innerHTML += `<div class="reply-item"><div class="avatar" style="width:30px;height:30px;font-size:0.8rem;">${(r.author_name||'A')[0]}</div><div><div style="font-weight:600;font-size:0.85rem;">${r.author_name}</div><div style="font-size:0.9rem;color:var(--text-secondary);">${r.content}</div></div></div>`;
+    loadMoreBtn.addEventListener('click', async () => {
+      if (!hasMore) return;
+      loadingMore.style.display = 'block';
+      loadMoreBtn.style.display = 'none';
+      await loadPosts(lastId);
+      loadingMore.style.display = 'none';
+      updateLoadMoreUI();
     });
-}
 
-async function submitReply(postId) {
-    const content = document.getElementById(`reply-input-${postId}`).value;
-    if (!content) return;
-    await supabase.from('replies').insert({ post_id: postId, author_name: currentUser.name, author_role: currentUser.role, content });
-    document.getElementById(`reply-input-${postId}`).value = '';
-    loadReplies(postId);
-}
-
-document.getElementById('publishBtn').addEventListener('click', async () => {
-    const content = document.getElementById('postInput').value;
-    if (!content) return;
-    
-    const btn = document.getElementById('publishBtn');
-    btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-
-    let imageUrl = null;
-    const file = document.getElementById('fileInput').files[0];
-    if (file) {
-        const fileName = `${Date.now()}_${file.name}`;
-        await supabase.storage.from('post-images').upload(`public/${fileName}`, file);
-        imageUrl = `${SUPABASE_URL}/storage/v1/object/public/post-images/public/${fileName}`;
-    }
-
-    const pass = document.getElementById('passCheck').value;
-    const hash = pass ? await sha256(pass) : null;
-    const age = document.getElementById('ageCheck').value || null;
-    const blur = document.getElementById('blurCheck').checked;
-
-    const { error } = await supabase.from('posts').insert([{
-        content, user_id: currentUser.id, user_email: currentUser.name + '@pulse.local',
-        author_role: currentUser.role, image_url: imageUrl, password_hash: hash,
-        age_required: age, is_blurred: blur
-    }]);
-
-    if (!error) {
-        document.getElementById('postInput').value = '';
-        document.getElementById('fileInput').value = '';
-        document.getElementById('blurCheck').checked = false;
-        document.getElementById('ageCheck').value = '';
-        document.getElementById('passCheck').value = '';
-        loadFeed();
-    }
-    btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> Publish';
-});
-
-const processors = [
-    {name:'PayPal',color:'#003087',icon:'fab fa-paypal',text:'#fff'},
-    {name:'Visa',color:'#1A1F71',icon:'fab fa-cc-visa',text:'#fff'},
-    {name:'Mastercard',color:'#EB001B',icon:'fab fa-cc-mastercard',text:'#fff'},
-    {name:'Apple Pay',color:'#000',icon:'fab fa-apple',text:'#fff'},
-    {name:'Bitcoin',color:'#f7931a',icon:'fab fa-bitcoin',text:'#fff'},
-    {name:'Stripe',color:'#635bff',icon:'fas fa-credit-card',text:'#fff'},
-    {name:'Venmo',color:'#3D95CE',icon:'fas fa-venmo',text:'#fff'},
-    {name:'Cash App',color:'#00D632',icon:'fas fa-dollar-sign',text:'#fff'}
-];
-
-function initPaymentModal() {
-    const select = document.getElementById('processorSelect');
-    processors.forEach(p => {
-        const opt = document.createElement('option');
-        opt.value = p.name; opt.textContent = p.name;
-        select.appendChild(opt);
+    // ----- Keyboard shortcuts -----
+    document.addEventListener('keydown', e => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); searchInput.focus(); }
+      if (e.key === '?' && !e.ctrlKey && !e.metaKey) { e.preventDefault(); document.getElementById('shortcutsModal').classList.toggle('open'); }
+      if (e.key === 'Escape') {
+        const modal = document.getElementById('shortcutsModal');
+        if (modal.classList.contains('open')) modal.classList.remove('open');
+        else if (document.activeElement === searchInput) searchInput.blur();
+      }
+      if (e.key === 'n' && !e.ctrlKey && !e.metaKey && !e.shiftKey && !e.target.closest('input,textarea,select')) {
+        e.preventDefault(); titleInput.focus();
+      }
     });
-    select.addEventListener('change', (e) => {
-        const p = processors.find(x => x.name === e.target.value) || processors[0];
-        const btn = document.getElementById('dynamicPayBtn');
-        btn.style.background = p.color; btn.style.color = p.text;
-        btn.innerHTML = `<i class="${p.icon}"></i> Pay with ${p.name}`;
-    });
-}
+    document.getElementById('modalCloseBtn').addEventListener('click', () => document.getElementById('shortcutsModal').classList.remove('open'));
+    document.getElementById('shortcutsModal').addEventListener('click', e => { if (e.target === e.currentTarget) e.currentTarget.classList.remove('open'); });
 
-function togglePaymentModal(show) {
-    document.getElementById('paymentModal').classList.toggle('open', show);
-}
-
-function copyBTC() {
-    const addr = document.getElementById('btcAddr').textContent;
-    navigator.clipboard.writeText(addr);
-    alert('BTC Address Copied!');
-}
-
-document.getElementById('themeToggle').addEventListener('click', () => {
-    const current = document.documentElement.getAttribute('data-theme');
-    document.documentElement.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
-});
-
-// ==========================================
-// INITIALIZATION
-// ==========================================
-initPaymentModal();
-
-// Start loading data immediately in the background
-loadFeed();
-
-// Restore scrolling and clean up intro overlay after animation completes
-setTimeout(() => {
-    document.body.style.overflow = "auto";
-    const intro = document.getElementById('introOverlay');
-    if (intro && intro.parentNode) {
-        intro.parentNode.removeChild(intro);
+    // ----- Realtime -----
+    function subscribe() {
+      supabase.channel('public:posts')
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'posts' }, payload => {
+          const p = payload.new;
+          if (posts.some(po => po.id === p.id)) return;
+          posts.unshift(p);
+          commentsMap.set(p.id, []);
+          if (!searchTerm && currentSort === 'new') renderPosts(posts, false);
+          updateLoadMoreUI();
+          notifyNew(p.content || '');
+        })
+        .subscribe();
+      supabase.channel('public:comments')
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'comments' }, payload => {
+          const c = payload.new;
+          const pid = c.post_id;
+          if (commentsMap.has(pid)) {
+            commentsMap.get(pid).push(c);
+            const list = document.getElementById(`commentList-${pid}`);
+            if (list) list.innerHTML = renderComments(pid);
+            const toggle = document.querySelector(`.comment-toggle[data-id="${pid}"]`);
+            if (toggle) {
+              const cs = toggle.querySelector('.comment-count');
+              if (cs) cs.textContent = commentsMap.get(pid).length;
+            }
+          }
+        })
+        .subscribe();
     }
-}, 3200); // Matches the 2.6s start of fadeOut + 0.6s duration
+
+    // ----- Start -----
+    initFeed();
+    subscribe();
+  })();
 </script>
 </body>
 </html>

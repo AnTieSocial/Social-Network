@@ -3,1265 +3,576 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>✨ Super Fancy Feed</title>
-    <!-- Favicon -->
+    <title>✨ World Forum Pulse</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✨</text></svg>">
-    <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <!-- Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
+
     <style>
-        /* ----- THEME VARIABLES ----- */
         :root {
-            --bg: #0b0d15;
-            --bg-card: rgba(255,255,255,0.04);
-            --border: rgba(255,255,255,0.08);
-            --text: #eef2ff;
-            --text-secondary: #94a3b8;
-            --input-bg: rgba(0,0,0,0.3);
+            --bg: #0b0d15; --bg-card: rgba(255,255,255,0.04); --border: rgba(255,255,255,0.08);
+            --text: #eef2ff; --text-secondary: #94a3b8; --input-bg: rgba(0,0,0,0.3);
             --shadow: 0 20px 40px -12px rgba(0,0,0,0.6);
+            --admin-color: #ff0033; --mod-color: #ff8800; --unverified-color: #aaa;
         }
         [data-theme="light"] {
-            --bg: #f1f5f9;
-            --bg-card: rgba(255,255,255,0.7);
-            --border: rgba(0,0,0,0.08);
-            --text: #0b0d15;
-            --text-secondary: #475569;
-            --input-bg: rgba(255,255,255,0.7);
-            --shadow: 0 20px 40px -12px rgba(0,0,0,0.15);
+            --bg: #f1f5f9; --bg-card: rgba(255,255,255,0.7); --border: rgba(0,0,0,0.08);
+            --text: #0b0d15; --text-secondary: #475569; --input-bg: rgba(255,255,255,0.7);
         }
-
         * { margin:0; padding:0; box-sizing:border-box; }
-        body {
-            font-family:"Inter",sans-serif;
-            background:var(--bg);
-            color:var(--text);
-            display:flex;
-            justify-content:center;
-            padding:2rem 1rem;
-            min-height:100vh;
-            transition:background 0.3s, color 0.3s;
-            background-image:radial-gradient(circle at 10% 20%,rgba(120,119,198,0.08)0%,transparent 50%),
-                             radial-gradient(circle at 90% 80%,rgba(255,119,198,0.08)0%,transparent 50%);
+        
+        body { 
+            font-family:"Inter",sans-serif; 
+            background:var(--bg); 
+            color:var(--text); 
+            display:flex; 
+            justify-content:center; 
+            padding:2rem 1rem; 
+            min-height:100vh; 
+            transition:background 0.3s, color 0.3s; 
             overflow: hidden; /* Prevents scrolling while intro plays */
         }
         .app-container { max-width:720px; width:100%; }
 
-        /* ----- INTRO OVERLAY ----- */
+        /* ==========================================
+           PREMIUM INTRO SEQUENCE
+           ========================================== */
         .intro-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: var(--bg);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #000000;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
             z-index: 9999;
-            animation: fadeOutContainer 0.5s ease-in-out forwards 2.8s;
-            transition: background 0.3s;
+            animation: fadeOutContainer 0.6s ease-in-out forwards 2.6s;
         }
         .intro-logo {
-            font-size: 4rem;
-            font-weight: 800;
-            letter-spacing: 4px;
-            background: linear-gradient(45deg, #a78bfa, #f472b6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            opacity: 0;
-            transform: scale(0.8);
-            animation: zoomIn 1.2s ease-out forwards 0.2s;
+            font-size: 4rem; font-weight: 800; letter-spacing: 2px;
+            background: linear-gradient(90deg, #a78bfa, #f472b6, #34d399);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-size: 200% 200%;
+            animation: zoomIn 1.2s ease-out forwards 0.2s, rainbow 4s ease infinite;
+            opacity: 0; transform: scale(0.8);
         }
         .intro-text {
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-            margin-top: 16px;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: slideUp 0.8s ease-out forwards 1s;
+            font-size: 1.1rem; color: #9ca3af; margin-top: 16px; font-weight: 500;
+            opacity: 0; transform: translateY(20px);
+            animation: slideUp 0.8s ease-out forwards 1.0s;
         }
-        @keyframes zoomIn {
-            to { opacity: 1; transform: scale(1); }
-        }
-        @keyframes slideUp {
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeOutContainer {
-            to { opacity: 0; visibility: hidden; }
-        }
+        @keyframes zoomIn { to { opacity: 1; transform: scale(1); } }
+        @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeOutContainer { to { opacity: 0; visibility: hidden; pointer-events: none; } }
+        @keyframes rainbow { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
 
-        /* Main content fades in after intro */
+        /* Main content fades in as intro fades out */
         .app-container {
             opacity: 0;
-            animation: fadeInContent 0.6s ease-out forwards 3s;
+            animation: fadeInContent 0.6s ease-out forwards 2.6s;
         }
-        @keyframes fadeInContent {
-            to { opacity: 1; }
-        }
+        @keyframes fadeInContent { to { opacity: 1; } }
 
-        /* ----- HEADER ----- */
-        .header {
-            display:flex; flex-wrap:wrap; align-items:center; gap:0.75rem;
-            margin-bottom:1.5rem; padding:0 0.5rem;
-        }
-        .header h1 {
-            font-size:1.8rem; font-weight:700;
-            background:linear-gradient(135deg,#a78bfa,#f472b6);
-            -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-            margin-right:auto;
-        }
-        .header-controls {
-            display:flex; align-items:center; gap:0.5rem;
-            flex-wrap:wrap;
-        }
-        .header-controls input[type="search"] {
-            background:var(--input-bg);
-            border:1px solid var(--border);
-            border-radius:40px; padding:0.5rem 1rem 0.5rem 2.5rem;
-            color:var(--text); font-family:Inter; font-size:0.9rem;
-            outline:none; width:160px; transition:border 0.2s, width 0.3s;
-            background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
-            background-repeat:no-repeat; background-position:0.75rem center;
-            background-size:16px;
-        }
-        .header-controls input[type="search"]:focus {
-            border-color:#a78bfa; width:220px;
-        }
-        .header-controls select {
-            background:var(--input-bg);
-            border:1px solid var(--border);
-            border-radius:40px; padding:0.5rem 1rem;
-            color:var(--text); font-family:Inter; font-size:0.9rem;
-            outline:none; cursor:pointer;
-        }
-        .header-controls select option { background:var(--bg); }
+        /* ==========================================
+           APP STYLES
+           ========================================== */
+        .stats-marquee { overflow:hidden; white-space:nowrap; background:rgba(167,139,250,0.08); border:1px solid var(--border); padding:0.6rem 0; margin-bottom:1rem; border-radius:40px; position:relative; }
+        .marquee-content { display:inline-block; animation: scroll 25s linear infinite; color:var(--text-secondary); font-size:0.85rem; font-weight:600; }
+        .marquee-content span { margin:0 2rem; }
+        @keyframes scroll { 0%{transform:translateX(100%)} 100%{transform:translateX(-100%)} }
+        
+        .header { display:flex; flex-wrap:wrap; align-items:center; gap:0.75rem; margin-bottom:1.5rem; }
+        .header h1 { font-size:1.8rem; font-weight:800; margin-right:auto; background:linear-gradient(90deg, #a78bfa, #f472b6); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        .header-controls { display:flex; gap:0.5rem; }
+        .header-controls input, .header-controls select, .btn-icon { background:var(--input-bg); border:1px solid var(--border); border-radius:40px; padding:0.5rem 1rem; color:var(--text); font-family:Inter; outline:none; transition:0.2s; }
+        .header-controls input:focus { border-color:#a78bfa; }
+        .btn-icon { cursor:pointer; padding:0.5rem 0.8rem; }
+        .btn-icon:hover { background:var(--border); }
 
-        /* Theme toggle */
-        .theme-toggle {
-            background:var(--input-bg);
-            border:1px solid var(--border);
-            border-radius:40px;
-            padding:0.5rem 0.8rem;
-            color:var(--text);
-            cursor:pointer;
-            transition:background 0.2s;
-            font-size:1rem;
-        }
-        .theme-toggle:hover { background:var(--border); }
+        .create-post { background:var(--bg-card); backdrop-filter:blur(24px); border:1px solid var(--border); border-radius:24px; padding:1.5rem; margin-bottom:2rem; box-shadow:var(--shadow); }
+        .create-post textarea { width:100%; background:var(--input-bg); border:1px solid var(--border); border-radius:16px; padding:1rem; color:var(--text); resize:vertical; min-height:80px; outline:none; font-family:Inter; }
+        .create-post textarea:focus { border-color:#a78bfa; box-shadow:0 0 0 4px rgba(167,139,250,0.15); }
+        .post-options { display:flex; gap:1rem; margin-top:1rem; flex-wrap:wrap; font-size:0.85rem; color:var(--text-secondary); align-items:center; }
+        .post-options label { display:flex; align-items:center; gap:6px; cursor:pointer; }
+        .post-options input[type="number"], .post-options input[type="password"] { background:var(--input-bg); border:1px solid var(--border); border-radius:8px; padding:4px 8px; color:var(--text); outline:none; }
+        .post-actions { display:flex; justify-content:flex-end; margin-top:1rem; gap:1rem; }
+        .publish-btn { background:linear-gradient(135deg,#7c3aed,#db2777); border:none; padding:0.6rem 1.8rem; border-radius:40px; color:white; font-weight:600; cursor:pointer; transition:0.2s; display:flex; align-items:center; gap:8px; }
+        .publish-btn:hover { transform:scale(1.03); box-shadow:0 8px 25px rgba(124,58,237,0.5); }
+        .publish-btn:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
 
-        /* ----- CREATE POST ----- */
-        .create-post {
-            background:var(--bg-card);
-            backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
-            border:1px solid var(--border);
-            border-radius:24px; padding:1.5rem;
-            margin-bottom:2rem; box-shadow:var(--shadow);
-            transition:background 0.3s, border 0.3s;
-        }
-        .create-post textarea {
-            width:100%; background:var(--input-bg);
-            border:1px solid var(--border);
-            border-radius:16px; padding:1rem;
-            color:var(--text); font-size:0.95rem; font-family:Inter;
-            resize:vertical; min-height:80px; outline:none;
-            transition:border 0.2s, background 0.3s;
-        }
-        .create-post textarea:focus {
-            border-color:#a78bfa; box-shadow:0 0 0 4px rgba(167,139,250,0.15);
-        }
-        .create-post textarea::placeholder { color:var(--text-secondary); }
-        .post-actions {
-            display:flex; justify-content:flex-end; margin-top:1rem;
-            gap:1rem; align-items:center; flex-wrap:wrap;
-        }
-        .upload-btn {
-            background:rgba(167,139,250,0.15);
-            border:1px solid var(--border);
-            padding:0.4rem 1rem; border-radius:40px;
-            color:var(--text); cursor:pointer;
-            font-size:0.85rem; font-family:Inter;
-            transition:background 0.2s;
-        }
-        .upload-btn:hover { background:rgba(167,139,250,0.25); }
-        .post-actions button.publish-btn {
-            background:linear-gradient(135deg,#7c3aed,#db2777);
-            border:none; padding:0.6rem 1.8rem; border-radius:40px;
-            color:white; font-weight:600; font-size:0.9rem;
-            cursor:pointer; transition:all 0.2s ease;
-            box-shadow:0 4px 15px rgba(124,58,237,0.3);
-            display:flex; align-items:center; gap:8px;
-        }
-        .post-actions button.publish-btn:hover { transform:scale(1.03); box-shadow:0 8px 25px rgba(124,58,237,0.5); }
-        .post-actions button.publish-btn:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
-
-        /* upload preview */
-        .upload-preview {
-            margin-top:0.5rem; display:flex; align-items:center; gap:0.5rem;
-        }
-        .upload-preview img {
-            max-height:60px; border-radius:8px; border:1px solid var(--border);
-        }
-        .upload-preview .remove-file {
-            color:#f87171; cursor:pointer; font-size:0.8rem;
-        }
-
-        /* ----- FEED ----- */
         .feed-list { display:flex; flex-direction:column; gap:1.25rem; }
-        .post-card {
-            background:var(--bg-card);
-            backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
-            border:1px solid var(--border);
-            border-radius:24px; padding:1.5rem;
-            transition:all 0.25s cubic-bezier(0.2,0,0,1), background 0.3s, border 0.3s;
-            box-shadow:var(--shadow);
-            animation:fadeSlideUp 0.4s ease forwards;
-            opacity:0;
+        .post-card { background:var(--bg-card); backdrop-filter:blur(24px); border:1px solid var(--border); border-radius:24px; padding:1.5rem; transition:all 0.3s cubic-bezier(0.2,0,0,1); box-shadow:var(--shadow); animation:fadeUp 0.4s ease forwards; opacity:0; position:relative; overflow:hidden; }
+        .post-card:hover { transform:translateY(-6px) scale(1.01); box-shadow:0 20px 40px -12px rgba(167,139,250,0.3); border-color:rgba(167,139,250,0.4); }
+        @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+        .post-card.role-admin { border: 2px solid var(--admin-color); box-shadow: 0 0 30px rgba(255,0,51,0.2); }
+        .post-card.role-admin .post-user { color: var(--admin-color); }
+        .post-card.role-mod { border: 2px solid var(--mod-color); box-shadow: 0 0 30px rgba(255,136,0,0.2); }
+        .post-card.role-mod .post-user { color: var(--mod-color); }
+        .post-card.role-unverified { border: 2px solid rgba(255,255,255,0.2); box-shadow: 0 0 30px rgba(255,255,255,0.05); }
+        .post-card.role-unverified .post-user { color: var(--unverified-color); }
+
+        .post-header { display:flex; align-items:center; gap:0.75rem; margin-bottom:0.75rem; }
+        .avatar { width:40px; height:40px; border-radius:40px; background:linear-gradient(135deg,#4f46e5,#a78bfa); display:flex; align-items:center; justify-content:center; font-weight:600; color:white; flex-shrink:0; }
+        .post-user { font-weight:700; font-size:0.95rem; display:flex; align-items:center; gap:8px; }
+        .badge { font-size:0.6rem; font-weight:700; padding:0.15rem 0.5rem; border-radius:40px; text-transform:uppercase; }
+        .badge-admin { background:var(--admin-color); color:#fff; }
+        .badge-mod { background:var(--mod-color); color:#000; }
+        .badge-unverified { background:transparent; border:1px solid var(--unverified-color); color:var(--unverified-color); }
+        .post-time { margin-left:auto; font-size:0.75rem; color:var(--text-secondary); background:rgba(0,0,0,0.15); padding:4px 10px; border-radius:40px; }
+        
+        .post-content { font-size:1rem; line-height:1.6; color:var(--text); margin-bottom:1rem; word-wrap:break-word; }
+        .post-content .hashtag { color:#a78bfa; cursor:pointer; font-weight:600; }
+        
+        .post-image { 
+            width: 100%; height: auto; max-height: 500px; 
+            object-fit: contain;
+            border-radius: 16px; margin: 0.5rem 0 1rem 0; 
+            border: 1px solid var(--border); background: rgba(0,0,0,0.1); 
+            cursor: zoom-in; transition: transform 0.2s; 
         }
-        .post-card:hover {
-            border-color:rgba(167,139,250,0.25);
-            transform:translateY(-2px);
-            box-shadow:0 20px 40px -12px rgba(0,0,0,0.4);
+        .post-image:hover { transform: scale(1.01); }
+        .image-blur { filter: blur(20px); transition: filter 0.3s; }
+        .image-blur.unblurred { filter: none; }
+
+        .lock-overlay, .age-overlay {
+            position:absolute; inset:0; background:rgba(11,13,21,0.85); backdrop-filter:blur(12px);
+            display:flex; flex-direction:column; align-items:center; justify-content:center;
+            z-index:10; border-radius:24px; text-align:center; padding:2rem;
         }
-        @keyframes fadeSlideUp {
-            from { opacity:0; transform:translateY(20px); }
-            to { opacity:1; transform:translateY(0); }
+        .lock-overlay i, .age-overlay i { font-size:2.5rem; color:var(--text-secondary); margin-bottom:1rem; }
+        .lock-overlay input, .age-overlay input {
+            background:var(--input-bg); border:1px solid var(--border); border-radius:40px;
+            padding:0.6rem 1.2rem; color:var(--text); text-align:center; margin-bottom:1rem; outline:none; width:200px;
         }
-        .post-header {
-            display:flex; align-items:center; gap:0.75rem; margin-bottom:0.75rem;
-        }
-        .avatar {
-            width:40px; height:40px; border-radius:40px;
-            background:linear-gradient(135deg,#4f46e5,#a78bfa);
-            display:flex; align-items:center; justify-content:center;
-            font-weight:600; font-size:1rem; color:white; flex-shrink:0;
-            box-shadow:0 4px 10px rgba(79,70,229,0.3);
-        }
-        .post-user { font-weight:600; font-size:0.95rem; }
-        .post-user span { color:var(--text-secondary); font-weight:400; margin-left:6px; font-size:0.8rem; }
-        .post-time {
-            margin-left:auto; font-size:0.75rem; color:var(--text-secondary);
-            background:rgba(0,0,0,0.15); padding:4px 10px; border-radius:40px;
-        }
-        .post-content {
-            font-size:1rem; line-height:1.6; color:var(--text);
-            margin-bottom:1rem; word-wrap:break-word;
-        }
-        .post-content .hashtag { color:#a78bfa; cursor:pointer; }
-        .post-content.editing {
-            outline:2px solid #a78bfa; border-radius:8px; padding:0.3rem;
-        }
-        .post-tags {
-            display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.75rem;
-        }
-        .post-tags .tag-pill {
-            background:rgba(167,139,250,0.15);
-            padding:0.2rem 0.7rem; border-radius:40px;
-            font-size:0.7rem; color:#a78bfa;
-        }
-        .post-image {
-            width:100%; max-height:320px; object-fit:cover;
-            border-radius:16px; margin:0.5rem 0 1rem 0;
-            border:1px solid var(--border);
-        }
-        .post-footer {
-            display:flex; align-items:center; gap:1.5rem;
-            padding-top:0.75rem; border-top:1px solid var(--border);
-        }
-        .post-footer button {
-            background:none; border:none; color:var(--text-secondary);
-            font-size:0.9rem; cursor:pointer; padding:4px 8px;
-            border-radius:40px; transition:all 0.15s ease;
-            font-family:Inter; display:flex; align-items:center; gap:6px;
-        }
-        .post-footer button i { font-size:1.1rem; transition:transform 0.2s ease; }
-        .post-footer button.liked { color:#f472b6; }
-        .post-footer button.liked i { font-weight:900; transform:scale(1.1); animation:pop 0.3s ease; }
-        @keyframes pop {
-            0% { transform:scale(1); }
-            50% { transform:scale(1.5); }
-            100% { transform:scale(1.1); }
-        }
+        .unlock-btn { background:#a78bfa; border:none; padding:0.5rem 1.5rem; border-radius:40px; color:#fff; font-weight:600; cursor:pointer; }
+
+        .post-footer { display:flex; align-items:center; gap:1.5rem; padding-top:0.75rem; border-top:1px solid var(--border); }
+        .post-footer button { background:none; border:none; color:var(--text-secondary); font-size:0.9rem; cursor:pointer; display:flex; align-items:center; gap:6px; transition:0.2s; }
         .post-footer button:hover { color:var(--text); }
-        .post-footer button.liked:hover { color:#ec4899; }
-        .post-footer button.bookmarked { color:#fbbf24; }
-        .post-footer button.bookmarked i { font-weight:900; }
+        .post-footer button.liked { color:#f472b6; }
+        .post-footer button.liked i { animation: pop 0.3s ease; }
+        @keyframes pop { 50%{transform:scale(1.5)} }
 
-        .badge-new {
-            background:#f472b6; color:#0b0d15; font-size:0.6rem;
-            font-weight:700; padding:0.15rem 0.5rem; border-radius:40px;
-            margin-left:0.5rem; text-transform:uppercase;
+        .replies-container { margin-top:1rem; padding-top:1rem; border-top:1px dashed var(--border); display:none; }
+        .replies-container.open { display:block; animation: fadeUp 0.3s ease; }
+        .reply-item { display:flex; gap:0.75rem; margin-bottom:1rem; padding:0.75rem; background:rgba(255,255,255,0.02); border-radius:16px; }
+        .reply-form { display:flex; gap:0.5rem; margin-top:1rem; }
+        .reply-form input { flex:1; background:var(--input-bg); border:1px solid var(--border); border-radius:40px; padding:0.5rem 1rem; color:var(--text); outline:none; }
+
+        .lightbox-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(8px);
+            display: none; justify-content: center; align-items: center; z-index: 3000;
+            cursor: zoom-out;
+        }
+        .lightbox-overlay.open { display: flex; }
+        .lightbox-img {
+            max-width: 90vw; max-height: 90vh; object-fit: contain; border-radius: 8px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
         }
 
-        /* ----- LOAD MORE ----- */
-        .load-more-container { text-align:center; margin-top:1.5rem; }
-        .load-more-btn {
-            background:var(--input-bg);
-            border:1px solid var(--border);
-            color:var(--text);
-            padding:0.8rem 2rem; border-radius:40px;
-            cursor:pointer; font-family:Inter; font-weight:600;
-            transition:all 0.2s ease;
-        }
-        .load-more-btn:hover { background:var(--border); transform:scale(1.02); }
-        .load-more-btn:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
-        .loading-more { color:var(--text-secondary); display:none; }
-
-        /* ----- EMPTY STATE ----- */
-        .empty-state { text-align:center; padding:3rem 1rem; color:var(--text-secondary); }
-        .empty-state i { font-size:3rem; margin-bottom:1rem; opacity:0.3; }
-
-        /* ----- LOADING INDICATOR (simple text) ----- */
-        .loading-indicator {
-            text-align:center; padding:2rem; color:var(--text-secondary);
-            font-size:0.95rem;
-        }
-        .loading-indicator i { margin-right:0.5rem; }
-
-        /* ----- MODAL ----- */
-        .modal-overlay {
-            position:fixed; top:0; left:0; width:100%; height:100%;
-            background:rgba(0,0,0,0.7); backdrop-filter:blur(8px);
-            display:none; justify-content:center; align-items:center;
-            z-index:1000;
-        }
+        .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.8); backdrop-filter:blur(12px); display:none; justify-content:center; align-items:center; z-index:2000; }
         .modal-overlay.open { display:flex; }
-        .modal-content {
-            background:var(--bg); padding:2rem; border-radius:24px;
-            max-width:500px; width:90%; box-shadow:0 40px 80px rgba(0,0,0,0.8);
-            border:1px solid var(--border);
-            color:var(--text);
-        }
-        .modal-content h2 {
-            font-size:1.5rem; margin-bottom:1rem;
-            background:linear-gradient(135deg,#a78bfa,#f472b6);
-            -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-        }
-        .modal-content .shortcut-grid {
-            display:grid; grid-template-columns:1fr 2fr; gap:0.5rem 1rem;
-            font-size:0.9rem;
-        }
-        .modal-content .shortcut-grid .key {
-            color:var(--text-secondary); text-align:right;
-        }
-        .modal-content .shortcut-grid .desc { color:var(--text); }
-        .modal-close {
-            margin-top:1.5rem; padding:0.5rem 1.5rem;
-            background:var(--input-bg); border:1px solid var(--border);
-            border-radius:40px; color:var(--text); cursor:pointer;
-            font-weight:600; transition:background 0.2s;
-        }
-        .modal-close:hover { background:var(--border); }
+        .modal-content { background:var(--bg); padding:2rem; border-radius:24px; max-width:500px; width:90%; border:1px solid var(--border); max-height:90vh; overflow-y:auto; }
+        .modal-content h2 { font-size:1.5rem; margin-bottom:1rem; background:linear-gradient(90deg, #a78bfa, #f472b6); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        .processor-select { width:100%; background:var(--input-bg); border:1px solid var(--border); border-radius:12px; padding:0.8rem; color:var(--text); margin-bottom:1rem; font-family:Inter; }
+        .pay-btn { width:100%; padding:1rem; border-radius:12px; border:none; font-weight:700; font-size:1.1rem; cursor:pointer; transition:0.3s; display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:1.5rem; }
+        .crypto-box { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:12px; padding:1rem; margin-top:1rem; }
+        .crypto-addr { display:flex; align-items:center; gap:0.5rem; background:var(--input-bg); padding:0.5rem; border-radius:8px; margin:0.5rem 0; font-family:monospace; font-size:0.85rem; word-break:break-all; }
+        .copy-btn { background:#a78bfa; border:none; color:#fff; padding:0.3rem 0.8rem; border-radius:6px; cursor:pointer; font-size:0.8rem; }
+        .disclaimer { font-size:0.75rem; color:var(--text-secondary); margin-top:1rem; line-height:1.4; }
+        .modal-close { margin-top:1.5rem; width:100%; padding:0.8rem; background:var(--input-bg); border:1px solid var(--border); border-radius:40px; color:var(--text); cursor:pointer; font-weight:600; }
 
-        /* ----- SCROLLBAR ----- */
         ::-webkit-scrollbar { width:6px; }
-        ::-webkit-scrollbar-track { background:transparent; }
         ::-webkit-scrollbar-thumb { background:#334155; border-radius:10px; }
-        ::-webkit-scrollbar-thumb:hover { background:#475569; }
-
-        /* Responsive */
-        @media (max-width:600px) {
-            .header-controls input[type="search"] { width:120px; }
-            .header-controls input[type="search"]:focus { width:160px; }
-        }
     </style>
 </head>
 <body>
 
-<!-- ===== INTRO OVERLAY (Premium Branded Entry) ===== -->
-<div class="intro-overlay" id="introOverlay">
-    <div class="intro-logo">✨ Pulse</div>
-    <div class="intro-text">Designing the future of social feeds</div>
-</div>
-
-<!-- ===== MODAL (Keyboard Shortcuts) ===== -->
-<div id="shortcutsModal" class="modal-overlay">
-    <div class="modal-content">
-        <h2><i class="fas fa-keyboard"></i> Keyboard Shortcuts</h2>
-        <div class="shortcut-grid">
-            <span class="key"><kbd>?</kbd></span><span class="desc">Toggle this help</span>
-            <span class="key"><kbd>Esc</kbd></span><span class="desc">Close modal / search</span>
-            <span class="key"><kbd>⌘K</kbd> or <kbd>Ctrl+K</kbd></span><span class="desc">Focus search</span>
-            <span class="key"><kbd>j</kbd> / <kbd>k</kbd></span><span class="desc">Navigate posts (down/up)</span>
-            <span class="key"><kbd>n</kbd></span><span class="desc">New post focus</span>
-        </div>
-        <button class="modal-close" id="modalCloseBtn">Close</button>
+    <!-- PREMIUM INTRO SEQUENCE -->
+    <div class="intro-overlay" id="introOverlay">
+        <div class="intro-logo">✨ PULSE</div>
+        <div class="intro-text">Designing the future of web experiences</div>
     </div>
-</div>
 
-<!-- ===== APP ===== -->
-<div class="app-container">
-    <!-- Header -->
-    <div class="header">
-        <h1><i class="fas fa-bolt" style="margin-right:8px;-webkit-text-fill-color:#a78bfa;"></i> Pulse</h1>
-        <div class="header-controls">
-            <input type="search" id="searchInput" placeholder="Search posts..." aria-label="Search">
-            <select id="sortSelect">
-                <option value="new">Newest</option>
-                <option value="trending">Trending</option>
-                <option value="random">Random</option>
-            </select>
-            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-                <i class="fas fa-moon"></i>
-            </button>
+    <!-- LIGHTBOX -->
+    <div id="lightbox" class="lightbox-overlay" onclick="closeLightbox()">
+        <img id="lightboxImg" class="lightbox-img" src="" alt="Full resolution">
+    </div>
+
+    <!-- PAYMENT MODAL -->
+    <div id="paymentModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2><i class="fas fa-crown"></i> Vetted Member Access</h2>
+            <select id="processorSelect" class="processor-select"></select>
+            <button id="dynamicPayBtn" class="pay-btn" style="background:#003087;color:#fff;"><i class="fab fa-paypal"></i> Pay with PayPal</button>
+            <div class="crypto-box">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
+                    <span style="font-weight:600;"><i class="fab fa-bitcoin" style="color:#f7931a;"></i> Bitcoin (BTC)</span>
+                    <span style="font-size:0.8rem;color:var(--text-secondary);">Network: BTC</span>
+                </div>
+                <div class="crypto-addr">
+                    <span id="btcAddr">bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh</span>
+                    <button class="copy-btn" onclick="copyBTC()"><i class="fas fa-copy"></i> Copy</button>
+                </div>
+                <div class="disclaimer">
+                    <strong>EN:</strong> FIAT terminated. BTC transactions are immutable and zero-refund.<br>
+                    <strong>PT:</strong> FIAT encerrado. Transações BTC são imutáveis e sem reembolso.<br>
+                    <strong>ZH:</strong> 法币已终止。BTC交易不可逆且不予退款。
+                </div>
+            </div>
+            <button class="modal-close" onclick="togglePaymentModal(false)">Close</button>
         </div>
     </div>
 
-    <!-- Create Post -->
-    <div class="create-post">
-        <textarea id="postInput" placeholder="What's on your mind? Use #hashtags ✨" rows="2"></textarea>
-        <div class="upload-preview" id="uploadPreview" style="display:none;">
-            <img id="previewImg" src="" alt="Upload preview">
-            <span class="remove-file" id="removeFileBtn"><i class="fas fa-times"></i> Remove</span>
+    <!-- MAIN APP CONTENT -->
+    <div class="app-container">
+        <div class="stats-marquee">
+            <div class="marquee-content">
+                <span><i class="fas fa-bolt"></i> Welcome to World Forum Pulse</span>
+                <span><i class="fas fa-users"></i> <strong>1,240</strong> Active</span>
+                <span><i class="fas fa-shield-alt"></i> <strong>12</strong> Admins Online</span>
+                <span><i class="fas fa-lock"></i> End-to-End Privacy Enabled</span>
+            </div>
         </div>
-        <div class="post-actions">
-            <label class="upload-btn" for="fileInput">
-                <i class="fas fa-image"></i> Attach image
-            </label>
-            <input type="file" id="fileInput" accept="image/*" style="display:none;">
-            <button class="publish-btn" id="publishBtn"><i class="fas fa-paper-plane"></i> Publish</button>
+
+        <div class="header">
+            <h1>✨ Pulse</h1>
+            <div class="header-controls">
+                <input type="search" id="searchInput" placeholder="Search...">
+                <button class="btn-icon" onclick="togglePaymentModal(true)" title="Support"><i class="fas fa-crown" style="color:#fbbf24;"></i></button>
+                <button class="btn-icon" id="themeToggle"><i class="fas fa-moon"></i></button>
+            </div>
         </div>
-    </div>
 
-    <!-- Feed -->
-    <div id="feedContainer" class="feed-list">
-        <!-- Simple loading text until first data arrives -->
-        <div class="loading-indicator"><i class="fas fa-spinner fa-spin"></i> Loading feed...</div>
-    </div>
+        <div class="create-post">
+            <textarea id="postInput" placeholder="What's on your mind? Use #hashtags"></textarea>
+            <div class="post-options">
+                <label><input type="file" id="fileInput" accept="image/*" style="display:none;"><i class="fas fa-image"></i> Image</label>
+                <label><input type="checkbox" id="blurCheck"> Blur Image</label>
+                <label><input type="number" id="ageCheck" placeholder="Age Gate (e.g. 18)" style="width:80px;"> Age</label>
+                <label><input type="password" id="passCheck" placeholder="Lock Password" style="width:120px;"> Lock</label>
+            </div>
+            <div class="post-actions">
+                <button class="publish-btn" id="publishBtn"><i class="fas fa-paper-plane"></i> Publish</button>
+            </div>
+        </div>
 
-    <!-- Load More -->
-    <div class="load-more-container">
-        <button id="loadMoreBtn" class="load-more-btn" style="display:none;">Load More</button>
-        <div id="loadingMore" class="loading-more"><i class="fas fa-spinner fa-spin"></i> Loading more...</div>
+        <div id="feedContainer" class="feed-list"></div>
     </div>
-</div>
 
 <script>
-(function() {
-    // ==============================================================
-    //  CONFIG – Supabase URL and publishable key
-    // ==============================================================
-    const SUPABASE_URL = "https://bkvvvlaibtbrrkbuxnke.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_ypObXvuLKlTXutfClJfwJQ_rqaG2mRi";
+const SUPABASE_URL = "https://bkvvvlaibtbrrkbuxnke.supabase.co";
+const SUPABASE_KEY = "sb_publishable_ypObXvuLKlTXutfClJfwJQ_rqaG2mRi";
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    const STORAGE_BUCKET = 'post-images';
+let posts = [];
+let currentUser = { id: 'user_' + Math.floor(Math.random()*10000), name: 'Anonymous', role: 'unverified' };
 
-    // ==============================================================
-    //  DOM refs
-    // ==============================================================
-    const feedContainer = document.getElementById('feedContainer');
-    const postInput = document.getElementById('postInput');
-    const publishBtn = document.getElementById('publishBtn');
-    const loadMoreBtn = document.getElementById('loadMoreBtn');
-    const loadingMore = document.getElementById('loadingMore');
-    const searchInput = document.getElementById('searchInput');
-    const sortSelect = document.getElementById('sortSelect');
-    const fileInput = document.getElementById('fileInput');
-    const uploadPreview = document.getElementById('uploadPreview');
-    const previewImg = document.getElementById('previewImg');
-    const removeFileBtn = document.getElementById('removeFileBtn');
+function triggerHaptics() { if(navigator.vibrate) navigator.vibrate(10); }
+function playPopSound() {
+    try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.frequency.value = 800; gain.gain.value = 0.1;
+        osc.start(); osc.stop(ctx.currentTime + 0.05);
+    } catch(e){}
+}
 
-    // ==============================================================
-    //  STATE
-    // ==============================================================
-    let posts = [];
-    let lastLoadedCursor = null;
-    let hasMore = true;
-    const PAGE_SIZE = 20;
-    let isSubmitting = false;
-    let searchTerm = '';
-    let currentSort = 'new';
-    let bookmarks = new Set();
-    let currentUser = 'user_' + Math.floor(Math.random()*10000);
-    let selectedFile = null;
+async function sha256(message) {
+    const msgBuffer = new TextEncoder().encode(message);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
 
-    // ==============================================================
-    //  INTRO OVERLAY – restore scroll after animation
-    // ==============================================================
-    setTimeout(() => {
-        document.body.style.overflow = "auto";
-    }, 3300); // matches fadeOutContainer + fadeInContent timing
+function getTimeAgo(dateString) {
+    const diff = Date.now() - new Date(dateString).getTime();
+    const mins = Math.floor(diff / 60000);
+    if (mins < 1) return 'just now';
+    if (mins < 60) return mins + 'm ago';
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24) return hrs + 'h ago';
+    return Math.floor(hrs / 24) + 'd ago';
+}
 
-    // ==============================================================
-    //  THEME TOGGLE
-    // ==============================================================
-    function setTheme(theme) {
-        document.documentElement.setAttribute('data-theme', theme);
-        localStorage.setItem('theme', theme);
-        const icon = document.querySelector('#themeToggle i');
-        if (theme === 'light') {
-            icon.className = 'fas fa-sun';
-        } else {
-            icon.className = 'fas fa-moon';
-        }
-    }
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    setTheme(savedTheme);
-    document.getElementById('themeToggle').addEventListener('click', function() {
-        const current = document.documentElement.getAttribute('data-theme');
-        const next = current === 'dark' ? 'light' : 'dark';
-        setTheme(next);
-    });
-
-    // ==============================================================
-    //  INDEXEDDB CACHING
-    // ==============================================================
-    const DB_NAME = 'PulseDB';
-    const STORE_NAME = 'posts';
-    let db = null;
-
-    function openDB() {
-        return new Promise((resolve, reject) => {
-            const request = indexedDB.open(DB_NAME, 1);
-            request.onupgradeneeded = (e) => {
-                const db = e.target.result;
-                if (!db.objectStoreNames.contains(STORE_NAME)) {
-                    db.createObjectStore(STORE_NAME, { keyPath: 'id' });
-                }
-            };
-            request.onsuccess = (e) => resolve(e.target.result);
-            request.onerror = (e) => reject(e.target.error);
-        });
-    }
-
-    async function cachePosts(postData) {
-        if (!db) db = await openDB();
-        const tx = db.transaction(STORE_NAME, 'readwrite');
-        const store = tx.objectStore(STORE_NAME);
-        store.clear();
-        for (const post of postData) {
-            store.put(post);
-        }
-        await new Promise((resolve, reject) => {
-            tx.oncomplete = resolve;
-            tx.onerror = reject;
-        });
-    }
-
-    async function getCachedPosts() {
-        if (!db) db = await openDB();
-        return new Promise((resolve, reject) => {
-            const tx = db.transaction(STORE_NAME, 'readonly');
-            const store = tx.objectStore(STORE_NAME);
-            const all = store.getAll();
-            all.onsuccess = () => resolve(all.result);
-            all.onerror = () => reject(all.error);
-        });
-    }
-
-    // ==============================================================
-    //  SERVICE WORKER (PWA)
-    // ==============================================================
-    function registerServiceWorker() {
-        if ('serviceWorker' in navigator) {
-            try {
-                const swCode = `
-                    self.addEventListener('install', e => {
-                        e.waitUntil(
-                            caches.open('pulse-v1').then(cache => {
-                                return cache.addAll(['/']);
-                            })
-                        );
-                    });
-                    self.addEventListener('fetch', e => {
-                        e.respondWith(
-                            caches.match(e.request).then(response => response || fetch(e.request))
-                        );
-                    });
-                `;
-                const blob = new Blob([swCode], { type: 'application/javascript' });
-                const swUrl = URL.createObjectURL(blob);
-                navigator.serviceWorker.register(swUrl, { scope: '/' })
-                    .then(() => console.log('Service worker registered'))
-                    .catch(err => console.warn('SW registration failed:', err));
-            } catch (e) {
-                console.warn('Service Worker not supported:', e);
-            }
-        }
-    }
-
-    // ==============================================================
-    //  HELPERS
-    // ==============================================================
-    function getTimeAgo(dateString) {
-        const now = new Date();
-        const past = new Date(dateString);
-        const diffMs = now - past;
-        const diffMins = Math.floor(diffMs / 60000);
-        if (diffMins < 1) return 'just now';
-        if (diffMins < 60) return diffMins + 'm ago';
-        const diffHours = Math.floor(diffMins / 60);
-        if (diffHours < 24) return diffHours + 'h ago';
-        const diffDays = Math.floor(diffHours / 24);
-        if (diffDays < 7) return diffDays + 'd ago';
-        return past.toLocaleDateString('en-US', { month:'short', day:'numeric' });
-    }
-
-    function getInitials(email) {
-        if (!email) return '?';
-        const parts = email.split('@')[0].split(/[._-]/);
-        if (parts.length === 1) return parts[0].substring(0,2).toUpperCase();
-        return (parts[0][0] + parts[1][0]).toUpperCase();
-    }
-
-    function getColorFromEmail(email) {
-        let hash = 0;
-        for (let i=0; i<email.length; i++) hash = email.charCodeAt(i) + ((hash << 5) - hash);
-        return 'hsl(' + (Math.abs(hash % 360)) + ',70%,55%)';
-    }
-
-    function escapeHTML(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
-
-    function extractHashtags(text) {
-        const matches = text.match(/#[\w]+/g);
-        return matches ? matches.map(t => t.slice(1)) : [];
-    }
-
-    // ==============================================================
-    //  NOTIFICATIONS
-    // ==============================================================
-    function requestNotificationPermission() {
-        if ('Notification' in window && Notification.permission === 'default') {
-            Notification.requestPermission();
-        }
-    }
-    function notifyNewPost(content) {
-        if ('Notification' in window && Notification.permission === 'granted') {
-            new Notification('New post!', {
-                body: content.length > 60 ? content.slice(0,60)+'…' : content,
-                icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">✨</text></svg>'
-            });
-        }
-    }
-
-    // ==============================================================
-    //  CONFETTI
-    // ==============================================================
-    function fireConfetti() {
-        const canvas = document.createElement('canvas');
-        canvas.style.position = 'fixed';
-        canvas.style.top = '0';
-        canvas.style.left = '0';
-        canvas.style.width = '100%';
-        canvas.style.height = '100%';
-        canvas.style.pointerEvents = 'none';
-        canvas.style.zIndex = '99999';
-        document.body.appendChild(canvas);
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        const particles = [];
-        const colors = ['#f472b6', '#a78bfa', '#34d399', '#fbbf24', '#f87171'];
-        for (let i=0; i<80; i++) {
-            particles.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height - canvas.height,
-                vx: (Math.random() - 0.5) * 6,
-                vy: Math.random() * 4 + 2,
-                size: Math.random() * 6 + 2,
-                color: colors[Math.floor(Math.random() * colors.length)],
-                rotation: Math.random() * 360,
-                rotSpeed: (Math.random() - 0.5) * 10
-            });
-        }
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            let alive = false;
-            for (let p of particles) {
-                p.x += p.vx;
-                p.y += p.vy;
-                p.vy += 0.1;
-                p.rotation += p.rotSpeed;
-                if (p.y < canvas.height + 50) alive = true;
-                ctx.save();
-                ctx.translate(p.x, p.y);
-                ctx.rotate(p.rotation * Math.PI/180);
-                ctx.fillStyle = p.color;
-                ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size);
-                ctx.restore();
-            }
-            if (alive) {
-                requestAnimationFrame(animate);
-            } else {
-                canvas.remove();
-            }
-        }
-        animate();
-        setTimeout(() => { if (canvas.parentNode) canvas.remove(); }, 5000);
-    }
-
-    // ==============================================================
-    //  RENDER POSTS
-    // ==============================================================
-    function renderPosts(postData, append = false) {
-        if (!postData || postData.length === 0) {
-            if (!append) {
-                feedContainer.innerHTML = '<div class="empty-state"><i class="fas fa-feather-pointed"></i><p>No posts yet. Be the first to shine! ✨</p></div>';
-            }
-            return;
-        }
-
-        let html = '';
-        const now = new Date();
-        postData.forEach(post => {
-            const initials = getInitials(post.user_email || 'anonymous@user.com');
-            const color = getColorFromEmail(post.user_email || 'anon');
-            const timeAgo = getTimeAgo(post.created_at);
-            const displayName = post.user_email ? post.user_email.split('@')[0] : 'Anonymous';
-            const likeCount = post.likes_count || 0;
-            const isBookmarked = bookmarks.has(post.id);
-            const tags = post.tags || [];
-            const isNew = (now - new Date(post.created_at)) < 3600000;
-            const isOwn = post.user_id === currentUser;
-
-            let contentHtml = DOMPurify.sanitize(post.content, { ALLOWED_TAGS: ['b','i','u','a','br','p','em','strong'] });
-            contentHtml = contentHtml.replace(/#(\w+)/g, '<span class="hashtag">#$1</span>');
-
-            html += `
-                <div class="post-card" data-id="${post.id}" data-owner="${isOwn}">
-                    <div class="post-header">
-                        <div class="avatar" style="background:${color};">${initials}</div>
-                        <div class="post-user">${escapeHTML(displayName)} <span>· ${post.user_email || 'anon'}</span>
-                            ${isNew ? '<span class="badge-new">New</span>' : ''}
-                        </div>
-                        <div class="post-time">${timeAgo}</div>
-                    </div>
-                    <div class="post-content" contenteditable="${isOwn ? 'true' : 'false'}" data-id="${post.id}">${contentHtml}</div>
-                    ${tags.length ? `<div class="post-tags">${tags.map(t => `<span class="tag-pill">#${escapeHTML(t)}</span>`).join('')}</div>` : ''}
-                    ${post.image_url ? `<img src="${post.image_url}" alt="Post image" class="post-image" loading="lazy" />` : ''}
-                    <div class="post-footer">
-                        <button class="like-btn" data-id="${post.id}">
-                            <i class="fa-regular fa-heart"></i> <span class="like-count">${likeCount}</span>
-                        </button>
-                        <button class="bookmark-btn ${isBookmarked ? 'bookmarked' : ''}" data-id="${post.id}">
-                            <i class="${isBookmarked ? 'fa-solid' : 'fa-regular'} fa-bookmark"></i>
-                        </button>
-                        ${isOwn ? `<button class="delete-btn" data-id="${post.id}" style="color:#f87171;"><i class="fas fa-trash"></i></button>` : ''}
-                        <span style="color:var(--text-secondary);font-size:0.9rem;"><i class="fa-regular fa-comment"></i> 0</span>
-                    </div>
-                </div>
-            `;
-        });
-
-        if (append) {
-            feedContainer.insertAdjacentHTML('beforeend', html);
-        } else {
-            feedContainer.innerHTML = html;
-        }
-
-        // Attach listeners
-        feedContainer.querySelectorAll('.like-btn').forEach(btn => {
-            btn.removeEventListener('click', handleLike);
-            btn.addEventListener('click', handleLike);
-        });
-        feedContainer.querySelectorAll('.bookmark-btn').forEach(btn => {
-            btn.removeEventListener('click', handleBookmark);
-            btn.addEventListener('click', handleBookmark);
-        });
-        feedContainer.querySelectorAll('.delete-btn').forEach(btn => {
-            btn.removeEventListener('click', handleDelete);
-            btn.addEventListener('click', handleDelete);
-        });
-        feedContainer.querySelectorAll('.post-content[contenteditable="true"]').forEach(el => {
-            el.removeEventListener('dblclick', enableEdit);
-            el.addEventListener('dblclick', enableEdit);
-            el.removeEventListener('blur', saveEdit);
-            el.addEventListener('blur', saveEdit);
-            el.removeEventListener('keydown', handleEditKeydown);
-            el.addEventListener('keydown', handleEditKeydown);
-        });
-    }
-
-    // ==============================================================
-    //  EDIT HANDLERS
-    // ==============================================================
-    let editingPostId = null;
-
-    function enableEdit(e) {
-        const el = e.currentTarget;
-        if (el.getAttribute('contenteditable') !== 'true') return;
-        el.focus();
-        editingPostId = el.dataset.id;
-        const range = document.createRange();
-        range.selectNodeContents(el);
-        const sel = window.getSelection();
-        sel.removeAllRanges();
-        sel.addRange(range);
-    }
-
-    function saveEdit(e) {
-        const el = e.currentTarget;
-        const postId = el.dataset.id;
-        const newContent = el.innerText.trim();
-        if (!newContent) return;
-        
-        const postIndex = posts.findIndex(p => String(p.id) === String(postId));
-        if (postIndex === -1) return;
-        
-        const oldContent = posts[postIndex].content;
-        if (newContent === oldContent) return;
-        
-        posts[postIndex].content = newContent;
-        const tags = extractHashtags(newContent);
-        posts[postIndex].tags = tags;
-        
-        el.innerHTML = DOMPurify.sanitize(newContent, { ALLOWED_TAGS: ['b','i','u','a','br','p','em','strong'] })
-                              .replace(/#(\w+)/g, '<span class="hashtag">#$1</span>');
-        
-        const card = el.closest('.post-card');
-        const oldTags = card.querySelector('.post-tags');
-        if (oldTags) oldTags.remove();
-        if (tags.length) {
-            const tagsDiv = document.createElement('div');
-            tagsDiv.className = 'post-tags';
-            tagsDiv.innerHTML = tags.map(t => `<span class="tag-pill">#${escapeHTML(t)}</span>`).join('');
-            el.insertAdjacentElement('afterend', tagsDiv);
-        }
-        
-        supabase.from('posts').update({ content: newContent, tags: tags }).eq('id', postId)
-            .then(({ error }) => { if (error) console.error('Edit error:', error); })
-            .catch(console.error);
-    }
-
-    function handleEditKeydown(e) {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            e.currentTarget.blur();
-        }
-        if (e.key === 'Escape') {
-            e.currentTarget.blur();
-        }
-    }
-
-    // ==============================================================
-    //  DELETE POST
-    // ==============================================================
-    async function handleDelete(e) {
-        const btn = e.currentTarget;
-        const postId = btn.dataset.id;
-        if (!confirm('Delete this post?')) return;
-        try {
-            const { error } = await supabase.from('posts').delete().eq('id', postId);
-            if (error) throw error;
-            posts = posts.filter(p => String(p.id) !== String(postId));
-            renderPosts(posts, false);
-        } catch (err) {
-            console.error('Delete error:', err);
-            alert('Failed to delete post.');
-        }
-    }
-
-    // ==============================================================
-    //  BOOKMARK HANDLER
-    // ==============================================================
-    async function handleBookmark(e) {
-        const btn = e.currentTarget;
-        const postId = btn.dataset.id;
-        const isBookmarked = btn.classList.contains('bookmarked');
-
-        btn.classList.toggle('bookmarked');
-        const icon = btn.querySelector('i');
-        icon.className = btn.classList.contains('bookmarked') ? 'fa-solid fa-bookmark' : 'fa-regular fa-bookmark';
-        if (btn.classList.contains('bookmarked')) bookmarks.add(postId);
-        else bookmarks.delete(postId);
-
-        try {
-            if (isBookmarked) {
-                await supabase.from('bookmarks').delete().eq('user_id', currentUser).eq('post_id', postId);
-            } else {
-                await supabase.from('bookmarks').insert({ user_id: currentUser, post_id: postId });
-            }
-        } catch (err) {
-            console.error('Bookmark error:', err);
-            btn.classList.toggle('bookmarked');
-            const icon = btn.querySelector('i');
-            icon.className = btn.classList.contains('bookmarked') ? 'fa-solid fa-bookmark' : 'fa-regular fa-bookmark';
-            if (btn.classList.contains('bookmarked')) bookmarks.add(postId);
-            else bookmarks.delete(postId);
-        }
-    }
-
-    // ==============================================================
-    //  LIKE HANDLER
-    // ==============================================================
-    async function handleLike(e) {
-        const btn = e.currentTarget;
-        const postId = btn.dataset.id;
-        const likeSpan = btn.querySelector('.like-count');
-        const icon = btn.querySelector('i');
-        const currentLikes = parseInt(likeSpan.textContent, 10) || 0;
-        const isLiked = btn.classList.toggle('liked');
-        const newLikeCount = isLiked ? currentLikes + 1 : currentLikes - 1;
-        likeSpan.textContent = newLikeCount;
-        icon.className = isLiked ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
-
-        const postIndex = posts.findIndex(p => String(p.id) === String(postId));
-        if (postIndex !== -1) posts[postIndex].likes_count = newLikeCount;
-
-        try {
-            await supabase.from('posts').update({ likes_count: newLikeCount }).eq('id', postId);
-        } catch (err) { console.error('Like update error:', err); }
-    }
-
-    // ==============================================================
-    //  IMAGE UPLOAD
-    // ==============================================================
-    fileInput.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (!file) return;
-        selectedFile = file;
-        const reader = new FileReader();
-        reader.onload = function(ev) {
-            previewImg.src = ev.target.result;
-            uploadPreview.style.display = 'flex';
-        };
-        reader.readAsDataURL(file);
-    });
-
-    removeFileBtn.addEventListener('click', function() {
-        selectedFile = null;
-        uploadPreview.style.display = 'none';
-        previewImg.src = '';
-        fileInput.value = '';
-    });
-
-    async function uploadImage(file) {
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${Date.now()}.${fileExt}`;
-        const filePath = `public/${fileName}`;
-        const { data, error } = await supabase.storage
-            .from(STORAGE_BUCKET)
-            .upload(filePath, file);
-        if (error) throw error;
-        const { data: urlData } = supabase.storage
-            .from(STORAGE_BUCKET)
-            .getPublicUrl(filePath);
-        return urlData.publicUrl;
-    }
-
-    // ==============================================================
-    //  CREATE POST
-    // ==============================================================
-    async function createPost(content, imageFile = null) {
-        if (isSubmitting) return;
-        isSubmitting = true;
-        publishBtn.disabled = true;
-        publishBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-
-        try {
-            let imageUrl = null;
-            if (imageFile) {
-                imageUrl = await uploadImage(imageFile);
-            }
-            const tags = extractHashtags(content);
-            const newPost = {
-                content: content.trim(),
-                user_email: currentUser + '@pulse.local',
-                user_id: currentUser,
-                likes_count: 0,
-                tags: tags.length ? tags : null,
-                image_url: imageUrl
-            };
-            const { data, error } = await supabase.from('posts').insert([newPost]).select();
-            if (error) throw error;
-            if (data && data.length > 0) {
-                posts.unshift(data[0]);
-                renderPosts(posts, false);
-                fireConfetti();
-                postInput.value = '';
-                selectedFile = null;
-                uploadPreview.style.display = 'none';
-                previewImg.src = '';
-                fileInput.value = '';
-                notifyNewPost(content);
-                await cachePosts(posts.slice(0, 200));
-            }
-        } catch (err) {
-            console.error('Publish error:', err);
-            alert('Failed to publish: ' + err.message);
-        } finally {
-            isSubmitting = false;
-            publishBtn.disabled = false;
-            publishBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Publish';
-        }
-    }
-
-    // ==============================================================
-    //  LOAD FEED (with offline cache fallback)
-    // ==============================================================
-    async function loadFeedFromCache() {
-        try {
-            const cached = await getCachedPosts();
-            if (cached && cached.length > 0) {
-                posts = cached;
-                renderPosts(posts, false);
-                return true;
-            }
-        } catch (e) { console.warn('Cache load failed', e); }
-        return false;
-    }
-
-    async function initFeed() {
-        const hasCache = await loadFeedFromCache();
-        if (hasCache) {
-            fetchFreshFeed();
-        } else {
-            await fetchFreshFeed();
-        }
-        await loadBookmarks();
-        requestNotificationPermission();
-        try {
-            registerServiceWorker();
-        } catch(e) { console.warn('SW registration skipped', e); }
-    }
-
-    async function fetchFreshFeed() {
-        try {
-            const { data, error } = await supabase
-                .from('posts')
-                .select('*')
-                .order('created_at', { ascending: false })
-                .limit(PAGE_SIZE);
-            if (error) throw error;
-            if (data.length < PAGE_SIZE) hasMore = false;
-            posts = data || [];
-            renderPosts(posts, false);
-            if (data && data.length > 0) {
-                lastLoadedCursor = data[data.length - 1].created_at;
-                await cachePosts(data);
-            }
-            updateLoadMoreUI();
-        } catch (err) {
-            console.error('Fresh feed error:', err);
-            if (posts.length === 0) {
-                feedContainer.innerHTML = '<div class="empty-state" style="color:#f87171;"><i class="fas fa-circle-exclamation"></i><p>Could not load feed. Check console or RLS policies.</p></div>';
-            }
-        }
-    }
-
-    // ==============================================================
-    //  PAGINATION
-    // ==============================================================
-    async function loadPosts(cursor = null) {
-        if (!hasMore) return;
-        loadMoreBtn.disabled = true;
-        const loadingMsg = document.createElement('div');
-        loadingMsg.className = 'loading-indicator';
-        loadingMsg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading more...';
-        feedContainer.appendChild(loadingMsg);
-
-        let query = supabase
+async function loadFeed() {
+    try {
+        const { data, error } = await supabase
             .from('posts')
             .select('*')
             .order('created_at', { ascending: false })
-            .limit(PAGE_SIZE);
-
-        if (cursor) {
-            query = query.lt('created_at', cursor);
-        }
-
-        const { data, error } = await query;
-        if (loadingMsg.parentNode) loadingMsg.remove();
-        loadMoreBtn.disabled = false;
-
+            .limit(20);
+            
         if (error) {
-            console.error('Pagination error:', error);
+            console.error('Feed load error:', error);
+            document.getElementById('feedContainer').innerHTML = `
+                <div style="text-align:center;padding:3rem 1rem;color:#f87171;">
+                    <i class="fas fa-exclamation-triangle" style="font-size:2rem;margin-bottom:1rem;"></i>
+                    <p style="font-weight:600;">Could not load feed</p>
+                    <p style="font-size:0.85rem;color:var(--text-secondary);margin-top:0.5rem;">
+                        ${error.message || 'Check console for details'}
+                    </p>
+                    <button onclick="loadFeed()" style="margin-top:1rem;background:#a78bfa;border:none;padding:0.5rem 1.5rem;border-radius:40px;color:#fff;cursor:pointer;font-weight:600;">
+                        <i class="fas fa-redo"></i> Retry
+                    </button>
+                </div>
+            `;
             return;
         }
+        
+        posts = data || [];
+        renderPosts(posts);
+    } catch (err) {
+        console.error('Feed exception:', err);
+        document.getElementById('feedContainer').innerHTML = `
+            <div style="text-align:center;padding:3rem 1rem;color:#f87171;">
+                <i class="fas fa-circle-exclamation" style="font-size:2rem;margin-bottom:1rem;"></i>
+                <p style="font-weight:600;">Connection error</p>
+                <button onclick="loadFeed()" style="margin-top:1rem;background:#a78bfa;border:none;padding:0.5rem 1.5rem;border-radius:40px;color:#fff;cursor:pointer;font-weight:600;">
+                    <i class="fas fa-redo"></i> Retry
+                </button>
+            </div>
+        `;
+    }
+}
 
-        if (data.length < PAGE_SIZE) hasMore = false;
-        if (data.length === 0) {
-            updateLoadMoreUI();
-            return;
-        }
+function renderPosts(data) {
+    const container = document.getElementById('feedContainer');
+    container.innerHTML = '';
+    
+    if (!data || data.length === 0) {
+        container.innerHTML = `
+            <div style="text-align:center;padding:3rem 1rem;color:var(--text-secondary);">
+                <i class="fas fa-feather-pointed" style="font-size:3rem;margin-bottom:1rem;opacity:0.3;"></i>
+                <p>No posts yet. Be the first to shine! ✨</p>
+            </div>
+        `;
+        return;
+    }
+    
+    data.forEach(post => {
+        const roleClass = `role-${post.author_role || 'unverified'}`;
+        const badgeHtml = post.author_role === 'admin' ? '<span class="badge badge-admin">Admin</span>' : 
+                          post.author_role === 'mod' ? '<span class="badge badge-mod">Mod</span>' : 
+                          post.author_role === 'unverified' ? '<span class="badge badge-unverified">Unverified</span>' : '';
+        
+        const isLocked = post.password_hash && !localStorage.getItem(`unlocked_${post.id}`);
+        const isAgeGated = post.age_required && !localStorage.getItem(`age_verified_${post.id}`);
+        const blurClass = post.is_blurred && !localStorage.getItem(`unblurred_${post.id}`) ? 'image-blur' : '';
 
-        const newPosts = data;
-        posts = posts.concat(newPosts);
-        renderPosts(newPosts, true);
-        lastLoadedCursor = newPosts[newPosts.length - 1].created_at;
-        await cachePosts(posts.slice(0, 200));
-        updateLoadMoreUI();
+        let contentHtml = DOMPurify.sanitize(post.content).replace(/#(\w+)/g, '<span class="hashtag">#$1</span>');
+
+        const card = document.createElement('div');
+        card.className = `post-card ${roleClass}`;
+        card.innerHTML = `
+            ${isLocked ? `<div class="lock-overlay"><i class="fas fa-lock"></i><p>Thread Locked</p><input type="password" id="pass-${post.id}" placeholder="Enter password"><button class="unlock-btn" onclick="unlockPost('${post.id}', '${post.password_hash}')">Unlock</button></div>` : ''}
+            ${isAgeGated && !isLocked ? `<div class="age-overlay"><i class="fas fa-exclamation-triangle"></i><p>Age Verification Required (18+)</p><input type="number" id="age-${post.id}" placeholder="Your Age"><button class="unlock-btn" onclick="verifyAge('${post.id}')">Verify</button></div>` : ''}
+            
+            <div class="post-header">
+                <div class="avatar">${(post.user_email || 'A')[0].toUpperCase()}</div>
+                <div class="post-user">${post.user_email?.split('@')[0] || 'Anonymous'} ${badgeHtml}</div>
+                <div class="post-time">${getTimeAgo(post.created_at)}</div>
+            </div>
+            <div class="post-content">${contentHtml}</div>
+            ${post.image_url ? `<img src="${post.image_url}" class="post-image ${blurClass}" onclick="handleImageClick(event, '${post.id}', '${post.image_url}', this)" loading="lazy">` : ''}
+            <div class="post-footer">
+                <button onclick="likePost('${post.id}', this)"><i class="fa-regular fa-heart"></i> <span>${post.likes_count || 0}</span></button>
+                <button onclick="toggleReplies('${post.id}')"><i class="fa-regular fa-comment"></i> Reply</button>
+                <button onclick="togglePaymentModal(true)"><i class="fas fa-crown" style="color:#fbbf24;"></i> Support</button>
+            </div>
+            <div id="replies-${post.id}" class="replies-container">
+                <div class="reply-form">
+                    <input type="text" id="reply-input-${post.id}" placeholder="Write a reply...">
+                    <button class="unlock-btn" onclick="submitReply('${post.id}')">Send</button>
+                </div>
+                <div id="reply-list-${post.id}"></div>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function handleImageClick(event, postId, imageUrl, imgElement) {
+    if (imgElement.classList.contains('image-blur') && !imgElement.classList.contains('unblurred')) {
+        event.stopPropagation();
+        imgElement.classList.add('unblurred');
+        localStorage.setItem(`unblurred_${postId}`, 'true');
+    } else {
+        openLightbox(imageUrl);
+    }
+}
+
+function openLightbox(src) {
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    lightboxImg.src = src;
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+    const lightbox = document.getElementById('lightbox');
+    lightbox.classList.remove('open');
+    document.body.style.overflow = 'auto';
+}
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeLightbox();
+});
+
+async function unlockPost(postId, correctHash) {
+    const input = document.getElementById(`pass-${postId}`).value;
+    const hash = await sha256(input);
+    if (hash === correctHash) {
+        localStorage.setItem(`unlocked_${postId}`, 'true');
+        loadFeed();
+    } else {
+        alert('Incorrect password');
+    }
+}
+
+function verifyAge(postId) {
+    const age = parseInt(document.getElementById(`age-${postId}`).value);
+    if (age >= 18) {
+        localStorage.setItem(`age_verified_${postId}`, 'true');
+        loadFeed();
+    } else {
+        alert('You must be 18 or older.');
+    }
+}
+
+async function likePost(postId, btn) {
+    triggerHaptics();
+    playPopSound();
+    const icon = btn.querySelector('i');
+    const span = btn.querySelector('span');
+    const isLiked = btn.classList.toggle('liked');
+    
+    icon.className = isLiked ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
+    span.textContent = parseInt(span.textContent) + (isLiked ? 1 : -1);
+    
+    const newCount = parseInt(span.textContent);
+    await supabase.from('posts').update({ likes_count: newCount }).eq('id', postId);
+}
+
+function toggleReplies(postId) {
+    const el = document.getElementById(`replies-${postId}`);
+    el.classList.toggle('open');
+    if (el.classList.contains('open')) loadReplies(postId);
+}
+
+async function loadReplies(postId) {
+    const { data } = await supabase.from('replies').select('*').eq('post_id', postId).order('created_at', {ascending: true});
+    const list = document.getElementById(`reply-list-${postId}`);
+    list.innerHTML = '';
+    data.forEach(r => {
+        list.innerHTML += `<div class="reply-item"><div class="avatar" style="width:30px;height:30px;font-size:0.8rem;">${(r.author_name||'A')[0]}</div><div><div style="font-weight:600;font-size:0.85rem;">${r.author_name}</div><div style="font-size:0.9rem;color:var(--text-secondary);">${r.content}</div></div></div>`;
+    });
+}
+
+async function submitReply(postId) {
+    const content = document.getElementById(`reply-input-${postId}`).value;
+    if (!content) return;
+    await supabase.from('replies').insert({ post_id: postId, author_name: currentUser.name, author_role: currentUser.role, content });
+    document.getElementById(`reply-input-${postId}`).value = '';
+    loadReplies(postId);
+}
+
+document.getElementById('publishBtn').addEventListener('click', async () => {
+    const content = document.getElementById('postInput').value;
+    if (!content) return;
+    
+    const btn = document.getElementById('publishBtn');
+    btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+
+    let imageUrl = null;
+    const file = document.getElementById('fileInput').files[0];
+    if (file) {
+        const fileName = `${Date.now()}_${file.name}`;
+        await supabase.storage.from('post-images').upload(`public/${fileName}`, file);
+        imageUrl = `${SUPABASE_URL}/storage/v1/object/public/post-images/public/${fileName}`;
     }
 
-    function updateLoadMoreUI() {
-        if (hasMore && posts.length > 0 && !searchTerm) {
-            loadMoreBtn.style.display = 'inline-block';
-        } else {
-            loadMoreBtn.style.display = 'none';
-        }
+    const pass = document.getElementById('passCheck').value;
+    const hash = pass ? await sha256(pass) : null;
+    const age = document.getElementById('ageCheck').value || null;
+    const blur = document.getElementById('blurCheck').checked;
+
+    const { error } = await supabase.from('posts').insert([{
+        content, user_id: currentUser.id, user_email: currentUser.name + '@pulse.local',
+        author_role: currentUser.role, image_url: imageUrl, password_hash: hash,
+        age_required: age, is_blurred: blur
+    }]);
+
+    if (!error) {
+        document.getElementById('postInput').value = '';
+        document.getElementById('fileInput').value = '';
+        document.getElementById('blurCheck').checked = false;
+        document.getElementById('ageCheck').value = '';
+        document.getElementById('passCheck').value = '';
+        loadFeed();
     }
+    btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> Publish';
+});
 
-    // ==============================================================
-    //  BOOKMARKS LOAD
-    // ==============================================================
-    async function loadBookmarks() {
-        try {
-            const { data, error } = await supabase
-                .from('bookmarks')
-                .select('post_id')
-                .eq('user_id', currentUser);
-            if (error) throw error;
-            if (data) bookmarks = new Set(data.map(row => row.post_id));
-        } catch (err) {
-            console.error('Load bookmarks error:', err);
-        }
+const processors = [
+    {name:'PayPal',color:'#003087',icon:'fab fa-paypal',text:'#fff'},
+    {name:'Visa',color:'#1A1F71',icon:'fab fa-cc-visa',text:'#fff'},
+    {name:'Mastercard',color:'#EB001B',icon:'fab fa-cc-mastercard',text:'#fff'},
+    {name:'Apple Pay',color:'#000',icon:'fab fa-apple',text:'#fff'},
+    {name:'Bitcoin',color:'#f7931a',icon:'fab fa-bitcoin',text:'#fff'},
+    {name:'Stripe',color:'#635bff',icon:'fas fa-credit-card',text:'#fff'},
+    {name:'Venmo',color:'#3D95CE',icon:'fas fa-venmo',text:'#fff'},
+    {name:'Cash App',color:'#00D632',icon:'fas fa-dollar-sign',text:'#fff'}
+];
+
+function initPaymentModal() {
+    const select = document.getElementById('processorSelect');
+    processors.forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p.name; opt.textContent = p.name;
+        select.appendChild(opt);
+    });
+    select.addEventListener('change', (e) => {
+        const p = processors.find(x => x.name === e.target.value) || processors[0];
+        const btn = document.getElementById('dynamicPayBtn');
+        btn.style.background = p.color; btn.style.color = p.text;
+        btn.innerHTML = `<i class="${p.icon}"></i> Pay with ${p.name}`;
+    });
+}
+
+function togglePaymentModal(show) {
+    document.getElementById('paymentModal').classList.toggle('open', show);
+}
+
+function copyBTC() {
+    const addr = document.getElementById('btcAddr').textContent;
+    navigator.clipboard.writeText(addr);
+    alert('BTC Address Copied!');
+}
+
+document.getElementById('themeToggle').addEventListener('click', () => {
+    const current = document.documentElement.getAttribute('data-theme');
+    document.documentElement.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+});
+
+// ==========================================
+// INITIALIZATION
+// ==========================================
+initPaymentModal();
+
+// Start loading data immediately in the background
+loadFeed();
+
+// Restore scrolling and clean up intro overlay after animation completes
+setTimeout(() => {
+    document.body.style.overflow = "auto";
+    const intro = document.getElementById('introOverlay');
+    if (intro && intro.parentNode) {
+        intro.parentNode.removeChild(intro);
     }
-
-    // ==============================================================
-    //  SEARCH
-    // ==============================================================
-    let searchTimeout = null;
-    function performSearch(term) {
-        searchTerm = term.trim().toLowerCase();
-        if (searchTerm === '') {
-            renderPosts(posts, false);
-            updateLoadMoreUI();
-            return;
-        }
-        const filtered = posts.filter(p => p.content.toLowerCase().includes(searchTerm));
-        renderPosts(filtered, false);
-        loadMoreBtn.style.display = 'none';
-    }
-
-    searchInput.addEventListener('input', function() {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => performSearch(this.value), 300);
-    });
-
-    // ==============================================================
-    //  SORTING
-    // ==============================================================
-    function applySort(sortType) {
-        currentSort = sortType;
-        let list = searchTerm ? posts.filter(p => p.content.toLowerCase().includes(searchTerm)) : [...posts];
-        if (sortType === 'trending') {
-            list.sort((a,b) => (b.likes_count || 0) - (a.likes_count || 0));
-        } else if (sortType === 'random') {
-            for (let i = list.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [list[i], list[j]] = [list[j], list[i]];
-            }
-        } else {
-            list.sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
-        }
-        renderPosts(list, false);
-    }
-
-    sortSelect.addEventListener('change', function() {
-        applySort(this.value);
-    });
-
-    // ==============================================================
-    //  REALTIME
-    // ==============================================================
-    function subscribeToNewPosts() {
-        supabase.channel('public:posts')
-            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'posts' }, payload => {
-                const newPost = payload.new;
-                if (posts.some(p => String(p.id) === String(newPost.id))) return;
-                posts.unshift(newPost);
-                if (!searchTerm && currentSort === 'new') {
-                    renderPosts(posts, false);
-                }
-                updateLoadMoreUI();
-                notifyNewPost(newPost.content);
-                cachePosts(posts.slice(0, 200));
-            })
-            .subscribe((status, err) => { if (err) console.error('Realtime error:', err); });
-    }
-
-    // ==============================================================
-    //  KEYBOARD SHORTCUTS
-    // ==============================================================
-    document.addEventListener('keydown', function(e) {
-        if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-            e.preventDefault();
-            searchInput.focus();
-            searchInput.select();
-        }
-        if (e.key === '?' && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
-            e.preventDefault();
-            document.getElementById('shortcutsModal').classList.toggle('open');
-        }
-        if (e.key === 'Escape') {
-            const modal = document.getElementById('shortcutsModal');
-            if (modal.classList.contains('open')) {
-                modal.classList.remove('open');
-                return;
-            }
-            if (document.activeElement === searchInput) searchInput.blur();
-        }
-        if (e.key === 'j' || e.key === 'k') {
-            const cards = feedContainer.querySelectorAll('.post-card');
-            if (!cards.length) return;
-            let current = document.activeElement;
-            let idx = -1;
-            if (current && current.closest('.post-card')) {
-                const parentCard = current.closest('.post-card');
-                idx = Array.from(cards).indexOf(parentCard);
-            } else {
-                idx = (e.key === 'j') ? 0 : cards.length - 1;
-            }
-            let newIdx = (e.key === 'j') ? Math.min(idx + 1, cards.length - 1) : Math.max(idx - 1, 0);
-            if (newIdx !== idx) {
-                cards[newIdx].focus();
-                cards[newIdx].scrollIntoView({ block: 'center' });
-            }
-        }
-        if (e.key === 'n' && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
-            if (!e.target.closest('input, textarea, select')) {
-                e.preventDefault();
-                postInput.focus();
-                postInput.scrollIntoView({ block: 'center' });
-            }
-        }
-    });
-
-    document.getElementById('modalCloseBtn').addEventListener('click', function() {
-        document.getElementById('shortcutsModal').classList.remove('open');
-    });
-    document.getElementById('shortcutsModal').addEventListener('click', function(e) {
-        if (e.target === this) this.classList.remove('open');
-    });
-
-    // ==============================================================
-    //  PUBLISH EVENT
-    // ==============================================================
-    publishBtn.addEventListener('click', async () => {
-        const content = postInput.value.trim();
-        if (!content) { postInput.focus(); postInput.style.borderColor = '#f87171'; setTimeout(() => postInput.style.borderColor = '', 1500); return; }
-        await createPost(content, selectedFile);
-    });
-
-    postInput.addEventListener('keydown', e => {
-        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); publishBtn.click(); }
-    });
-
-    loadMoreBtn.addEventListener('click', async () => {
-        if (!hasMore) return;
-        loadingMore.style.display = 'block';
-        loadMoreBtn.style.display = 'none';
-        await loadPosts(lastLoadedCursor);
-        loadingMore.style.display = 'none';
-        updateLoadMoreUI();
-    });
-
-    // ==============================================================
-    //  INIT
-    // ==============================================================
-    initFeed();
-    subscribeToNewPosts();
-})();
+}, 3200); // Matches the 2.6s start of fadeOut + 0.6s duration
 </script>
 </body>
 </html>

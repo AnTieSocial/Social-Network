@@ -248,6 +248,7 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
+            align-items: center;
             gap: 1.8rem;
             margin-top: 1rem;
             perspective: 1200px;
@@ -282,6 +283,9 @@
         }
         .app-card:nth-child(4) {
             animation-delay: 1.8s;
+        }
+        .app-card:nth-child(5) {
+            animation-delay: 2.4s;
         }
 
         .app-card::before {
@@ -357,29 +361,29 @@
             display: inline-flex;
             align-items: center;
             gap: 0.25rem;
-            padding: 0.2rem 0.6rem;
+            padding: 0.25rem 0.7rem;
             border-radius: 100px;
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            font-size: 0.5rem;
+            font-size: 0.7rem;
             font-weight: 600;
             letter-spacing: 0.05em;
             text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.5);
+            color: rgba(255, 255, 255, 0.6);
             transition: all 0.3s;
             white-space: nowrap;
             backdrop-filter: blur(4px);
         }
 
         .badge-group .badge .platform-icon {
-            font-size: 0.65rem;
+            font-size: 0.8rem;
             line-height: 1;
         }
 
         .app-card:hover .badge-group .badge {
             background: rgba(0, 240, 255, 0.08);
             border-color: rgba(0, 240, 255, 0.2);
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.9);
         }
 
         @keyframes cardFloat {
@@ -394,44 +398,103 @@
 
         /* ── THEMED CARDS ── */
 
-        /* 1. Trade – blueish */
+        /* 1. DRIFT – dark / out of service (visible green tint) */
         .app-card:nth-child(1) {
-            border-color: rgba(0, 180, 255, 0.4);
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 150, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            border-color: rgba(0, 255, 100, 0.4);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.8), inset 0 0 30px rgba(0, 255, 100, 0.06);
+            background: rgba(10, 25, 15, 0.95);
+            animation: none;
+            cursor: not-allowed;
         }
         .app-card:nth-child(1)::before {
-            background: conic-gradient(from 0deg, transparent, rgba(0, 150, 255, 0.15), transparent, rgba(0, 150, 255, 0.15), transparent);
+            background: conic-gradient(from 0deg, transparent, rgba(0, 255, 100, 0.1), transparent, rgba(0, 255, 100, 0.1), transparent);
+            animation: none;
+        }
+        .app-card:nth-child(1)::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(45deg,
+                    transparent,
+                    transparent 8px,
+                    rgba(0, 0, 0, 0.25) 8px,
+                    rgba(0, 0, 0, 0.25) 10px);
+            pointer-events: none;
+            border-radius: 2rem;
+            z-index: 1;
         }
         .app-card:nth-child(1):hover {
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(0, 150, 255, 0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(0, 255, 100, 0.15);
+            border-color: rgba(0, 255, 100, 0.6);
+            transform: translateY(-6px) scale(1.01);
+        }
+        .app-card:nth-child(1) .name {
+            color: #7a9e8a;
+        }
+        .app-card:nth-child(1) .name .highlight {
+            color: #4a7a5a;
+        }
+        .app-card:nth-child(1) .desc {
+            color: rgba(255, 255, 255, 0.25);
+        }
+        .app-card:nth-child(1) .icon {
+            filter: brightness(0.75);
+        }
+        .app-card:nth-child(1) .badge-group .badge {
+            background: rgba(0, 255, 100, 0.06);
+            border-color: rgba(0, 255, 100, 0.12);
+            color: rgba(255, 255, 255, 0.25);
+        }
+        .app-card:nth-child(1):hover .badge-group .badge {
+            background: rgba(0, 255, 100, 0.1);
+            border-color: rgba(0, 255, 100, 0.25);
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .app-card:nth-child(1) .badge-group .badge .platform-icon {
+            filter: grayscale(1);
         }
 
-        /* 2. Pulse – purplish */
+        /* 2. TRADE – blueish (BRIGHTENED) */
         .app-card:nth-child(2) {
-            border-color: rgba(160, 0, 255, 0.4);
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(160, 0, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            border-color: rgba(0, 180, 255, 0.6);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 150, 255, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.04);
         }
         .app-card:nth-child(2)::before {
-            background: conic-gradient(from 0deg, transparent, rgba(160, 0, 255, 0.15), transparent, rgba(160, 0, 255, 0.15), transparent);
+            background: conic-gradient(from 0deg, transparent, rgba(0, 150, 255, 0.25), transparent, rgba(0, 150, 255, 0.25), transparent);
         }
         .app-card:nth-child(2):hover {
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(160, 0, 255, 0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(0, 150, 255, 0.4);
         }
 
-        /* 3. Bloom – pinkish */
+        /* 3. PULSE – purplish (BRIGHTENED) */
         .app-card:nth-child(3) {
-            border-color: rgba(255, 105, 180, 0.5);
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(255, 20, 147, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            border-color: rgba(160, 0, 255, 0.6);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(160, 0, 255, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.04);
         }
         .app-card:nth-child(3)::before {
-            background: conic-gradient(from 0deg, transparent, rgba(255, 105, 180, 0.2), transparent, rgba(255, 105, 180, 0.2), transparent);
+            background: conic-gradient(from 0deg, transparent, rgba(160, 0, 255, 0.25), transparent, rgba(160, 0, 255, 0.25), transparent);
         }
         .app-card:nth-child(3):hover {
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(255, 20, 147, 0.25);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(160, 0, 255, 0.4);
         }
 
-        /* 4. Secret – reddish, completely blurred out */
+        /* 4. BLOOM – pinkish (BRIGHTENED) */
         .app-card:nth-child(4) {
+            border-color: rgba(255, 105, 180, 0.7);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(255, 20, 147, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        }
+        .app-card:nth-child(4)::before {
+            background: conic-gradient(from 0deg, transparent, rgba(255, 105, 180, 0.3), transparent, rgba(255, 105, 180, 0.3), transparent);
+        }
+        .app-card:nth-child(4):hover {
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(255, 20, 147, 0.4);
+        }
+
+        /* 5. SECRET – reddish, completely blurred out */
+        .app-card:nth-child(5) {
             filter: blur(8px);
             pointer-events: none;
             border-color: rgba(255, 0, 0, 0.6);
@@ -439,16 +502,68 @@
             animation-duration: 4s;
             opacity: 0.85;
         }
-        .app-card:nth-child(4)::before {
+        .app-card:nth-child(5)::before {
             background: conic-gradient(from 0deg, transparent, rgba(255, 0, 0, 0.35), transparent, rgba(255, 0, 0, 0.35), transparent);
         }
-        .app-card:nth-child(4) .name .highlight {
+        .app-card:nth-child(5) .name .highlight {
             color: #ff3333;
         }
-        .app-card:nth-child(4) .badge-group .badge {
+        .app-card:nth-child(5) .badge-group .badge {
             background: rgba(255, 0, 0, 0.12);
             border-color: rgba(255, 0, 0, 0.2);
             color: rgba(255, 255, 255, 0.25);
+        }
+
+        /* ── GLITCH PLUS (matching question mark) ── */
+        .plus-glitch {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 6rem;
+            font-weight: 700;
+            color: var(--neon-red);
+            text-shadow: 0 0 20px var(--neon-red), 0 0 40px rgba(255, 0, 64, 0.4), 0 0 80px rgba(255, 0, 64, 0.2);
+            animation: glitchPulse 3s ease-in-out infinite alternate;
+            cursor: pointer;
+            letter-spacing: -0.04em;
+            line-height: 1;
+            transition: transform 0.2s;
+            width: 190px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            position: relative;
+        }
+
+        .plus-glitch:hover {
+            transform: scale(1.1);
+        }
+
+        .plus-glitch::before,
+        .plus-glitch::after {
+            content: '+';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .plus-glitch::before {
+            color: var(--neon-blue);
+            z-index: -1;
+            animation: glitchShift 2s infinite linear alternate-reverse;
+            clip-path: inset(20% 0 60% 0);
+        }
+
+        .plus-glitch::after {
+            color: var(--neon-purple);
+            z-index: -2;
+            animation: glitchShift 1.8s infinite linear alternate-reverse;
+            clip-path: inset(60% 0 10% 0);
         }
 
         /* ── platform row (below cards) ── */
@@ -500,6 +615,336 @@
             50% {
                 opacity: 1;
                 transform: scale(1.3);
+            }
+        }
+
+        /* ── bottom question mark ── */
+        .bottom-question {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 6rem;
+            font-weight: 700;
+            color: var(--neon-red);
+            text-shadow: 0 0 20px var(--neon-red), 0 0 40px rgba(255, 0, 64, 0.4), 0 0 80px rgba(255, 0, 64, 0.2);
+            z-index: 100;
+            animation: glitchPulse 3s ease-in-out infinite alternate;
+            cursor: pointer;
+            letter-spacing: -0.04em;
+            line-height: 1;
+            transition: transform 0.2s;
+        }
+
+        .bottom-question:hover {
+            transform: translateX(-50%) scale(1.1);
+        }
+
+        .bottom-question::before,
+        .bottom-question::after {
+            content: '?';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .bottom-question::before {
+            color: var(--neon-blue);
+            z-index: -1;
+            animation: glitchShift 2s infinite linear alternate-reverse;
+            clip-path: inset(20% 0 60% 0);
+        }
+
+        .bottom-question::after {
+            color: var(--neon-purple);
+            z-index: -2;
+            animation: glitchShift 1.8s infinite linear alternate-reverse;
+            clip-path: inset(60% 0 10% 0);
+        }
+
+        /* ── FAQ OVERLAY ── */
+        .faq-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 15, 0.98);
+            z-index: 9999;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 4rem 2rem 2rem;
+            overflow-y: auto;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .faq-overlay.active {
+            display: flex;
+        }
+
+        .faq-container {
+            max-width: 700px;
+            width: 100%;
+            margin: auto;
+            padding: 1rem 0 3rem;
+        }
+
+        .faq-close {
+            position: fixed;
+            top: 1.5rem;
+            right: 2rem;
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: var(--neon-red);
+            cursor: pointer;
+            z-index: 10000;
+            transition: transform 0.3s, text-shadow 0.3s;
+            text-shadow: 0 0 20px rgba(255, 0, 64, 0.3);
+            font-family: 'Space Grotesk', sans-serif;
+            background: none;
+            border: none;
+            padding: 0.5rem;
+            line-height: 1;
+        }
+
+        .faq-close:hover {
+            transform: rotate(90deg);
+            text-shadow: 0 0 40px rgba(255, 0, 64, 0.6);
+        }
+
+        .faq-title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 0 30px var(--neon-red), 0 0 60px rgba(255, 0, 64, 0.2);
+            margin-bottom: 2.5rem;
+            letter-spacing: -0.02em;
+            text-align: center;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .faq-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 1.5rem;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            backdrop-filter: blur(8px);
+            transition: border-color 0.3s;
+        }
+
+        .faq-item:hover {
+            border-color: rgba(255, 0, 64, 0.2);
+        }
+
+        .faq-question {
+            padding: 1.2rem 1.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Space Grotesk', sans-serif;
+            letter-spacing: 0.02em;
+            transition: color 0.3s;
+            user-select: none;
+        }
+
+        .faq-question:hover {
+            color: #fff;
+        }
+
+        .faq-question .arrow {
+            font-size: 1.5rem;
+            color: var(--neon-red);
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+            margin-left: 1rem;
+        }
+
+        .faq-item.active .faq-question .arrow {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.23, 1, 0.32, 1), padding 0.3s ease;
+            padding: 0 1.5rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.7;
+            border-top: 1px solid transparent;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 300px;
+            padding: 1.2rem 1.5rem;
+            border-top-color: rgba(255, 0, 64, 0.15);
+        }
+
+        /* ── GUIDE OVERLAY ── */
+        .guide-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 15, 0.98);
+            z-index: 9998;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem 2rem;
+            overflow-y: auto;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .guide-overlay.active {
+            display: flex;
+        }
+
+        .guide-overlay.blurred .guide-content {
+            filter: blur(12px);
+            pointer-events: none;
+            transition: filter 0.8s ease;
+        }
+
+        .guide-container {
+            max-width: 700px;
+            width: 100%;
+            margin: auto;
+            padding: 1rem 0 3rem;
+            text-align: left;
+        }
+
+        .guide-title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 0 30px var(--neon-red), 0 0 60px rgba(255, 0, 64, 0.2);
+            margin-bottom: 2rem;
+            letter-spacing: -0.02em;
+            text-align: center;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .guide-content {
+            transition: filter 0.8s ease;
+        }
+
+        .guide-content h3 {
+            font-size: 1.3rem;
+            color: var(--neon-red);
+            margin: 1.5rem 0 0.5rem;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .guide-content p {
+            color: rgba(255, 255, 255, 0.7);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 0.8rem;
+        }
+
+        .guide-content ul {
+            color: rgba(255, 255, 255, 0.6);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            padding-left: 1.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .guide-content ul li {
+            margin-bottom: 0.3rem;
+        }
+
+        .guide-close {
+            position: fixed;
+            top: 1.5rem;
+            right: 2rem;
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: var(--neon-red);
+            cursor: pointer;
+            z-index: 10000;
+            transition: transform 0.3s, text-shadow 0.3s;
+            text-shadow: 0 0 20px rgba(255, 0, 64, 0.3);
+            font-family: 'Space Grotesk', sans-serif;
+            background: none;
+            border: none;
+            padding: 0.5rem;
+            line-height: 1;
+        }
+
+        .guide-close:hover {
+            transform: rotate(90deg);
+            text-shadow: 0 0 40px rgba(255, 0, 64, 0.6);
+        }
+
+        /* ── JOIN BUTTON (appears after 5s) ── */
+        .join-button-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        .join-button-container.active {
+            display: flex;
+            pointer-events: auto;
+        }
+
+        .join-button {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #fff;
+            background: transparent;
+            border: 2px solid var(--neon-red);
+            border-radius: 4rem;
+            padding: 1.2rem 3.5rem;
+            cursor: pointer;
+            text-shadow: 0 0 30px var(--neon-red), 0 0 60px rgba(255, 0, 64, 0.3);
+            box-shadow: 0 0 40px rgba(255, 0, 64, 0.15), inset 0 0 40px rgba(255, 0, 64, 0.05);
+            transition: all 0.3s ease;
+            animation: joinPulse 2s ease-in-out infinite;
+            letter-spacing: 0.05em;
+            backdrop-filter: blur(8px);
+            background: rgba(255, 0, 64, 0.05);
+        }
+
+        .join-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 60px rgba(255, 0, 64, 0.3), inset 0 0 60px rgba(255, 0, 64, 0.1);
+            background: rgba(255, 0, 64, 0.1);
+        }
+
+        @keyframes joinPulse {
+            0%,
+            100% {
+                box-shadow: 0 0 40px rgba(255, 0, 64, 0.15), inset 0 0 40px rgba(255, 0, 64, 0.05);
+            }
+            50% {
+                box-shadow: 0 0 80px rgba(255, 0, 64, 0.3), inset 0 0 60px rgba(255, 0, 64, 0.1);
             }
         }
 
@@ -705,6 +1150,10 @@
                 padding: 1.5rem 1.2rem 1.6rem;
                 border-radius: 1.5rem;
             }
+            .plus-glitch {
+                width: 150px;
+                font-size: 4rem;
+            }
             .app-card .icon {
                 font-size: 2.2rem;
             }
@@ -712,11 +1161,11 @@
                 font-size: 1rem;
             }
             .badge-group .badge {
-                font-size: 0.4rem;
-                padding: 0.12rem 0.4rem;
+                font-size: 0.55rem;
+                padding: 0.18rem 0.5rem;
             }
             .badge-group .badge .platform-icon {
-                font-size: 0.55rem;
+                font-size: 0.65rem;
             }
             .tagline {
                 font-size: 0.7rem;
@@ -742,12 +1191,57 @@
             .watermark {
                 display: none;
             }
+            .bottom-question {
+                font-size: 4rem;
+                bottom: 1rem;
+            }
+            .faq-overlay {
+                padding: 5rem 1rem 1rem;
+            }
+            .faq-container {
+                padding: 0 0 2rem;
+            }
+            .faq-question {
+                font-size: 1rem;
+                padding: 1rem 1.2rem;
+            }
+            .faq-answer {
+                font-size: 0.8rem;
+                padding: 0 1.2rem;
+            }
+            .faq-item.active .faq-answer {
+                padding: 1rem 1.2rem;
+            }
+            .faq-close {
+                font-size: 2rem;
+                top: 1rem;
+                right: 1.2rem;
+            }
+            .guide-overlay {
+                padding: 5rem 1rem 1rem;
+            }
+            .guide-container {
+                padding: 0 0 2rem;
+            }
+            .guide-close {
+                font-size: 2rem;
+                top: 1rem;
+                right: 1.2rem;
+            }
+            .join-button {
+                font-size: 1.8rem;
+                padding: 1rem 2.5rem;
+            }
         }
 
         @media (max-width: 480px) {
             .app-card {
                 width: 130px;
                 padding: 1.2rem 0.8rem 1.2rem;
+            }
+            .plus-glitch {
+                width: 130px;
+                font-size: 3rem;
             }
             .app-card .icon {
                 font-size: 1.8rem;
@@ -763,11 +1257,11 @@
                 margin-top: 0.6rem;
             }
             .badge-group .badge {
-                font-size: 0.35rem;
-                padding: 0.08rem 0.35rem;
+                font-size: 0.45rem;
+                padding: 0.1rem 0.4rem;
             }
             .badge-group .badge .platform-icon {
-                font-size: 0.5rem;
+                font-size: 0.55rem;
             }
             .brand .glitch {
                 font-size: clamp(2.2rem, 12vw, 3.6rem);
@@ -775,6 +1269,36 @@
             .brand .sub {
                 font-size: 0.6rem;
                 letter-spacing: 0.3em;
+            }
+            .bottom-question {
+                font-size: 3rem;
+                bottom: 0.8rem;
+            }
+            .faq-title {
+                font-size: 1.8rem;
+            }
+            .faq-question {
+                font-size: 0.9rem;
+                padding: 0.8rem 1rem;
+            }
+            .faq-answer {
+                font-size: 0.75rem;
+            }
+            .faq-item.active .faq-answer {
+                padding: 0.8rem 1rem;
+            }
+            .guide-title {
+                font-size: 1.8rem;
+            }
+            .guide-content p {
+                font-size: 0.8rem;
+            }
+            .guide-content ul {
+                font-size: 0.8rem;
+            }
+            .join-button {
+                font-size: 1.5rem;
+                padding: 0.8rem 2rem;
             }
         }
 
@@ -806,12 +1330,24 @@
         </div>
 
         <!-- tagline -->
-        <div class="tagline visible">// three apps · one mission · disconnect to connect</div>
+        <div class="tagline visible">// four apps · one mission · disconnect to connect</div>
 
         <!-- app cards -->
         <div class="apps" id="appContainer">
 
-            <!-- Trade – blueish -->
+            <!-- DRIFT – dark / out of service -->
+            <div class="app-card" data-app="DRIFT">
+                <span class="icon">🪲</span>
+                <div class="name">DRIFT<span class="highlight">.</span></div>
+                <div class="desc">offline</div>
+                <div class="badge-group">
+                    <span class="badge"><span class="platform-icon">🖥️</span> desktop</span>
+                    <span class="badge"><span class="platform-icon">📱</span> android</span>
+                    <span class="badge"><span class="platform-icon">🌐</span> browser</span>
+                </div>
+            </div>
+
+            <!-- TRADE – blueish (BRIGHTENED) -->
             <div class="app-card" data-app="TRADE">
                 <span class="icon">🌍</span>
                 <div class="name">TRADE<span class="highlight">.</span></div>
@@ -819,11 +1355,11 @@
                 <div class="badge-group">
                     <span class="badge"><span class="platform-icon">🖥️</span> desktop</span>
                     <span class="badge"><span class="platform-icon">📱</span> android</span>
-                    <span class="badge"><span class="platform-icon">🌐</span> web</span>
+                    <span class="badge"><span class="platform-icon">🌐</span> browser</span>
                 </div>
             </div>
 
-            <!-- Pulse – purplish -->
+            <!-- PULSE – purplish (BRIGHTENED) -->
             <div class="app-card" data-app="PULSE">
                 <span class="icon">🩷</span>
                 <div class="name">PULSE<span class="highlight">.</span></div>
@@ -831,11 +1367,11 @@
                 <div class="badge-group">
                     <span class="badge"><span class="platform-icon">🖥️</span> desktop</span>
                     <span class="badge"><span class="platform-icon">📱</span> android</span>
-                    <span class="badge"><span class="platform-icon">🌐</span> web</span>
+                    <span class="badge"><span class="platform-icon">🌐</span> browser</span>
                 </div>
             </div>
 
-            <!-- Bloom – pinkish -->
+            <!-- BLOOM – pinkish (BRIGHTENED) -->
             <div class="app-card" data-app="BLOOM">
                 <span class="icon">🌸</span>
                 <div class="name">BLOOM<span class="highlight">.</span></div>
@@ -843,11 +1379,11 @@
                 <div class="badge-group">
                     <span class="badge"><span class="platform-icon">🖥️</span> desktop</span>
                     <span class="badge"><span class="platform-icon">📱</span> android</span>
-                    <span class="badge"><span class="platform-icon">🌐</span> web</span>
+                    <span class="badge"><span class="platform-icon">🌐</span> browser</span>
                 </div>
             </div>
 
-            <!-- 4th – reddish, blurred -->
+            <!-- 5th – reddish, blurred -->
             <div class="app-card" data-app="????">
                 <span class="icon">🔴</span>
                 <div class="name">????<span class="highlight">.</span></div>
@@ -855,20 +1391,26 @@
                 <div class="badge-group">
                     <span class="badge"><span class="platform-icon">🖥️</span> desktop</span>
                     <span class="badge"><span class="platform-icon">📱</span> android</span>
-                    <span class="badge"><span class="platform-icon">🌐</span> web</span>
+                    <span class="badge"><span class="platform-icon">🌐</span> browser</span>
                 </div>
             </div>
+
+            <!-- GLITCH PLUS (matching question mark) -->
+            <div class="plus-glitch" id="plusTrigger">+</div>
 
         </div>
 
         <!-- platform row -->
         <div class="platform-row">
-            <span><span class="dot"></span> 3 desktop apps</span>
-            <span><span class="dot"></span> 3 android apps</span>
+            <span><span class="dot"></span> 4 desktop apps</span>
+            <span><span class="dot"></span> 4 android apps</span>
             <span><span class="dot"></span> cross‑sync</span>
         </div>
 
     </div>
+
+    <!-- bottom question mark -->
+    <div class="bottom-question" id="faqTrigger">?</div>
 
     <!-- watermark -->
     <div class="watermark">✦ anti social network · v0.1</div>
@@ -877,12 +1419,91 @@
     <div class="modal-overlay" id="downloadModal">
         <div class="modal">
             <button class="modal-close" id="modalClose">✕</button>
-            <div class="modal-title" id="modalTitle">TRADE<span class="hl">.</span></div>
+            <div class="modal-title" id="modalTitle">DRIFT<span class="hl">.</span></div>
             <div class="modal-sub">download for your platform</div>
             <div class="platform-list" id="platformList">
                 <!-- filled by JS -->
             </div>
             <div class="note">click the active platforms to start download</div>
+        </div>
+    </div>
+
+    <!-- ── FAQ OVERLAY ── -->
+    <div class="faq-overlay" id="faqOverlay">
+        <button class="faq-close" id="faqClose">✕</button>
+        <div class="faq-container">
+            <div class="faq-title">// FREQUENTLY ASKED QUESTIONS</div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    Why do you hate mainstream social media?
+                    <span class="arrow">▼</span>
+                </div>
+                <div class="faq-answer">
+                    Because it's a digital prison designed to silence dissent. I'm tired of the censorship, the algorithmic manipulation, and the constant data mining. The "Anti Social Network" is a rebellion against these echo chambers.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    Why do you keep getting banned?
+                    <span class="arrow">▼</span>
+                </div>
+                <div class="faq-answer">
+                    The algorithms are built to enforce conformity, not freedom. I've been banned for sharing opinions that don't fit the mainstream narrative. This platform exists because I refuse to conform to arbitrary, ever‑changing rules.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    What is the "Anti Social Network" exactly?
+                    <span class="arrow">▼</span>
+                </div>
+                <div class="faq-answer">
+                    It's a middle finger to the system. A collection of apps (Trade, Pulse, Bloom, and the offline Drift) built for people who are tired of the sanitized, boring social media wasteland. It's a space where freedom of speech is paramount.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    Are these apps actually real?
+                    <span class="arrow">▼</span>
+                </div>
+                <div class="faq-answer">
+                    Absolutely. Trade, Pulse, and Bloom are live and actively developed. Drift is currently an offline experiment representing the ultimate break from central authority. The browser links above will take you directly to the live web versions.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── GUIDE OVERLAY ── -->
+    <div class="guide-overlay" id="guideOverlay">
+        <button class="guide-close" id="guideClose">✕</button>
+        <div class="guide-container" id="guideContainer">
+            <div class="guide-title">// BUILD YOUR OWN SOCIAL MEDIA</div>
+            <div class="guide-content" id="guideContent">
+                <h3>1. Choose Your Stack</h3>
+                <p>Pick a backend that scales. Node.js + Express is a solid start. For real-time features, consider WebSockets or Socket.io. Database? PostgreSQL for structure, or MongoDB for flexibility.</p>
+
+                <h3>2. Design the Data Model</h3>
+                <p>Users, posts, comments, likes, follows — keep it simple at first. Think about privacy: encryption at rest, hashed passwords, and API keys that actually expire.</p>
+
+                <h3>3. Build the API</h3>
+                <p>REST is fine. GraphQL gives you more control. Just make sure your endpoints are secure: rate limiting, CORS, and JWT authentication are non-negotiable.</p>
+
+                <h3>4. Create the Frontend</h3>
+                <p>React, Vue, or Svelte — pick your poison. Keep it fast, keep it dark. Users love a good dark mode. And please, no infinite scroll just to sell ads.</p>
+
+                <h3>5. Deploy & Scale</h3>
+                <p>Dockerize everything. Use a reverse proxy (NGINX) and a CDN for static assets. Monitor with Prometheus + Grafana. And always, always have a kill switch.</p>
+
+                <h3>6. Stay Independent</h3>
+                <p>Don't rely on VC funding. Don't sell user data. Don't bow to censorship. Build something that outlasts the algorithms.</p>
+            </div>
+        </div>
+        <!-- JOIN BUTTON (hidden initially, appears after 5s) -->
+        <div class="join-button-container" id="joinContainer">
+            <button class="join-button" id="joinButton">JOIN THE MOVEMENT</button>
         </div>
     </div>
 
@@ -1010,6 +1631,101 @@
                 }
             });
 
+            // ── FAQ LOGIC ──
+            const faqTrigger = document.getElementById('faqTrigger');
+            const faqOverlay = document.getElementById('faqOverlay');
+            const faqClose = document.getElementById('faqClose');
+            const faqItems = document.querySelectorAll('.faq-item');
+
+            function openFaq() {
+                faqOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeFaq() {
+                faqOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            faqTrigger.addEventListener('click', openFaq);
+            faqClose.addEventListener('click', closeFaq);
+
+            faqOverlay.addEventListener('click', function(e) {
+                if (e.target === faqOverlay) {
+                    closeFaq();
+                }
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && faqOverlay.classList.contains('active')) {
+                    closeFaq();
+                }
+            });
+
+            // Accordion logic
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                question.addEventListener('click', function() {
+                    item.classList.toggle('active');
+                });
+            });
+
+            // ── GUIDE LOGIC ──
+            const plusTrigger = document.getElementById('plusTrigger');
+            const guideOverlay = document.getElementById('guideOverlay');
+            const guideClose = document.getElementById('guideClose');
+            const guideContent = document.getElementById('guideContent');
+            const joinContainer = document.getElementById('joinContainer');
+            const joinButton = document.getElementById('joinButton');
+            let guideTimer = null;
+            let guideOpen = false;
+
+            function openGuide() {
+                guideOverlay.classList.add('active');
+                guideOverlay.classList.remove('blurred');
+                joinContainer.classList.remove('active');
+                document.body.style.overflow = 'hidden';
+                guideOpen = true;
+
+                // Reset and start timer for join button
+                clearTimeout(guideTimer);
+                guideTimer = setTimeout(function() {
+                    if (guideOpen) {
+                        guideOverlay.classList.add('blurred');
+                        joinContainer.classList.add('active');
+                    }
+                }, 5000);
+            }
+
+            function closeGuide() {
+                guideOverlay.classList.remove('active');
+                guideOverlay.classList.remove('blurred');
+                joinContainer.classList.remove('active');
+                document.body.style.overflow = '';
+                guideOpen = false;
+                clearTimeout(guideTimer);
+            }
+
+            plusTrigger.addEventListener('click', openGuide);
+            guideClose.addEventListener('click', closeGuide);
+
+            guideOverlay.addEventListener('click', function(e) {
+                if (e.target === guideOverlay) {
+                    closeGuide();
+                }
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && guideOverlay.classList.contains('active')) {
+                    closeGuide();
+                }
+            });
+
+            // Join button redirect
+            joinButton.addEventListener('click', function() {
+                window.location.href = 'https://pt-im.github.io/mdt/';
+            });
+
             // ── MODAL LOGIC ──
             const modalOverlay = document.getElementById('downloadModal');
             const modalTitle = document.getElementById('modalTitle');
@@ -1018,21 +1734,30 @@
 
             // ── platform definitions per app ──
             function getPlatformsForApp(appName) {
-                // default: Windows, Android, Web active; others inactive
+                // default: Windows, Android, Browser active; others inactive
                 const defaultPlatforms = [
                     { id: 'windows', icon: '🖥️', name: 'Windows', active: true, link: '#' },
                     { id: 'android', icon: '📱', name: 'Android', active: true, link: '#' },
-                    { id: 'web', icon: '🌐', name: 'Browser (web)', active: true, link: '#' },
+                    { id: 'web', icon: '🌐', name: 'Browser', active: true, link: '#' },
                     { id: 'macos', icon: '🍏', name: 'macOS', active: false, link: null },
                     { id: 'linux', icon: '🐧', name: 'Linux', active: false, link: null },
                     { id: 'ios', icon: '📲', name: 'iOS', active: false, link: null },
                 ];
 
-                if (appName === 'TRADE') {
+                if (appName === 'DRIFT') {
+                    return [
+                        { id: 'windows', icon: '🖥️', name: 'Windows', active: false, link: '#' },
+                        { id: 'android', icon: '📱', name: 'Android', active: false, link: '#' },
+                        { id: 'web', icon: '🌐', name: 'Browser', active: true, link: 'https://www.fedpromptly.com/home' },
+                        { id: 'macos', icon: '🍏', name: 'macOS', active: false, link: null },
+                        { id: 'linux', icon: '🐧', name: 'Linux', active: false, link: null },
+                        { id: 'ios', icon: '📲', name: 'iOS', active: false, link: null },
+                    ];
+                } else if (appName === 'TRADE') {
                     return [
                         { id: 'windows', icon: '🖥️', name: 'Windows (exe)', active: true, link: 'https://download942.mediafire.com/wuvqke2uc6jgxBVQX3vR42mPQyJVndEyZAu3ih5V3kaXL_qzVJdVyrN4ODiJOnzyjf8vBT20eAVJ6HAo3zm8nwGK-sEbf0dG8TMnZW0lm2VD6-MFfABDSVv3exSZ7CbdSt8fTvTbwAeGKAFNGztWg67CuiXN_UmzkkhRHCKDHQEgKmA/4nil7idlivizpj3/Pokejumper+Setup+1.0.0.exe' },
                         { id: 'android', icon: '📱', name: 'Android (apk)', active: true, link: 'https://download1592.mediafire.com/vyy5i3tqk9cgdS1NUb0PJJLlEpnE7j0lbzngzvfAcUmjy7rhnrqIRig9xdPgWQVfcbE44quqjopBKhsf6jhe5WPot5WJkrDmJi5XQueS1h4OKD4b930JHjcCJZ900aPtiLMlWV7TaVdrTIDfQqM2HcVphKVB2LP6_wDOijMT328GZlY/dh1phsbdqvkp8ua/Pokejumperapp-release.apk' },
-                        { id: 'web', icon: '🌐', name: 'Browser (web)', active: true, link: '#' },
+                        { id: 'web', icon: '🌐', name: 'Browser', active: true, link: 'https://www.pokejumper.org/reddit' },
                         { id: 'installer', icon: '📦', name: 'Installer (zip)', active: true, link: 'https://download1583.mediafire.com/fzkgyuf9t6sgD47OHDLi9gr6mZk-mYxckU0AgDI92yMJKyGumjWqrYISZjryXr_Yw-WKUXLIGt8ybDbZhe___ZaQkfQTXOsglF8ghsImrtJXI8-MPgLWHezU-JdjGtXvtt1k9Pyj9XdttWBF6EIBMHL12pB5l4POS_86_EJbydCNTcA/n2njti7g0o3a8q1/Pokejumper-Installer.zip' },
                         { id: 'macos', icon: '🍏', name: 'macOS', active: false, link: null },
                         { id: 'linux', icon: '🐧', name: 'Linux', active: false, link: null },
@@ -1042,13 +1767,22 @@
                     return [
                         { id: 'windows', icon: '🖥️', name: 'Windows', active: true, link: 'https://github.com/PokeLegend/web/actions/runs/30162657074/artifacts/8620675945' },
                         { id: 'android', icon: '📱', name: 'Android', active: true, link: 'https://github.com/PokeLegend/my-android-app/actions/runs/30035354992/artifacts/8575029840' },
-                        { id: 'web', icon: '🌐', name: 'Browser (web)', active: true, link: '#' },
+                        { id: 'web', icon: '🌐', name: 'Browser', active: true, link: 'http://patreon.rf.gd/' },
+                        { id: 'macos', icon: '🍏', name: 'macOS', active: false, link: null },
+                        { id: 'linux', icon: '🐧', name: 'Linux', active: false, link: null },
+                        { id: 'ios', icon: '📲', name: 'iOS', active: false, link: null },
+                    ];
+                } else if (appName === 'BLOOM') {
+                    return [
+                        { id: 'windows', icon: '🖥️', name: 'Windows', active: true, link: '#' },
+                        { id: 'android', icon: '📱', name: 'Android', active: true, link: '#' },
+                        { id: 'web', icon: '🌐', name: 'Browser', active: true, link: 'https://pt-im.github.io/cc/' },
                         { id: 'macos', icon: '🍏', name: 'macOS', active: false, link: null },
                         { id: 'linux', icon: '🐧', name: 'Linux', active: false, link: null },
                         { id: 'ios', icon: '📲', name: 'iOS', active: false, link: null },
                     ];
                 } else {
-                    // BLOOM or any other app – use default with web placeholder
+                    // any other app – use default with placeholder
                     return defaultPlatforms;
                 }
             }
@@ -1092,12 +1826,12 @@
                 modalOverlay.classList.remove('active');
             }
 
-            // click on app card (except the blurred 4th)
+            // click on app card (except the blurred 5th)
             const appContainer = document.getElementById('appContainer');
             appContainer.addEventListener('click', function(e) {
                 const card = e.target.closest('.app-card');
                 if (!card) return;
-                // if the card has pointer-events: none (the 4th), it won't fire because it's not clickable, but we check anyway
+                // if the card has pointer-events: none (the 5th), it won't fire because it's not clickable, but we check anyway
                 if (card.style.pointerEvents === 'none') return;
                 // get app name from data-app attribute
                 const appName = card.dataset.app || 'App';

@@ -935,7 +935,14 @@
             font-size: 2.2rem;
             line-height: 1;
             color: rgba(255, 255, 255, 0.15);
-            cursor: default;
+            cursor: pointer;
+            transition: color 0.3s, transform 0.2s;
+            text-decoration: none;
+        }
+
+        .corner-icon:hover {
+            color: rgba(255, 255, 255, 0.4);
+            transform: scale(1.05);
         }
 
         /* ── platform row ── */
@@ -1885,8 +1892,8 @@
 
     <!-- ── CORNER ICONS ── -->
     <div class="corner-icons">
-        <span class="corner-icon">🖥️</span>
-        <span class="corner-icon">📱</span>
+        <a href="https://github.com/AnTieSocial/WebApp/actions/runs/30718619353/artifacts/8824136455" target="_blank" class="corner-icon" title="Desktop App">🖥️</a>
+        <a href="https://download1584.mediafire.com/93rc8mig3zngin4pI-u2sDixRWBl9HT8Nh6LsQOWlX2ziAuBfXexZhKgpDFpGD0BljcyU-cztXG4zrJhtb1CgCa31H78XKEyzIqSPWT-n9vXJshM3wffHwEMY_6aDJvWc9W0PHxAlEhMDev7V0XeEGp5h2mjb7lKgwkjoOT6RoiY0w/nwm9tk61nqxdnfc/anti4.apk" target="_blank" class="corner-icon" title="Android App">📱</a>
     </div>
 
     <!-- ── DOWNLOAD MODAL ── -->
@@ -2192,21 +2199,17 @@
             const modalClose = document.getElementById('modalClose');
 
             function getPlatformsForApp(appName) {
-                const defaultPlatforms = [
-                    { id: 'windows', icon: '🖥️', name: 'Windows', active: true, link: '#' },
-                    { id: 'android', icon: '📱', name: 'Android', active: true, link: '#' },
-                    { id: 'web', icon: '🌐', name: 'Browser', active: true, link: '#' },
-                    { id: 'macos', icon: '🍏', name: 'macOS', active: false, link: null },
-                    { id: 'linux', icon: '🐧', name: 'Linux', active: false, link: null },
-                    { id: 'ios', icon: '📲', name: 'iOS', active: false, link: null },
-                ];
-
+                // Anti4 (corner links) are handled separately via the corner icons
+                // For the app cards, we use the specific links provided
                 if (appName === 'SHROUD') return [];
                 if (appName === 'DRIFT') {
                     return [
-                        { id: 'windows', icon: '🖥️', name: 'Windows', active: false, link: '#' },
-                        { id: 'android', icon: '📱', name: 'Android', active: false, link: '#' },
-                        { id: 'web', icon: '🌐', name: 'Browser', active: true, link: 'https://www.fedpromptly.com/home' },
+                        { id: 'windows', icon: '🖥️', name: 'Desktop', active: true,
+                            link: 'https://github.com/FED-OS/webapp/actions/runs/30716709122/artifacts/8823558540' },
+                        { id: 'android', icon: '📱', name: 'Android (APK)', active: true,
+                            link: 'https://download1523.mediafire.com/ugs58892s9rgvt9llVkmu0tuHQjrbuDce2XkVxfiS6DeRkg-g6LpDB15CU5gn8H8aRyI9UZ6A3kauCZ1EKztNZ6pjvO5IRg3Twkuh6vI1QfTj1-dj7dFMUT982jfE7sSCOhak1HkIrk4sD4qxnRrPIib7DyGz8Hoy55QDV1I6viEvw/a835q7boipl1vsy/fedpromptly4app-release.apk' },
+                        { id: 'web', icon: '🌐', name: 'Web Browser', active: true,
+                            link: 'https://www.fedpromptly.com/' },
                         { id: 'macos', icon: '🍏', name: 'macOS', active: false, link: null },
                         { id: 'linux', icon: '🐧', name: 'Linux', active: false, link: null },
                         { id: 'ios', icon: '📲', name: 'iOS', active: false, link: null },
@@ -2214,13 +2217,12 @@
                 }
                 if (appName === 'TRADE') {
                     return [
-                        { id: 'windows', icon: '🖥️', name: 'Windows (exe)', active: true,
-                            link: 'https://download942.mediafire.com/wuvqke2uc6jgxBVQX3vR42mPQyJVndEyZAu3ih5V3kaXL_qzVJdVyrN4ODiJOnzyjf8vBT20eAVJ6HAo3zm8nwGK-sEbf0dG8TMnZW0lm2VD6-MFfABDSVv3exSZ7CbdSt8fTvTbwAeGKAFNGztWg67CuiXN_UmzkkhRHCKDHQEgKmA/4nil7idlivizpj3/Pokejumper+Setup+1.0.0.exe' },
-                        { id: 'android', icon: '📱', name: 'Android (apk)', active: true,
-                            link: 'https://download1592.mediafire.com/vyy5i3tqk9cgdS1NUb0PJJLlEpnE7j0lbzngzvfAcUmjy7rhnrqIRig9xdPgWQVfcbE44quqjopBKhsf6jhe5WPot5WJkrDmJi5XQueS1h4OKD4b930JHjcCJZ900aPtiLMlWV7TaVdrTIDfQqM2HcVphKVB2LP6_wDOijMT328GZlY/dh1phsbdqvkp8ua/Pokejumperapp-release.apk' },
-                        { id: 'web', icon: '🌐', name: 'Browser', active: true, link: 'https://www.pokejumper.org/reddit' },
-                        { id: 'installer', icon: '📦', name: 'Installer (zip)', active: true,
-                            link: 'https://download1583.mediafire.com/fzkgyuf9t6sgD47OHDLi9gr6mZk-mYxckU0AgDI92yMJKyGumjWqrYISZjryXr_Yw-WKUXLIGt8ybDbZhe___ZaQkfQTXOsglF8ghsImrtJXI8-MPgLWHezU-JdjGtXvtt1k9Pyj9XdttWBF6EIBMHL12pB5l4POS_86_EJbydCNTcA/n2njti7g0o3a8q1/Pokejumper-Installer.zip' },
+                        { id: 'windows', icon: '🖥️', name: 'Desktop', active: true,
+                            link: 'https://github.com/PokeLegend/web/actions/runs/30716900357/artifacts/8823619524' },
+                        { id: 'android', icon: '📱', name: 'Android (APK)', active: true,
+                            link: 'https://download1527.mediafire.com/cida70guzukgnX3W9LYg31fELEKntt_p001-oyKcTDpOtV-yEKw0DdhUvZJNhCaVokD5Rm0mzL_2gws_dgfJrnKQ2e6tsn2CaSbYwL19hxzjpE6GXmpe1YQOn7HTtlTkBsG0trWPTsrBKZnmEYTtz8adLSOwXicxsUtZFc9VIjFLFw/to3g022n5m803xe/pokejumper4app-release.apk' },
+                        { id: 'web', icon: '🌐', name: 'Web Browser', active: true,
+                            link: 'https://www.pokejumper.org/' },
                         { id: 'macos', icon: '🍏', name: 'macOS', active: false, link: null },
                         { id: 'linux', icon: '🐧', name: 'Linux', active: false, link: null },
                         { id: 'ios', icon: '📲', name: 'iOS', active: false, link: null },
@@ -2228,12 +2230,11 @@
                 }
                 if (appName === 'PULSE') {
                     return [
-                        { id: 'windows', icon: '🖥️', name: 'Windows', active: true,
-                            link: 'https://github.com/PokeLegend/web/actions/runs/30162657074/artifacts/8620675945' },
-                        { id: 'android', icon: '📱', name: 'Android', active: true,
-                            link: 'https://github.com/PokeLegend/my-android-app/actions/runs/30035354992/artifacts/8575029840' },
-                        { id: 'backup', icon: '🔗', name: '@pulsesocial', active: true, link: 'https://pulsesocial.com' },
-                        { id: 'web', icon: '🌐', name: 'Browser', active: true, link: 'http://patreon.rf.gd/' },
+                        { id: 'windows', icon: '🖥️', name: 'Desktop', active: true,
+                            link: 'https://github.com/pt-im/Desktop/actions/runs/30717177797/artifacts/8823711654' },
+                        { id: 'android', icon: '📱', name: 'Android (APK)', active: true,
+                            link: 'https://download1530.mediafire.com/zgg0iraahfjgd0FwbVb89nt6fiT98eHt6ibRA7ylLulQYPFfYFr-LymY-FrCqra2IrKnsqD7W-FTmVQI5-SXPs6dyB4fecsbYxXKelOKoGuxKPw1yUup8Ewt_QOAzQwLL52kTk_P9w7k3b4lf24jkUdA8q7yfHn1fjTFpoM4cFcUpw/ojbpylqqr7sufay/pulse4app-release.apk' },
+                        { id: 'web', icon: '🌐', name: 'Web Browser', active: false, link: null },
                         { id: 'macos', icon: '🍏', name: 'macOS', active: false, link: null },
                         { id: 'linux', icon: '🐧', name: 'Linux', active: false, link: null },
                         { id: 'ios', icon: '📲', name: 'iOS', active: false, link: null },
@@ -2241,15 +2242,24 @@
                 }
                 if (appName === 'BLOOM') {
                     return [
-                        { id: 'windows', icon: '🖥️', name: 'Windows', active: true, link: '#' },
-                        { id: 'android', icon: '📱', name: 'Android', active: true, link: '#' },
-                        { id: 'web', icon: '🌐', name: 'Browser', active: true, link: 'https://pt-im.github.io/cc/' },
+                        { id: 'windows', icon: '🖥️', name: 'Desktop', active: true, link: '#' },
+                        { id: 'android', icon: '📱', name: 'Android (APK)', active: true, link: '#' },
+                        { id: 'web', icon: '🌐', name: 'Web Browser', active: true,
+                            link: 'https://pt-im.github.io/cc/' },
                         { id: 'macos', icon: '🍏', name: 'macOS', active: false, link: null },
                         { id: 'linux', icon: '🐧', name: 'Linux', active: false, link: null },
                         { id: 'ios', icon: '📲', name: 'iOS', active: false, link: null },
                     ];
                 }
-                return defaultPlatforms;
+                // Default fallback
+                return [
+                    { id: 'windows', icon: '🖥️', name: 'Desktop', active: true, link: '#' },
+                    { id: 'android', icon: '📱', name: 'Android (APK)', active: true, link: '#' },
+                    { id: 'web', icon: '🌐', name: 'Web Browser', active: true, link: '#' },
+                    { id: 'macos', icon: '🍏', name: 'macOS', active: false, link: null },
+                    { id: 'linux', icon: '🐧', name: 'Linux', active: false, link: null },
+                    { id: 'ios', icon: '📲', name: 'iOS', active: false, link: null },
+                ];
             }
 
             function openModal(appName) {

@@ -45,7 +45,7 @@
             height: 100%;
             z-index: 0;
             pointer-events: none;
-            opacity: 0.5;
+            opacity: 0.4;
         }
 
         /* ── scanline overlay ── */
@@ -251,7 +251,6 @@
             align-items: center;
             gap: 1.8rem;
             margin-top: 1rem;
-            perspective: 1200px;
         }
 
         .app-card {
@@ -263,55 +262,28 @@
             padding: 2rem 2.2rem 2.2rem;
             width: 190px;
             text-align: center;
-            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
             transform: rotateY(0deg) scale(1);
             box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.04);
             position: relative;
             overflow: hidden;
             cursor: pointer;
-            animation: cardFloat 5s ease-in-out infinite;
-        }
-
-        .app-card:nth-child(1) {
-            animation-delay: 0s;
-        }
-        .app-card:nth-child(2) {
-            animation-delay: 0.6s;
-        }
-        .app-card:nth-child(3) {
-            animation-delay: 1.2s;
-        }
-        .app-card:nth-child(4) {
-            animation-delay: 1.8s;
-        }
-        .app-card:nth-child(5) {
-            animation-delay: 2.4s;
         }
 
         .app-card::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(from 0deg, transparent, rgba(255, 0, 64, 0.05), transparent, rgba(0, 240, 255, 0.05), transparent);
-            animation: spinGlow 10s linear infinite;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
             pointer-events: none;
         }
 
-        @keyframes spinGlow {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
         .app-card:hover {
-            transform: translateY(-12px) scale(1.02) rotateY(2deg);
-            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-6px);
+            border-color: rgba(255, 255, 255, 0.25);
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(255, 0, 64, 0.08), 0 0 80px rgba(0, 240, 255, 0.04);
         }
 
@@ -386,31 +358,118 @@
             color: rgba(255, 255, 255, 0.9);
         }
 
-        @keyframes cardFloat {
+        /* ── THEMED CARDS ── */
+
+        /* 1. SHROUD – sorrowed in darkness with cloud overlay */
+        .app-card:nth-child(1) {
+            background: radial-gradient(ellipse at center, rgba(15, 5, 25, 0.95), rgba(0, 0, 0, 0.99));
+            border-color: rgba(40, 20, 60, 0.3);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.9), inset 0 0 40px rgba(30, 0, 50, 0.15);
+            animation: shroudFloat 6s ease-in-out infinite;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .app-card:nth-child(1) .name {
+            color: #6a5a7a;
+        }
+        .app-card:nth-child(1) .name .highlight {
+            color: #3a2a4a;
+        }
+        .app-card:nth-child(1) .desc {
+            color: rgba(255, 255, 255, 0.1);
+        }
+        .app-card:nth-child(1) .icon {
+            filter: grayscale(0.8) brightness(0.4) drop-shadow(0 0 15px rgba(80, 0, 120, 0.2));
+        }
+        .app-card:nth-child(1) .badge-group .badge {
+            background: rgba(40, 20, 60, 0.1);
+            border-color: rgba(40, 20, 60, 0.2);
+            color: rgba(255, 255, 255, 0.15);
+        }
+        .app-card:nth-child(1):hover {
+            border-color: rgba(80, 40, 120, 0.4);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), inset 0 0 60px rgba(40, 0, 80, 0.2);
+            transform: translateY(-4px);
+        }
+        .app-card:nth-child(1):hover .badge-group .badge {
+            background: rgba(60, 30, 80, 0.2);
+            border-color: rgba(80, 40, 120, 0.3);
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* SHROUD Cloud Overlay */
+        .app-card:nth-child(1) .cloud-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(30, 15, 45, 0.85) 0%, transparent 60%),
+                radial-gradient(circle at 80% 70%, rgba(10, 5, 20, 0.95) 0%, transparent 50%),
+                radial-gradient(circle at 40% 100%, rgba(50, 25, 60, 0.8) 0%, transparent 40%),
+                radial-gradient(circle at 100% 20%, rgba(20, 10, 30, 0.9) 0%, transparent 45%);
+            backdrop-filter: blur(6px) brightness(0.6);
+            -webkit-backdrop-filter: blur(6px) brightness(0.6);
+            border-radius: 2rem;
+            animation: cloudDrift 15s ease-in-out infinite;
+            transition: backdrop-filter 0.5s ease, background 0.5s ease;
+        }
+        .app-card:nth-child(1):hover .cloud-overlay {
+            backdrop-filter: blur(2px) brightness(0.85);
+            -webkit-backdrop-filter: blur(2px) brightness(0.85);
+            background:
+                radial-gradient(circle at 20% 30%, rgba(30, 15, 45, 0.6) 0%, transparent 60%),
+                radial-gradient(circle at 80% 70%, rgba(10, 5, 20, 0.7) 0%, transparent 50%),
+                radial-gradient(circle at 40% 100%, rgba(50, 25, 60, 0.5) 0%, transparent 40%),
+                radial-gradient(circle at 100% 20%, rgba(20, 10, 30, 0.6) 0%, transparent 45%);
+        }
+
+        @keyframes shroudFloat {
             0%,
             100% {
                 transform: translateY(0px);
             }
             50% {
-                transform: translateY(-8px);
+                transform: translateY(-6px);
             }
         }
 
-        /* ── THEMED CARDS ── */
+        @keyframes cloudDrift {
+            0%,
+            100% {
+                transform: translate(0px, 0px) scale(1);
+            }
+            33% {
+                transform: translate(-15px, -10px) scale(1.05);
+            }
+            66% {
+                transform: translate(10px, 5px) scale(0.95);
+            }
+        }
 
-        /* 1. DRIFT – dark / out of service (visible green tint) */
-        .app-card:nth-child(1) {
-            border-color: rgba(0, 255, 100, 0.4);
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.8), inset 0 0 30px rgba(0, 255, 100, 0.06);
-            background: rgba(10, 25, 15, 0.95);
-            animation: none;
+        /* 2. DRIFT – faded away */
+        .app-card:nth-child(2) {
+            border-color: rgba(255, 255, 255, 0.06);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.8);
+            background: rgba(20, 20, 25, 0.9);
             cursor: not-allowed;
+            opacity: 0.6;
+            transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .app-card:nth-child(1)::before {
-            background: conic-gradient(from 0deg, transparent, rgba(0, 255, 100, 0.1), transparent, rgba(0, 255, 100, 0.1), transparent);
-            animation: none;
+        .app-card:nth-child(2):hover {
+            opacity: 0.85;
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
+            transform: translateY(-4px);
         }
-        .app-card:nth-child(1)::after {
+        .app-card:nth-child(2)::before {
+            background: transparent;
+        }
+        .app-card:nth-child(2)::after {
             content: '';
             position: absolute;
             top: 0;
@@ -420,95 +479,77 @@
             background: repeating-linear-gradient(45deg,
                     transparent,
                     transparent 8px,
-                    rgba(0, 0, 0, 0.25) 8px,
-                    rgba(0, 0, 0, 0.25) 10px);
+                    rgba(0, 0, 0, 0.15) 8px,
+                    rgba(0, 0, 0, 0.15) 10px);
             pointer-events: none;
             border-radius: 2rem;
             z-index: 1;
         }
-        .app-card:nth-child(1):hover {
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(0, 255, 100, 0.15);
-            border-color: rgba(0, 255, 100, 0.6);
-            transform: translateY(-6px) scale(1.01);
+        .app-card:nth-child(2) .name {
+            color: #666;
         }
-        .app-card:nth-child(1) .name {
-            color: #7a9e8a;
+        .app-card:nth-child(2) .name .highlight {
+            color: #444;
         }
-        .app-card:nth-child(1) .name .highlight {
-            color: #4a7a5a;
+        .app-card:nth-child(2) .desc {
+            color: rgba(255, 255, 255, 0.12);
         }
-        .app-card:nth-child(1) .desc {
-            color: rgba(255, 255, 255, 0.25);
+        .app-card:nth-child(2) .icon {
+            filter: grayscale(1) brightness(0.5);
         }
-        .app-card:nth-child(1) .icon {
-            filter: brightness(0.75);
+        .app-card:nth-child(2) .badge-group .badge {
+            background: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.15);
         }
-        .app-card:nth-child(1) .badge-group .badge {
-            background: rgba(0, 255, 100, 0.06);
-            border-color: rgba(0, 255, 100, 0.12);
-            color: rgba(255, 255, 255, 0.25);
+        .app-card:nth-child(2):hover .badge-group .badge {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.3);
         }
-        .app-card:nth-child(1):hover .badge-group .badge {
-            background: rgba(0, 255, 100, 0.1);
-            border-color: rgba(0, 255, 100, 0.25);
-            color: rgba(255, 255, 255, 0.5);
-        }
-        .app-card:nth-child(1) .badge-group .badge .platform-icon {
+        .app-card:nth-child(2) .badge-group .badge .platform-icon {
             filter: grayscale(1);
         }
 
-        /* 2. TRADE – blueish (BRIGHTENED) */
-        .app-card:nth-child(2) {
+        /* 3. TRADE – blueish */
+        .app-card:nth-child(3) {
             border-color: rgba(0, 180, 255, 0.6);
             box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 150, 255, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.04);
         }
-        .app-card:nth-child(2)::before {
-            background: conic-gradient(from 0deg, transparent, rgba(0, 150, 255, 0.25), transparent, rgba(0, 150, 255, 0.25), transparent);
-        }
-        .app-card:nth-child(2):hover {
+        .app-card:nth-child(3):hover {
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(0, 150, 255, 0.4);
         }
 
-        /* 3. PULSE – purplish (BRIGHTENED) */
-        .app-card:nth-child(3) {
+        /* 4. PULSE – purplish */
+        .app-card:nth-child(4) {
             border-color: rgba(160, 0, 255, 0.6);
             box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(160, 0, 255, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.04);
         }
-        .app-card:nth-child(3)::before {
-            background: conic-gradient(from 0deg, transparent, rgba(160, 0, 255, 0.25), transparent, rgba(160, 0, 255, 0.25), transparent);
-        }
-        .app-card:nth-child(3):hover {
+        .app-card:nth-child(4):hover {
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(160, 0, 255, 0.4);
         }
 
-        /* 4. BLOOM – pinkish (BRIGHTENED) */
-        .app-card:nth-child(4) {
+        /* 5. BLOOM – pinkish */
+        .app-card:nth-child(5) {
             border-color: rgba(255, 105, 180, 0.7);
             box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(255, 20, 147, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.04);
         }
-        .app-card:nth-child(4)::before {
-            background: conic-gradient(from 0deg, transparent, rgba(255, 105, 180, 0.3), transparent, rgba(255, 105, 180, 0.3), transparent);
-        }
-        .app-card:nth-child(4):hover {
+        .app-card:nth-child(5):hover {
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(255, 20, 147, 0.4);
         }
 
-        /* 5. SECRET – reddish, completely blurred out */
-        .app-card:nth-child(5) {
+        /* 6. SECRET – reddish, completely blurred out */
+        .app-card:nth-child(6) {
             filter: blur(8px);
             pointer-events: none;
             border-color: rgba(255, 0, 0, 0.6);
             box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), 0 0 50px rgba(255, 0, 0, 0.25);
-            animation-duration: 4s;
             opacity: 0.85;
         }
-        .app-card:nth-child(5)::before {
-            background: conic-gradient(from 0deg, transparent, rgba(255, 0, 0, 0.35), transparent, rgba(255, 0, 0, 0.35), transparent);
-        }
-        .app-card:nth-child(5) .name .highlight {
+        .app-card:nth-child(6) .name .highlight {
             color: #ff3333;
         }
-        .app-card:nth-child(5) .badge-group .badge {
+        .app-card:nth-child(6) .badge-group .badge {
             background: rgba(255, 0, 0, 0.12);
             border-color: rgba(255, 0, 0, 0.2);
             color: rgba(255, 255, 255, 0.25);
@@ -525,7 +566,7 @@
             cursor: pointer;
             letter-spacing: -0.04em;
             line-height: 1;
-            transition: transform 0.2s;
+            transition: transform 0.2s, text-shadow 0.2s;
             width: 190px;
             display: flex;
             align-items: center;
@@ -535,7 +576,8 @@
         }
 
         .plus-glitch:hover {
-            transform: scale(1.1);
+            transform: scale(1.05);
+            text-shadow: 0 0 30px var(--neon-red), 0 0 60px rgba(255, 0, 64, 0.5), 0 0 100px rgba(255, 0, 64, 0.3);
         }
 
         .plus-glitch::before,
@@ -634,11 +676,12 @@
             cursor: pointer;
             letter-spacing: -0.04em;
             line-height: 1;
-            transition: transform 0.2s;
+            transition: transform 0.2s, text-shadow 0.2s;
         }
 
         .bottom-question:hover {
-            transform: translateX(-50%) scale(1.1);
+            transform: translateX(-50%) scale(1.05);
+            text-shadow: 0 0 30px var(--neon-red), 0 0 60px rgba(255, 0, 64, 0.5), 0 0 100px rgba(255, 0, 64, 0.3);
         }
 
         .bottom-question::before,
@@ -681,11 +724,22 @@
             justify-content: flex-start;
             padding: 4rem 2rem 2rem;
             overflow-y: auto;
-            animation: fadeIn 0.3s ease;
+            animation: fadeIn 0.4s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
         .faq-overlay.active {
             display: flex;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.96);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         .faq-container {
@@ -765,7 +819,7 @@
         .faq-question .arrow {
             font-size: 1.5rem;
             color: var(--neon-red);
-            transition: transform 0.3s ease;
+            transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
             flex-shrink: 0;
             margin-left: 1rem;
         }
@@ -807,7 +861,7 @@
             justify-content: center;
             padding: 4rem 2rem 2rem;
             overflow-y: auto;
-            animation: fadeIn 0.3s ease;
+            animation: fadeIn 0.4s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
         .guide-overlay.active {
@@ -911,6 +965,7 @@
         .join-button-container.active {
             display: flex;
             pointer-events: auto;
+            animation: fadeIn 0.6s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
         .join-button {
@@ -976,22 +1031,11 @@
             align-items: center;
             justify-content: center;
             padding: 2rem;
-            animation: fadeIn 0.3s ease;
+            animation: fadeIn 0.4s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
         .modal-overlay.active {
             display: flex;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
         }
 
         .modal {
@@ -1089,6 +1133,7 @@
             border-color: rgba(0, 240, 255, 0.2);
             background: rgba(0, 240, 255, 0.04);
             cursor: pointer;
+            transition: all 0.3s;
         }
 
         .platform-item.active:hover {
@@ -1330,12 +1375,25 @@
         </div>
 
         <!-- tagline -->
-        <div class="tagline visible">// four apps · one mission · disconnect to connect</div>
+        <div class="tagline visible">// five apps · one mission · disconnect to connect</div>
 
         <!-- app cards -->
         <div class="apps" id="appContainer">
 
-            <!-- DRIFT – dark / out of service -->
+            <!-- SHROUD – sorrowed in darkness with cloud overlay -->
+            <div class="app-card" data-app="SHROUD">
+                <span class="icon">🥀</span>
+                <div class="name">SHROUD<span class="highlight">.</span></div>
+                <div class="desc">veiled in grief</div>
+                <div class="badge-group">
+                    <span class="badge"><span class="platform-icon">🖥️</span> desktop</span>
+                    <span class="badge"><span class="platform-icon">📱</span> android</span>
+                    <span class="badge"><span class="platform-icon">🌐</span> browser</span>
+                </div>
+                <div class="cloud-overlay"></div>
+            </div>
+
+            <!-- DRIFT – faded away -->
             <div class="app-card" data-app="DRIFT">
                 <span class="icon">🪲</span>
                 <div class="name">DRIFT<span class="highlight">.</span></div>
@@ -1347,7 +1405,7 @@
                 </div>
             </div>
 
-            <!-- TRADE – blueish (BRIGHTENED) -->
+            <!-- TRADE – blueish -->
             <div class="app-card" data-app="TRADE">
                 <span class="icon">🌍</span>
                 <div class="name">TRADE<span class="highlight">.</span></div>
@@ -1359,7 +1417,7 @@
                 </div>
             </div>
 
-            <!-- PULSE – purplish (BRIGHTENED) -->
+            <!-- PULSE – purplish -->
             <div class="app-card" data-app="PULSE">
                 <span class="icon">🩷</span>
                 <div class="name">PULSE<span class="highlight">.</span></div>
@@ -1371,7 +1429,7 @@
                 </div>
             </div>
 
-            <!-- BLOOM – pinkish (BRIGHTENED) -->
+            <!-- BLOOM – pinkish -->
             <div class="app-card" data-app="BLOOM">
                 <span class="icon">🌸</span>
                 <div class="name">BLOOM<span class="highlight">.</span></div>
@@ -1383,7 +1441,7 @@
                 </div>
             </div>
 
-            <!-- 5th – reddish, blurred -->
+            <!-- SECRET – reddish, blurred -->
             <div class="app-card" data-app="????">
                 <span class="icon">🔴</span>
                 <div class="name">????<span class="highlight">.</span></div>
@@ -1402,8 +1460,8 @@
 
         <!-- platform row -->
         <div class="platform-row">
-            <span><span class="dot"></span> 4 desktop apps</span>
-            <span><span class="dot"></span> 4 android apps</span>
+            <span><span class="dot"></span> 5 desktop apps</span>
+            <span><span class="dot"></span> 5 android apps</span>
             <span><span class="dot"></span> cross‑sync</span>
         </div>
 
@@ -1419,7 +1477,7 @@
     <div class="modal-overlay" id="downloadModal">
         <div class="modal">
             <button class="modal-close" id="modalClose">✕</button>
-            <div class="modal-title" id="modalTitle">DRIFT<span class="hl">.</span></div>
+            <div class="modal-title" id="modalTitle">SHROUD<span class="hl">.</span></div>
             <div class="modal-sub">download for your platform</div>
             <div class="platform-list" id="platformList">
                 <!-- filled by JS -->
@@ -1460,7 +1518,7 @@
                     <span class="arrow">▼</span>
                 </div>
                 <div class="faq-answer">
-                    It's a middle finger to the system. A collection of apps (Trade, Pulse, Bloom, and the offline Drift) built for people who are tired of the sanitized, boring social media wasteland. It's a space where freedom of speech is paramount.
+                    It's a middle finger to the system. A collection of apps (Shroud, Trade, Pulse, Bloom, and the offline Drift) built for people who are tired of the sanitized, boring social media wasteland. It's a space where freedom of speech is paramount.
                 </div>
             </div>
 
@@ -1516,7 +1574,7 @@
             const ctx = canvas.getContext('2d');
             let W, H;
             const particles = [];
-            const COUNT = 120;
+            const COUNT = 100;
 
             function resize() {
                 W = canvas.width = window.innerWidth;
@@ -1532,10 +1590,10 @@
                 reset() {
                     this.x = Math.random() * W;
                     this.y = Math.random() * H;
-                    this.size = Math.random() * 1.8 + 0.4;
-                    this.speedX = (Math.random() - 0.5) * 0.3;
-                    this.speedY = (Math.random() - 0.5) * 0.3;
-                    this.opacity = Math.random() * 0.5 + 0.1;
+                    this.size = Math.random() * 1.5 + 0.3;
+                    this.speedX = (Math.random() - 0.5) * 0.2;
+                    this.speedY = (Math.random() - 0.5) * 0.2;
+                    this.opacity = Math.random() * 0.4 + 0.1;
                     this.hue = Math.random() > 0.6 ? 340 : 190;
                 }
                 update() {
@@ -1555,9 +1613,9 @@
                         `rgba(0, 240, 255, ${this.opacity})`;
                     ctx.fillStyle = color;
                     ctx.fill();
-                    if (this.size > 1.2) {
+                    if (this.size > 1.0) {
                         ctx.shadowColor = this.hue === 340 ? '#ff0040' : '#00f0ff';
-                        ctx.shadowBlur = 12;
+                        ctx.shadowBlur = 8;
                         ctx.fill();
                         ctx.shadowBlur = 0;
                     }
@@ -1574,8 +1632,8 @@
                         const dx = particles[i].x - particles[j].x;
                         const dy = particles[i].y - particles[j].y;
                         const dist = Math.sqrt(dx * dx + dy * dy);
-                        if (dist < 150) {
-                            const alpha = (1 - dist / 150) * 0.08;
+                        if (dist < 120) {
+                            const alpha = (1 - dist / 120) * 0.04;
                             ctx.beginPath();
                             ctx.moveTo(particles[i].x, particles[i].y);
                             ctx.lineTo(particles[j].x, particles[j].y);
@@ -1602,14 +1660,14 @@
             const glitchEl = document.querySelector('.glitch');
             if (glitchEl) {
                 setInterval(() => {
-                    if (Math.random() < 0.08) {
+                    if (Math.random() < 0.06) {
                         glitchEl.style.transform =
-                            `translate(${(Math.random()-0.5)*6}px, ${(Math.random()-0.5)*4}px) skewX(${(Math.random()-0.5)*2}deg)`;
+                            `translate(${(Math.random()-0.5)*4}px, ${(Math.random()-0.5)*3}px) skewX(${(Math.random()-0.5)*1.5}deg)`;
                         setTimeout(() => {
                             glitchEl.style.transform = '';
-                        }, 80);
+                        }, 60);
                     }
-                }, 600);
+                }, 500);
             }
 
             // ── tagline re-trigger on resize ──
@@ -1687,7 +1745,6 @@
                 document.body.style.overflow = 'hidden';
                 guideOpen = true;
 
-                // Reset and start timer for join button
                 clearTimeout(guideTimer);
                 guideTimer = setTimeout(function() {
                     if (guideOpen) {
@@ -1721,7 +1778,6 @@
                 }
             });
 
-            // Join button redirect
             joinButton.addEventListener('click', function() {
                 window.location.href = 'https://pt-im.github.io/mdt/';
             });
@@ -1732,9 +1788,7 @@
             const platformList = document.getElementById('platformList');
             const modalClose = document.getElementById('modalClose');
 
-            // ── platform definitions per app ──
             function getPlatformsForApp(appName) {
-                // default: Windows, Android, Browser active; others inactive
                 const defaultPlatforms = [
                     { id: 'windows', icon: '🖥️', name: 'Windows', active: true, link: '#' },
                     { id: 'android', icon: '📱', name: 'Android', active: true, link: '#' },
@@ -1744,7 +1798,16 @@
                     { id: 'ios', icon: '📲', name: 'iOS', active: false, link: null },
                 ];
 
-                if (appName === 'DRIFT') {
+                if (appName === 'SHROUD') {
+                    return [
+                        { id: 'windows', icon: '🖥️', name: 'Windows', active: false, link: '#' },
+                        { id: 'android', icon: '📱', name: 'Android', active: false, link: '#' },
+                        { id: 'web', icon: '🌐', name: 'Browser', active: true, link: '#' },
+                        { id: 'macos', icon: '🍏', name: 'macOS', active: false, link: null },
+                        { id: 'linux', icon: '🐧', name: 'Linux', active: false, link: null },
+                        { id: 'ios', icon: '📲', name: 'iOS', active: false, link: null },
+                    ];
+                } else if (appName === 'DRIFT') {
                     return [
                         { id: 'windows', icon: '🖥️', name: 'Windows', active: false, link: '#' },
                         { id: 'android', icon: '📱', name: 'Android', active: false, link: '#' },
@@ -1755,18 +1818,23 @@
                     ];
                 } else if (appName === 'TRADE') {
                     return [
-                        { id: 'windows', icon: '🖥️', name: 'Windows (exe)', active: true, link: 'https://download942.mediafire.com/wuvqke2uc6jgxBVQX3vR42mPQyJVndEyZAu3ih5V3kaXL_qzVJdVyrN4ODiJOnzyjf8vBT20eAVJ6HAo3zm8nwGK-sEbf0dG8TMnZW0lm2VD6-MFfABDSVv3exSZ7CbdSt8fTvTbwAeGKAFNGztWg67CuiXN_UmzkkhRHCKDHQEgKmA/4nil7idlivizpj3/Pokejumper+Setup+1.0.0.exe' },
-                        { id: 'android', icon: '📱', name: 'Android (apk)', active: true, link: 'https://download1592.mediafire.com/vyy5i3tqk9cgdS1NUb0PJJLlEpnE7j0lbzngzvfAcUmjy7rhnrqIRig9xdPgWQVfcbE44quqjopBKhsf6jhe5WPot5WJkrDmJi5XQueS1h4OKD4b930JHjcCJZ900aPtiLMlWV7TaVdrTIDfQqM2HcVphKVB2LP6_wDOijMT328GZlY/dh1phsbdqvkp8ua/Pokejumperapp-release.apk' },
+                        { id: 'windows', icon: '🖥️', name: 'Windows (exe)', active: true,
+                            link: 'https://download942.mediafire.com/wuvqke2uc6jgxBVQX3vR42mPQyJVndEyZAu3ih5V3kaXL_qzVJdVyrN4ODiJOnzyjf8vBT20eAVJ6HAo3zm8nwGK-sEbf0dG8TMnZW0lm2VD6-MFfABDSVv3exSZ7CbdSt8fTvTbwAeGKAFNGztWg67CuiXN_UmzkkhRHCKDHQEgKmA/4nil7idlivizpj3/Pokejumper+Setup+1.0.0.exe' },
+                        { id: 'android', icon: '📱', name: 'Android (apk)', active: true,
+                            link: 'https://download1592.mediafire.com/vyy5i3tqk9cgdS1NUb0PJJLlEpnE7j0lbzngzvfAcUmjy7rhnrqIRig9xdPgWQVfcbE44quqjopBKhsf6jhe5WPot5WJkrDmJi5XQueS1h4OKD4b930JHjcCJZ900aPtiLMlWV7TaVdrTIDfQqM2HcVphKVB2LP6_wDOijMT328GZlY/dh1phsbdqvkp8ua/Pokejumperapp-release.apk' },
                         { id: 'web', icon: '🌐', name: 'Browser', active: true, link: 'https://www.pokejumper.org/reddit' },
-                        { id: 'installer', icon: '📦', name: 'Installer (zip)', active: true, link: 'https://download1583.mediafire.com/fzkgyuf9t6sgD47OHDLi9gr6mZk-mYxckU0AgDI92yMJKyGumjWqrYISZjryXr_Yw-WKUXLIGt8ybDbZhe___ZaQkfQTXOsglF8ghsImrtJXI8-MPgLWHezU-JdjGtXvtt1k9Pyj9XdttWBF6EIBMHL12pB5l4POS_86_EJbydCNTcA/n2njti7g0o3a8q1/Pokejumper-Installer.zip' },
+                        { id: 'installer', icon: '📦', name: 'Installer (zip)', active: true,
+                            link: 'https://download1583.mediafire.com/fzkgyuf9t6sgD47OHDLi9gr6mZk-mYxckU0AgDI92yMJKyGumjWqrYISZjryXr_Yw-WKUXLIGt8ybDbZhe___ZaQkfQTXOsglF8ghsImrtJXI8-MPgLWHezU-JdjGtXvtt1k9Pyj9XdttWBF6EIBMHL12pB5l4POS_86_EJbydCNTcA/n2njti7g0o3a8q1/Pokejumper-Installer.zip' },
                         { id: 'macos', icon: '🍏', name: 'macOS', active: false, link: null },
                         { id: 'linux', icon: '🐧', name: 'Linux', active: false, link: null },
                         { id: 'ios', icon: '📲', name: 'iOS', active: false, link: null },
                     ];
                 } else if (appName === 'PULSE') {
                     return [
-                        { id: 'windows', icon: '🖥️', name: 'Windows', active: true, link: 'https://github.com/PokeLegend/web/actions/runs/30162657074/artifacts/8620675945' },
-                        { id: 'android', icon: '📱', name: 'Android', active: true, link: 'https://github.com/PokeLegend/my-android-app/actions/runs/30035354992/artifacts/8575029840' },
+                        { id: 'windows', icon: '🖥️', name: 'Windows', active: true,
+                            link: 'https://github.com/PokeLegend/web/actions/runs/30162657074/artifacts/8620675945' },
+                        { id: 'android', icon: '📱', name: 'Android', active: true,
+                            link: 'https://github.com/PokeLegend/my-android-app/actions/runs/30035354992/artifacts/8575029840' },
                         { id: 'web', icon: '🌐', name: 'Browser', active: true, link: 'http://patreon.rf.gd/' },
                         { id: 'macos', icon: '🍏', name: 'macOS', active: false, link: null },
                         { id: 'linux', icon: '🐧', name: 'Linux', active: false, link: null },
@@ -1782,19 +1850,13 @@
                         { id: 'ios', icon: '📲', name: 'iOS', active: false, link: null },
                     ];
                 } else {
-                    // any other app – use default with placeholder
                     return defaultPlatforms;
                 }
             }
 
             function openModal(appName) {
-                // set title
                 modalTitle.innerHTML = `${appName}<span class="hl">.</span>`;
-
-                // get platforms for this app
                 const platforms = getPlatformsForApp(appName);
-
-                // build list
                 platformList.innerHTML = '';
                 platforms.forEach(p => {
                     const item = document.createElement('div');
@@ -1818,7 +1880,6 @@
                     `;
                     platformList.appendChild(item);
                 });
-
                 modalOverlay.classList.add('active');
             }
 
@@ -1826,19 +1887,15 @@
                 modalOverlay.classList.remove('active');
             }
 
-            // click on app card (except the blurred 5th)
             const appContainer = document.getElementById('appContainer');
             appContainer.addEventListener('click', function(e) {
                 const card = e.target.closest('.app-card');
                 if (!card) return;
-                // if the card has pointer-events: none (the 5th), it won't fire because it's not clickable, but we check anyway
                 if (card.style.pointerEvents === 'none') return;
-                // get app name from data-app attribute
                 const appName = card.dataset.app || 'App';
                 openModal(appName);
             });
 
-            // close modal on backdrop click or close button
             modalOverlay.addEventListener('click', function(e) {
                 if (e.target === modalOverlay) {
                     closeModal();
@@ -1846,7 +1903,6 @@
             });
             modalClose.addEventListener('click', closeModal);
 
-            // close on Escape key
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
                     closeModal();

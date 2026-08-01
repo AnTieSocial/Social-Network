@@ -37,7 +37,7 @@
             cursor: default;
         }
 
-        /* ── INTRO OVERLAY (fixed, full-screen) ── */
+        /* ── INTRO OVERLAY ── */
         #intro-overlay {
             position: fixed;
             top: 0;
@@ -79,9 +79,8 @@
             color: rgba(255, 255, 255, 0.35);
         }
 
-        /* ── intro text container ── */
+        /* ── intro text ── */
         #intro-text {
-            position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -120,7 +119,6 @@
             animation: glitchPulse 1.5s ease-in-out infinite alternate;
         }
 
-        /* ── glitch animations ── */
         @keyframes glitchPulse {
             0% {
                 text-shadow: 0 0 10px var(--neon-red), 0 0 40px var(--neon-red), 0 0 80px rgba(255, 0, 64, 0.2);
@@ -355,6 +353,17 @@
             cursor: pointer;
         }
 
+        .app-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(255, 0, 64, 0.05), transparent, rgba(0, 240, 255, 0.05), transparent);
+            pointer-events: none;
+        }
+
         .app-card:hover {
             transform: translateY(-6px);
             border-color: rgba(255, 255, 255, 0.25);
@@ -437,8 +446,8 @@
         /* SHROUD */
         .app-card:nth-child(1) {
             background: radial-gradient(ellipse at center, rgba(15, 5, 25, 0.95), rgba(0, 0, 0, 0.99));
-            border-color: rgba(40, 20, 60, 0.3);
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.9), inset 0 0 40px rgba(30, 0, 50, 0.15);
+            border-color: rgba(80, 40, 120, 0.5);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.8), 0 0 60px rgba(80, 40, 120, 0.3), inset 0 0 40px rgba(80, 40, 120, 0.2);
             animation: shroudFloat 6s ease-in-out infinite;
             cursor: pointer;
             position: relative;
@@ -457,19 +466,19 @@
             filter: grayscale(0.8) brightness(0.4) drop-shadow(0 0 15px rgba(80, 0, 120, 0.2));
         }
         .app-card:nth-child(1) .badge-group .badge {
-            background: rgba(40, 20, 60, 0.1);
-            border-color: rgba(40, 20, 60, 0.2);
-            color: rgba(255, 255, 255, 0.15);
+            background: rgba(80, 40, 120, 0.15);
+            border-color: rgba(80, 40, 120, 0.25);
+            color: rgba(255, 255, 255, 0.2);
         }
         .app-card:nth-child(1):hover {
-            border-color: rgba(80, 40, 120, 0.4);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), inset 0 0 60px rgba(40, 0, 80, 0.2);
+            border-color: rgba(80, 40, 120, 0.7);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 80px rgba(80, 40, 120, 0.4), inset 0 0 60px rgba(80, 40, 120, 0.3);
             transform: translateY(-4px);
         }
         .app-card:nth-child(1):hover .badge-group .badge {
-            background: rgba(60, 30, 80, 0.2);
-            border-color: rgba(80, 40, 120, 0.3);
-            color: rgba(255, 255, 255, 0.3);
+            background: rgba(80, 40, 120, 0.25);
+            border-color: rgba(80, 40, 120, 0.35);
+            color: rgba(255, 255, 255, 0.4);
         }
 
         .app-card:nth-child(1) .cloud-overlay {
@@ -525,12 +534,15 @@
 
         /* DRIFT */
         .app-card:nth-child(2) {
-            border-color: rgba(0, 255, 100, 0.5);
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 255, 100, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            border-color: rgba(0, 255, 100, 0.7);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), 0 0 60px rgba(0, 255, 100, 0.4), inset 0 0 30px rgba(0, 255, 100, 0.15);
+        }
+        .app-card:nth-child(2)::before {
+            background: conic-gradient(from 0deg, transparent, rgba(0, 255, 100, 0.2), transparent, rgba(0, 255, 100, 0.2), transparent);
         }
         .app-card:nth-child(2):hover {
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(0, 255, 100, 0.3);
-            border-color: rgba(0, 255, 100, 0.7);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 80px rgba(0, 255, 100, 0.5), inset 0 0 40px rgba(0, 255, 100, 0.25);
+            border-color: rgba(0, 255, 100, 0.9);
         }
         .app-card:nth-child(2) .name {
             color: #fff;
@@ -542,14 +554,14 @@
             color: rgba(255, 255, 255, 0.6);
         }
         .app-card:nth-child(2) .badge-group .badge {
-            background: rgba(0, 255, 100, 0.06);
-            border-color: rgba(0, 255, 100, 0.12);
-            color: rgba(255, 255, 255, 0.5);
+            background: rgba(0, 255, 100, 0.1);
+            border-color: rgba(0, 255, 100, 0.2);
+            color: rgba(255, 255, 255, 0.6);
         }
         .app-card:nth-child(2):hover .badge-group .badge {
-            background: rgba(0, 255, 100, 0.1);
-            border-color: rgba(0, 255, 100, 0.25);
-            color: rgba(255, 255, 255, 0.8);
+            background: rgba(0, 255, 100, 0.2);
+            border-color: rgba(0, 255, 100, 0.35);
+            color: rgba(255, 255, 255, 0.9);
         }
         .icon-shake {
             display: inline-block;
@@ -623,11 +635,14 @@
 
         /* TRADE */
         .app-card:nth-child(3) {
-            border-color: rgba(0, 180, 255, 0.6);
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 150, 255, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            border-color: rgba(0, 180, 255, 0.8);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), 0 0 60px rgba(0, 180, 255, 0.4), inset 0 0 30px rgba(0, 180, 255, 0.15);
+        }
+        .app-card:nth-child(3)::before {
+            background: conic-gradient(from 0deg, transparent, rgba(0, 180, 255, 0.2), transparent, rgba(0, 180, 255, 0.2), transparent);
         }
         .app-card:nth-child(3):hover {
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(0, 150, 255, 0.4);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 80px rgba(0, 180, 255, 0.5), inset 0 0 40px rgba(0, 180, 255, 0.25);
         }
         .icon-earth {
             display: inline-block;
@@ -647,11 +662,14 @@
 
         /* PULSE */
         .app-card:nth-child(4) {
-            border-color: rgba(160, 0, 255, 0.6);
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(160, 0, 255, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            border-color: rgba(160, 0, 255, 0.8);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), 0 0 60px rgba(160, 0, 255, 0.4), inset 0 0 30px rgba(160, 0, 255, 0.15);
+        }
+        .app-card:nth-child(4)::before {
+            background: conic-gradient(from 0deg, transparent, rgba(160, 0, 255, 0.2), transparent, rgba(160, 0, 255, 0.2), transparent);
         }
         .app-card:nth-child(4):hover {
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(160, 0, 255, 0.4);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 80px rgba(160, 0, 255, 0.5), inset 0 0 40px rgba(160, 0, 255, 0.25);
         }
         .icon-heart {
             display: inline-block;
@@ -676,7 +694,7 @@
             }
         }
 
-        /* BLOOM */
+        /* ── BLOOM – flip card ── */
         .flip-card {
             perspective: 1200px;
             width: 190px;
@@ -706,7 +724,7 @@
             height: 100%;
             backface-visibility: hidden;
             border-radius: 2rem;
-            padding: 2rem 1.5rem;
+            padding: 2rem 2.2rem 2.2rem;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -715,35 +733,46 @@
             background: var(--card-bg);
             backdrop-filter: blur(16px) saturate(1.2);
             -webkit-backdrop-filter: blur(16px) saturate(1.2);
-            border: 1px solid rgba(255, 105, 180, 0.7);
+            border: 1px solid var(--glass-border);
             box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.04);
         }
 
+        /* Front – matches other cards exactly, with pink pulse glow */
         .flip-card .flip-front {
             transform: rotateY(0deg);
+            border-color: rgba(255, 105, 180, 0.4);
+            box-shadow: 0 0 20px rgba(255, 105, 180, 0.2);
+            animation: pinkPulse 2.5s ease-in-out infinite;
         }
-
-        .flip-card .flip-back {
-            transform: rotateY(180deg);
-            background: radial-gradient(ellipse at center, rgba(20, 5, 15, 0.95), rgba(5, 0, 5, 0.99));
-            border-color: rgba(255, 105, 180, 0.3);
-            cursor: pointer;
+        .flip-card .flip-front::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: transparent;
+            pointer-events: none;
         }
-
+        .flip-card .flip-front:hover {
+            border-color: rgba(255, 105, 180, 0.7);
+            box-shadow: 0 0 40px rgba(255, 105, 180, 0.4);
+        }
         .flip-card .flip-front .icon {
             font-size: 2.8rem;
             display: block;
             margin-bottom: 0.8rem;
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.06));
         }
         .flip-card .flip-front .name {
             font-weight: 700;
             font-size: 1.2rem;
             letter-spacing: 0.02em;
-            color: #ff8cba;
+            color: #fff;
             margin-bottom: 0.25rem;
         }
         .flip-card .flip-front .name .highlight {
-            color: #ff4d8a;
+            color: var(--neon-blue);
         }
         .flip-card .flip-front .desc {
             font-size: 0.7rem;
@@ -780,6 +809,31 @@
             font-size: 0.8rem;
             line-height: 1;
         }
+        .flip-card .flip-front .icon-bloom {
+            display: inline-block;
+        }
+
+        @keyframes pinkPulse {
+            0%, 100% {
+                border-color: rgba(255, 105, 180, 0.3);
+                box-shadow: 0 0 15px rgba(255, 105, 180, 0.1);
+            }
+            50% {
+                border-color: rgba(255, 105, 180, 0.7);
+                box-shadow: 0 0 35px rgba(255, 105, 180, 0.35);
+            }
+        }
+
+        /* Back – minimal flip prompt */
+        .flip-card .flip-back {
+            transform: rotateY(180deg);
+            background: radial-gradient(ellipse at center, rgba(20, 5, 15, 0.95), rgba(5, 0, 5, 0.99));
+            border-color: rgba(255, 105, 180, 0.2);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6), inset 0 0 30px rgba(30, 0, 20, 0.1);
+            cursor: pointer;
+            justify-content: center;
+            gap: 0.5rem;
+        }
         .flip-card .flip-back .back-flip-prompt {
             font-size: 0.85rem;
             color: rgba(255, 255, 255, 0.12);
@@ -789,46 +843,31 @@
             border: 1px dashed rgba(255, 255, 255, 0.05);
             padding: 0.8rem 1.2rem;
             border-radius: 2rem;
-            transition: border-color 0.3s;
+            transition: border-color 0.3s, color 0.3s;
         }
         .flip-card .flip-back:hover .back-flip-prompt {
             border-color: rgba(255, 105, 180, 0.2);
             color: rgba(255, 255, 255, 0.25);
-        }
-        .icon-bloom {
-            display: inline-block;
-            animation: bloomFlower 3s ease-in-out infinite alternate;
-        }
-        @keyframes bloomFlower {
-            0% {
-                transform: scale(0.85) rotate(-8deg);
-                filter: brightness(0.7) saturate(0.8);
-            }
-            50% {
-                transform: scale(1.15) rotate(5deg);
-                filter: brightness(1.2) saturate(1.3);
-            }
-            100% {
-                transform: scale(1) rotate(-4deg);
-                filter: brightness(1) saturate(1);
-            }
         }
 
         /* SECRET */
         .app-card:nth-child(6) {
             filter: blur(8px);
             pointer-events: none;
-            border-color: rgba(255, 0, 0, 0.6);
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), 0 0 50px rgba(255, 0, 0, 0.25);
+            border-color: rgba(255, 0, 0, 0.7);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), 0 0 70px rgba(255, 0, 0, 0.35), inset 0 0 30px rgba(255, 0, 0, 0.1);
             opacity: 0.85;
+        }
+        .app-card:nth-child(6)::before {
+            background: conic-gradient(from 0deg, transparent, rgba(255, 0, 0, 0.2), transparent, rgba(255, 0, 0, 0.2), transparent);
         }
         .app-card:nth-child(6) .name .highlight {
             color: #ff3333;
         }
         .app-card:nth-child(6) .badge-group .badge {
-            background: rgba(255, 0, 0, 0.12);
-            border-color: rgba(255, 0, 0, 0.2);
-            color: rgba(255, 255, 255, 0.25);
+            background: rgba(255, 0, 0, 0.15);
+            border-color: rgba(255, 0, 0, 0.25);
+            color: rgba(255, 255, 255, 0.3);
         }
 
         /* PLUS */
@@ -878,6 +917,25 @@
             z-index: -2;
             animation: glitchShift 1.8s infinite linear alternate-reverse;
             clip-path: inset(60% 0 10% 0);
+        }
+
+        /* ── CORNER ICONS (Left side, plain, no effects) ── */
+        .corner-icons {
+            position: fixed;
+            top: 1.5rem;
+            left: 1.5rem;
+            display: flex;
+            gap: 0.8rem;
+            z-index: 100;
+            font-family: 'Space Grotesk', sans-serif;
+            user-select: none;
+        }
+
+        .corner-icon {
+            font-size: 2.2rem;
+            line-height: 1;
+            color: rgba(255, 255, 255, 0.15);
+            cursor: default;
         }
 
         /* ── platform row ── */
@@ -1559,6 +1617,20 @@
                 font-size: 0.7rem;
                 padding: 0.6rem 1rem;
             }
+            .flip-card .flip-front .icon {
+                font-size: 2.2rem;
+            }
+            .flip-card .flip-front .name {
+                font-size: 1rem;
+            }
+            .corner-icons {
+                top: 1rem;
+                left: 1rem;
+                gap: 0.5rem;
+            }
+            .corner-icon {
+                font-size: 1.8rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1641,6 +1713,30 @@
             .flip-card .flip-back .back-flip-prompt {
                 font-size: 0.6rem;
                 padding: 0.4rem 0.8rem;
+            }
+            .flip-card .flip-front .icon {
+                font-size: 1.8rem;
+            }
+            .flip-card .flip-front .name {
+                font-size: 0.85rem;
+            }
+            .flip-card .flip-front .desc {
+                font-size: 0.55rem;
+            }
+            .flip-card .flip-front .badge-group .badge {
+                font-size: 0.45rem;
+                padding: 0.1rem 0.4rem;
+            }
+            .flip-card .flip-front .badge-group .badge .platform-icon {
+                font-size: 0.55rem;
+            }
+            .corner-icons {
+                top: 0.8rem;
+                left: 0.8rem;
+                gap: 0.4rem;
+            }
+            .corner-icon {
+                font-size: 1.5rem;
             }
         }
 
@@ -1736,7 +1832,7 @@
                 </div>
             </div>
 
-            <!-- BLOOM -->
+            <!-- BLOOM – flip card (starts flipped) -->
             <div class="flip-card flipped" id="bloomFlip">
                 <div class="flip-inner">
                     <div class="flip-front">
@@ -1786,6 +1882,12 @@
 
     <!-- watermark -->
     <div class="watermark">✦ anti social network · v0.1</div>
+
+    <!-- ── CORNER ICONS ── -->
+    <div class="corner-icons">
+        <span class="corner-icon">🖥️</span>
+        <span class="corner-icon">📱</span>
+    </div>
 
     <!-- ── DOWNLOAD MODAL ── -->
     <div class="modal-overlay" id="downloadModal">
@@ -2061,8 +2163,14 @@
             const bloomFlip = document.getElementById('bloomFlip');
             let bloomFlipped = true;
             bloomFlip.addEventListener('click', function(e) {
-                if (bloomFlipped) { this.classList.remove('flipped');
-                    bloomFlipped = false; } else { openModal('BLOOM'); }
+                if (bloomFlipped) {
+                    // Flip to front
+                    this.classList.remove('flipped');
+                    bloomFlipped = false;
+                } else {
+                    // Open the modal
+                    openModal('BLOOM');
+                }
             });
 
             // ── SHROUD empty ──

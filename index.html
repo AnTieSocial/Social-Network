@@ -37,7 +37,7 @@
             cursor: default;
         }
 
-        /* ── INTRO OVERLAY ── */
+        /* ── INTRO OVERLAY (faster) ── */
         #intro-overlay {
             position: fixed;
             top: 0;
@@ -53,7 +53,7 @@
             padding: 2rem;
             font-family: 'Space Grotesk', sans-serif;
             user-select: none;
-            transition: opacity 1.2s ease;
+            transition: opacity 0.8s ease;
             pointer-events: auto;
         }
 
@@ -64,11 +64,11 @@
 
         #intro-overlay .skip {
             position: absolute;
-            bottom: 2.5rem;
-            font-size: 0.7rem;
-            color: rgba(255, 255, 255, 0.1);
+            bottom: 2rem;
+            font-size: 0.6rem;
+            color: rgba(255, 255, 255, 0.08);
             font-family: 'JetBrains Mono', monospace;
-            letter-spacing: 0.2em;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
             cursor: pointer;
             transition: color 0.3s;
@@ -76,7 +76,7 @@
         }
 
         #intro-overlay .skip:hover {
-            color: rgba(255, 255, 255, 0.35);
+            color: rgba(255, 255, 255, 0.25);
         }
 
         /* ── intro text ── */
@@ -87,7 +87,7 @@
             justify-content: center;
             width: 100%;
             max-width: 1000px;
-            min-height: 200px;
+            min-height: 120px;
         }
 
         #intro-text-inner {
@@ -96,7 +96,7 @@
             align-items: center;
             justify-content: center;
             gap: 0.05em;
-            font-size: clamp(3rem, 12vw, 8rem);
+            font-size: clamp(2.5rem, 10vw, 6rem);
             font-weight: 700;
             color: rgba(255, 255, 255, 0.92);
         }
@@ -107,7 +107,7 @@
 
         #intro-nti {
             opacity: 0;
-            transition: opacity 1s ease, text-shadow 1s ease;
+            transition: opacity 0.6s ease, text-shadow 0.6s ease;
         }
 
         #intro-nti.show {
@@ -115,19 +115,19 @@
         }
 
         #intro-nti.glow {
-            text-shadow: 0 0 10px var(--neon-red), 0 0 40px var(--neon-blue), 0 0 80px var(--neon-purple);
-            animation: glitchPulse 1.5s ease-in-out infinite alternate;
+            text-shadow: 0 0 10px var(--neon-red), 0 0 30px var(--neon-blue), 0 0 60px var(--neon-purple);
+            animation: glitchPulse 1.2s ease-in-out infinite alternate;
         }
 
         @keyframes glitchPulse {
             0% {
-                text-shadow: 0 0 10px var(--neon-red), 0 0 40px var(--neon-red), 0 0 80px rgba(255, 0, 64, 0.2);
+                text-shadow: 0 0 8px var(--neon-red), 0 0 30px var(--neon-red), 0 0 60px rgba(255, 0, 64, 0.2);
             }
             50% {
-                text-shadow: 0 0 15px var(--neon-red), 0 0 60px var(--neon-red), 0 0 120px rgba(255, 0, 64, 0.4), 0 0 200px rgba(0, 240, 255, 0.1);
+                text-shadow: 0 0 12px var(--neon-red), 0 0 45px var(--neon-red), 0 0 90px rgba(255, 0, 64, 0.35), 0 0 150px rgba(0, 240, 255, 0.08);
             }
             100% {
-                text-shadow: 0 0 10px var(--neon-red), 0 0 40px var(--neon-red), 0 0 80px rgba(255, 0, 64, 0.2);
+                text-shadow: 0 0 8px var(--neon-red), 0 0 30px var(--neon-red), 0 0 60px rgba(255, 0, 64, 0.2);
             }
         }
 
@@ -814,7 +814,8 @@
         }
 
         @keyframes pinkPulse {
-            0%, 100% {
+            0%,
+            100% {
                 border-color: rgba(255, 105, 180, 0.3);
                 box-shadow: 0 0 15px rgba(255, 105, 180, 0.1);
             }
@@ -919,30 +920,195 @@
             clip-path: inset(60% 0 10% 0);
         }
 
-        /* ── CORNER ICONS (Left side, plain, no effects) ── */
-        .corner-icons {
+        /* ── DOWNLOAD GLITCH (upper left) ── */
+        .download-glitch {
             position: fixed;
             top: 1.5rem;
             left: 1.5rem;
-            display: flex;
-            gap: 0.8rem;
             z-index: 100;
             font-family: 'Space Grotesk', sans-serif;
+            font-size: 3.2rem;
+            font-weight: 700;
+            color: var(--neon-red);
+            text-shadow: 0 0 15px var(--neon-red), 0 0 30px rgba(255, 0, 64, 0.35), 0 0 60px rgba(255, 0, 64, 0.15);
+            animation: glitchPulse 3s ease-in-out infinite alternate;
+            cursor: pointer;
+            letter-spacing: -0.04em;
+            line-height: 1;
+            transition: transform 0.2s, text-shadow 0.2s;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 3.2rem;
+            height: 3.2rem;
+        }
+        .download-glitch:hover {
+            transform: scale(1.06);
+            text-shadow: 0 0 25px var(--neon-red), 0 0 50px rgba(255, 0, 64, 0.5), 0 0 80px rgba(255, 0, 64, 0.25);
+        }
+        .download-glitch::before,
+        .download-glitch::after {
+            content: '⬇';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .download-glitch::before {
+            color: var(--neon-blue);
+            z-index: -1;
+            animation: glitchShift 2s infinite linear alternate-reverse;
+            clip-path: inset(20% 0 60% 0);
+        }
+        .download-glitch::after {
+            color: var(--neon-purple);
+            z-index: -2;
+            animation: glitchShift 1.8s infinite linear alternate-reverse;
+            clip-path: inset(60% 0 10% 0);
+        }
+
+        /* ── TOP-RIGHT DOLLAR SIGN (smaller) ── */
+        .top-dollar {
+            position: fixed;
+            top: 1.2rem;
+            right: 2.5rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3.2rem;
+            font-weight: 700;
+            color: var(--neon-red);
+            text-shadow: 0 0 15px var(--neon-red), 0 0 30px rgba(255, 0, 64, 0.35), 0 0 60px rgba(255, 0, 64, 0.15);
+            z-index: 100;
+            animation: glitchPulse 3s ease-in-out infinite alternate;
+            cursor: pointer;
+            letter-spacing: -0.04em;
+            line-height: 1;
+            transition: transform 0.2s, text-shadow 0.2s;
             user-select: none;
         }
-
-        .corner-icon {
-            font-size: 2.2rem;
-            line-height: 1;
-            color: rgba(255, 255, 255, 0.15);
-            cursor: pointer;
-            transition: color 0.3s, transform 0.2s;
-            text-decoration: none;
+        .top-dollar:hover {
+            transform: scale(1.06);
+            text-shadow: 0 0 25px var(--neon-red), 0 0 50px rgba(255, 0, 64, 0.5), 0 0 80px rgba(255, 0, 64, 0.25);
+        }
+        .top-dollar::before,
+        .top-dollar::after {
+            content: '$';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .top-dollar::before {
+            color: var(--neon-blue);
+            z-index: -1;
+            animation: glitchShift 2s infinite linear alternate-reverse;
+            clip-path: inset(20% 0 60% 0);
+        }
+        .top-dollar::after {
+            color: var(--neon-purple);
+            z-index: -2;
+            animation: glitchShift 1.8s infinite linear alternate-reverse;
+            clip-path: inset(60% 0 10% 0);
         }
 
-        .corner-icon:hover {
+        /* ── ZIP OVERLAY (no hints) ── */
+        .zip-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 99999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .zip-overlay.active {
+            display: flex;
+        }
+
+        .zip-box {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            max-width: 300px;
+            width: 100%;
+            text-align: center;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8);
+        }
+
+        .zip-input {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 100px;
+            padding: 0.8rem 1.2rem;
+            font-size: 1.2rem;
+            color: #fff;
+            width: 100%;
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            outline: none;
+            transition: border-color 0.3s;
+            letter-spacing: 0.2em;
+        }
+
+        .zip-input:focus {
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .zip-submit {
+            margin-top: 1rem;
+            background: transparent;
+            border: 1px solid var(--neon-red);
+            border-radius: 100px;
+            padding: 0.6rem 1.5rem;
+            color: #fff;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            letter-spacing: 0.1em;
+        }
+
+        .zip-submit:hover {
+            background: rgba(255, 0, 64, 0.1);
+            border-color: rgba(255, 0, 64, 0.5);
+        }
+
+        .zip-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 2rem;
+            font-size: 2rem;
+            color: rgba(255, 255, 255, 0.15);
+            cursor: pointer;
+            transition: color 0.3s;
+            background: none;
+            border: none;
+            font-family: inherit;
+            line-height: 1;
+        }
+
+        .zip-close:hover {
             color: rgba(255, 255, 255, 0.4);
-            transform: scale(1.05);
         }
 
         /* ── platform row ── */
@@ -1514,6 +1680,178 @@
             font-family: 'JetBrains Mono', monospace;
         }
 
+        /* ── PAYPAL OVERLAY ── */
+        .paypal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 15, 0.97);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            z-index: 99999;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            animation: fadeIn 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .paypal-overlay.active {
+            display: flex;
+        }
+        .paypal-close {
+            position: fixed;
+            top: 1.5rem;
+            right: 2rem;
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: var(--neon-red);
+            cursor: pointer;
+            z-index: 100000;
+            transition: transform 0.3s, text-shadow 0.3s;
+            text-shadow: 0 0 20px rgba(255, 0, 64, 0.3);
+            font-family: 'Space Grotesk', sans-serif;
+            background: none;
+            border: none;
+            padding: 0.5rem;
+            line-height: 1;
+        }
+        .paypal-close:hover {
+            transform: rotate(90deg);
+            text-shadow: 0 0 40px rgba(255, 0, 64, 0.6);
+        }
+        .paypal-container {
+            max-width: 480px;
+            width: 100%;
+            padding: 1rem 0;
+            text-align: center;
+        }
+        .paypal-title {
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 0 30px var(--neon-red), 0 0 60px rgba(255, 0, 64, 0.2);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .paypal-sub {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.4);
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 0.05em;
+            margin-bottom: 2.5rem;
+            text-transform: uppercase;
+        }
+        .paypal-container #paypal-button-container-P-4CH66365SP314171VNIPAMFQ {
+            margin: 0 auto;
+            max-width: 340px;
+        }
+        .paypal-container #paypal-button-container-P-4CH66365SP314171VNIPAMFQ .paypal-buttons {
+            border-radius: 12px !important;
+            overflow: hidden;
+        }
+
+        /* ── DOWNLOAD LINKS OVERLAY (new minimal) ── */
+        .download-links-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 15, 0.97);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            z-index: 99998;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            animation: fadeIn 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .download-links-overlay.active {
+            display: flex;
+        }
+        .download-links-close {
+            position: fixed;
+            top: 1.5rem;
+            right: 2rem;
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: var(--neon-red);
+            cursor: pointer;
+            z-index: 99999;
+            transition: transform 0.3s, text-shadow 0.3s;
+            text-shadow: 0 0 20px rgba(255, 0, 64, 0.3);
+            font-family: 'Space Grotesk', sans-serif;
+            background: none;
+            border: none;
+            padding: 0.5rem;
+            line-height: 1;
+        }
+        .download-links-close:hover {
+            transform: rotate(90deg);
+            text-shadow: 0 0 40px rgba(255, 0, 64, 0.6);
+        }
+        .download-links-container {
+            max-width: 380px;
+            width: 100%;
+            text-align: center;
+        }
+        .download-links-title {
+            font-size: clamp(1.4rem, 3vw, 2.2rem);
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 0 30px var(--neon-red), 0 0 60px rgba(255, 0, 64, 0.2);
+            margin-bottom: 2rem;
+            letter-spacing: -0.02em;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .download-links-container .platform-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+        .download-links-container .platform-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.8rem 1.2rem;
+            border-radius: 100px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .download-links-container .platform-item:hover {
+            background: rgba(0, 240, 255, 0.08);
+            border-color: rgba(0, 240, 255, 0.3);
+            transform: translateX(4px);
+        }
+        .download-links-container .platform-item .plat-icon {
+            font-size: 1.4rem;
+            margin-right: 0.8rem;
+        }
+        .download-links-container .platform-item .plat-name {
+            flex: 1;
+            text-align: left;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        .download-links-container .platform-item .plat-status {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 0.2rem 0.8rem;
+            border-radius: 100px;
+            background: rgba(0, 240, 255, 0.1);
+            color: var(--neon-blue);
+        }
+
         /* ── responsive ── */
         @media (max-width: 700px) {
             .apps {
@@ -1576,6 +1914,23 @@
             .bottom-question {
                 font-size: 4rem;
                 bottom: 1rem;
+                left: 2rem;
+                transform: none;
+            }
+            .bottom-question:hover {
+                transform: scale(1.05);
+            }
+            .top-dollar {
+                font-size: 2.6rem;
+                top: 1.2rem;
+                right: 1.5rem;
+            }
+            .download-glitch {
+                font-size: 2.6rem;
+                top: 1.2rem;
+                left: 1.2rem;
+                width: 2.6rem;
+                height: 2.6rem;
             }
             .faq-overlay {
                 padding: 5rem 1rem 1rem;
@@ -1630,13 +1985,38 @@
             .flip-card .flip-front .name {
                 font-size: 1rem;
             }
-            .corner-icons {
-                top: 1rem;
-                left: 1rem;
-                gap: 0.5rem;
+            .zip-box {
+                padding: 1.5rem;
             }
-            .corner-icon {
+            .zip-input {
+                font-size: 1rem;
+                padding: 0.6rem 1rem;
+            }
+            .paypal-title {
                 font-size: 1.8rem;
+            }
+            .paypal-sub {
+                font-size: 0.7rem;
+                margin-bottom: 1.8rem;
+            }
+            .paypal-container {
+                padding: 0.5rem 0;
+            }
+            .paypal-close {
+                font-size: 2rem;
+                top: 1rem;
+                right: 1.2rem;
+            }
+            .paypal-container #paypal-button-container-P-4CH66365SP314171VNIPAMFQ {
+                max-width: 280px;
+            }
+            .download-links-container .platform-item {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+            .download-links-title {
+                font-size: 1.6rem;
+                margin-bottom: 1.5rem;
             }
         }
 
@@ -1685,8 +2065,21 @@
                 letter-spacing: 0.3em;
             }
             .bottom-question {
-                font-size: 3rem;
+                font-size: 3.2rem;
                 bottom: 0.8rem;
+                left: 1.2rem;
+            }
+            .top-dollar {
+                font-size: 2.2rem;
+                top: 1rem;
+                right: 1.2rem;
+            }
+            .download-glitch {
+                font-size: 2.2rem;
+                top: 1rem;
+                left: 1rem;
+                width: 2.2rem;
+                height: 2.2rem;
             }
             .faq-title {
                 font-size: 1.8rem;
@@ -1737,13 +2130,34 @@
             .flip-card .flip-front .badge-group .badge .platform-icon {
                 font-size: 0.55rem;
             }
-            .corner-icons {
-                top: 0.8rem;
-                left: 0.8rem;
-                gap: 0.4rem;
+            .zip-box {
+                padding: 1.2rem;
             }
-            .corner-icon {
+            .zip-input {
+                font-size: 0.9rem;
+                padding: 0.5rem 0.8rem;
+            }
+            .paypal-title {
                 font-size: 1.5rem;
+            }
+            .paypal-sub {
+                font-size: 0.6rem;
+            }
+            .paypal-container #paypal-button-container-P-4CH66365SP314171VNIPAMFQ {
+                max-width: 220px;
+            }
+            .download-links-container .platform-item {
+                padding: 0.5rem 0.8rem;
+                font-size: 0.8rem;
+            }
+            .download-links-title {
+                font-size: 1.3rem;
+                margin-bottom: 1.2rem;
+            }
+            .download-links-close {
+                font-size: 2rem;
+                top: 1rem;
+                right: 1.2rem;
             }
         }
 
@@ -1757,7 +2171,7 @@
 </head>
 <body>
 
-    <!-- ── INTRO OVERLAY ── -->
+    <!-- ── INTRO OVERLAY (faster) ── -->
     <div id="intro-overlay">
         <div id="intro-text">
             <div id="intro-text-inner">
@@ -1765,7 +2179,7 @@
                 <span id="intro-nti">nti</span>
             </div>
         </div>
-        <div class="skip">click anywhere to skip</div>
+        <div class="skip">click to skip</div>
     </div>
 
     <!-- background canvas -->
@@ -1887,13 +2301,22 @@
     <!-- bottom question mark -->
     <div class="bottom-question" id="faqTrigger">?</div>
 
+    <!-- top-left download button (glitch themed) -->
+    <div class="download-glitch" id="downloadTrigger" title="Download apps">⬇</div>
+
+    <!-- top-right dollar sign (smaller) -->
+    <div class="top-dollar" id="dollarTrigger">$</div>
+
     <!-- watermark -->
     <div class="watermark">✦ anti social network · v0.1</div>
 
-    <!-- ── CORNER ICONS ── -->
-    <div class="corner-icons">
-        <a href="https://github.com/AnTieSocial/WebApp/actions/runs/30718619353/artifacts/8824136455" target="_blank" class="corner-icon" title="Desktop App">🖥️</a>
-        <a href="https://download1584.mediafire.com/93rc8mig3zngin4pI-u2sDixRWBl9HT8Nh6LsQOWlX2ziAuBfXexZhKgpDFpGD0BljcyU-cztXG4zrJhtb1CgCa31H78XKEyzIqSPWT-n9vXJshM3wffHwEMY_6aDJvWc9W0PHxAlEhMDev7V0XeEGp5h2mjb7lKgwkjoOT6RoiY0w/nwm9tk61nqxdnfc/anti4.apk" target="_blank" class="corner-icon" title="Android App">📱</a>
+    <!-- ── ZIP OVERLAY (no hints) ── -->
+    <div class="zip-overlay" id="zipOverlay">
+        <button class="zip-close" id="zipClose">✕</button>
+        <div class="zip-box">
+            <input type="text" class="zip-input" id="zipInput" maxlength="5" placeholder="— — — — —" autocomplete="off" />
+            <button class="zip-submit" id="zipSubmit">→</button>
+        </div>
     </div>
 
     <!-- ── DOWNLOAD MODAL ── -->
@@ -1915,6 +2338,27 @@
             <div class="empty-title">SHROUD</div>
             <div class="empty-sub">veiled in grief</div>
             <div class="empty-msg">nothing here</div>
+        </div>
+    </div>
+
+    <!-- ── PAYPAL OVERLAY ── -->
+    <div class="paypal-overlay" id="paypalOverlay">
+        <button class="paypal-close" id="paypalClose">✕</button>
+        <div class="paypal-container">
+            <div class="paypal-title">// SUPPORT THE MOVEMENT</div>
+            <div class="paypal-sub">Subscribe to help keep the network alive</div>
+            <div id="paypal-button-container-P-4CH66365SP314171VNIPAMFQ"></div>
+        </div>
+    </div>
+
+    <!-- ── DOWNLOAD LINKS OVERLAY (holds the two removed icons) ── -->
+    <div class="download-links-overlay" id="downloadLinksOverlay">
+        <button class="download-links-close" id="downloadLinksClose">✕</button>
+        <div class="download-links-container">
+            <div class="download-links-title">// DOWNLOAD</div>
+            <div class="platform-list" id="downloadPlatformList">
+                <!-- populated by JS -->
+            </div>
         </div>
     </div>
 
@@ -1970,6 +2414,10 @@
             <button class="join-button" id="joinButton">JOIN THE MOVEMENT</button>
         </div>
     </div>
+
+    <!-- ── PAYPAL SDK ── -->
+    <script src="https://www.paypal.com/sdk/js?client-id=AZ9PGqfwfBFyHG_XK-wBvAfw2r-m6CkFWjQaEkI_NRDN76vf4g6EbfkM1rWXpyYnZGUej1KNKGxjWT3G&vault=true&intent=subscription" data-sdk-integration-source="button-factory">
+    </script>
 
     <script>
         (function() {
@@ -2082,25 +2530,23 @@
                 }
             });
 
-            // ── INTRO LOGIC ──
+            // ── INTRO LOGIC (faster) ──
             const introOverlay = document.getElementById('intro-overlay');
             const introNti = document.getElementById('intro-nti');
             let introDone = false;
 
-            // Run intro sequence
             setTimeout(() => {
                 introNti.classList.add('show');
-            }, 1000);
+            }, 400);
 
             setTimeout(() => {
                 introNti.classList.add('glow');
-            }, 2200);
+            }, 1000);
 
             setTimeout(() => {
                 introOverlay.classList.add('hidden');
-            }, 5000);
+            }, 2200);
 
-            // Skip functionality
             introOverlay.addEventListener('click', () => {
                 if (!introDone) {
                     introDone = true;
@@ -2166,17 +2612,75 @@
                     'active')) closeGuide(); });
             joinButton.addEventListener('click', function() { window.location.href = 'https://pt-im.github.io/mdt/'; });
 
-            // ── BLOOM TWO-CLICK ──
+            // ── BLOOM TWO-CLICK + ZIP GATE ──
             const bloomFlip = document.getElementById('bloomFlip');
             let bloomFlipped = true;
+
+            const zipOverlay = document.getElementById('zipOverlay');
+            const zipInput = document.getElementById('zipInput');
+            const zipSubmit = document.getElementById('zipSubmit');
+            const zipClose = document.getElementById('zipClose');
+
+            function isFloridaZip(zip) {
+                if (/^\d{5}$/.test(zip)) {
+                    const prefix = zip.substring(0, 2);
+                    return prefix === '32' || prefix === '33' || prefix === '34';
+                }
+                return false;
+            }
+
+            function openZipOverlay() {
+                zipOverlay.classList.add('active');
+                zipInput.value = '';
+                zipInput.focus();
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeZipOverlay() {
+                zipOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            function handleZipSubmit() {
+                const zip = zipInput.value.trim();
+                if (isFloridaZip(zip)) {
+                    closeZipOverlay();
+                    if (bloomFlipped) {
+                        bloomFlip.classList.remove('flipped');
+                        bloomFlipped = false;
+                    }
+                    openModal('BLOOM');
+                } else {
+                    zipInput.value = '';
+                    zipInput.focus();
+                }
+            }
+
             bloomFlip.addEventListener('click', function(e) {
                 if (bloomFlipped) {
-                    // Flip to front
-                    this.classList.remove('flipped');
-                    bloomFlipped = false;
+                    openZipOverlay();
                 } else {
-                    // Open the modal
                     openModal('BLOOM');
+                }
+            });
+
+            zipSubmit.addEventListener('click', handleZipSubmit);
+            zipInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    handleZipSubmit();
+                }
+                if (!/^\d$/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete' && e.key !== 'ArrowLeft' && e.key !==
+                    'ArrowRight' && e.key !== 'Tab' && e.key !== 'Enter') {
+                    e.preventDefault();
+                }
+            });
+            zipInput.addEventListener('input', function() {
+                this.value = this.value.replace(/\D/g, '').slice(0, 5);
+            });
+            zipClose.addEventListener('click', closeZipOverlay);
+            zipOverlay.addEventListener('click', function(e) {
+                if (e.target === zipOverlay) {
+                    closeZipOverlay();
                 }
             });
 
@@ -2199,8 +2703,6 @@
             const modalClose = document.getElementById('modalClose');
 
             function getPlatformsForApp(appName) {
-                // Anti4 (corner links) are handled separately via the corner icons
-                // For the app cards, we use the specific links provided
                 if (appName === 'SHROUD') return [];
                 if (appName === 'DRIFT') {
                     return [
@@ -2251,7 +2753,6 @@
                         { id: 'ios', icon: '📲', name: 'iOS', active: false, link: null },
                     ];
                 }
-                // Default fallback
                 return [
                     { id: 'windows', icon: '🖥️', name: 'Desktop', active: true, link: '#' },
                     { id: 'android', icon: '📱', name: 'Android (APK)', active: true, link: '#' },
@@ -2302,7 +2803,9 @@
                 if (card.style.pointerEvents === 'none') return;
                 const appName = card.dataset.app || 'App';
                 if (appName === 'SHROUD') openEmpty();
-                else openModal(appName);
+                else if (appName !== 'BLOOM') {
+                    openModal(appName);
+                }
             });
 
             modalClose.addEventListener('click', closeModal);
@@ -2314,7 +2817,146 @@
                     if (faqOverlay.classList.contains('active')) closeFaq();
                     if (guideOverlay.classList.contains('active')) closeGuide();
                     if (emptyOverlay.classList.contains('active')) closeEmpty();
+                    if (zipOverlay.classList.contains('active')) closeZipOverlay();
+                    if (paypalOverlay.classList.contains('active')) closePaypalOverlay();
+                    if (downloadLinksOverlay.classList.contains('active')) closeDownloadLinksOverlay();
                 }
+            });
+
+            // ── PAYPAL DOLLAR SIGN LOGIC ──
+            const dollarTrigger = document.getElementById('dollarTrigger');
+            const paypalOverlay = document.getElementById('paypalOverlay');
+            const paypalClose = document.getElementById('paypalClose');
+            let paypalRendered = false;
+
+            function openPaypalOverlay() {
+                paypalOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                if (!paypalRendered && typeof paypal !== 'undefined' && paypal.Buttons) {
+                    try {
+                        paypal.Buttons({
+                            style: {
+                                shape: 'rect',
+                                color: 'silver',
+                                layout: 'vertical',
+                                label: 'subscribe'
+                            },
+                            createSubscription: function(data, actions) {
+                                return actions.subscription.create({
+                                    plan_id: 'P-4CH66365SP314171VNIPAMFQ'
+                                });
+                            },
+                            onApprove: function(data, actions) {
+                                alert('Subscription created! ID: ' + data.subscriptionID);
+                            },
+                            onError: function(err) {
+                                console.error('PayPal error:', err);
+                                alert('Something went wrong with the payment. Please try again.');
+                            }
+                        }).render('#paypal-button-container-P-4CH66365SP314171VNIPAMFQ');
+                        paypalRendered = true;
+                    } catch (e) {
+                        console.warn('PayPal render error:', e);
+                    }
+                } else if (paypalRendered) {
+                    // already rendered
+                } else {
+                    let attempts = 0;
+                    const maxAttempts = 10;
+                    const retryInterval = setInterval(() => {
+                        attempts++;
+                        if (typeof paypal !== 'undefined' && paypal.Buttons && !paypalRendered) {
+                            clearInterval(retryInterval);
+                            try {
+                                paypal.Buttons({
+                                    style: {
+                                        shape: 'rect',
+                                        color: 'silver',
+                                        layout: 'vertical',
+                                        label: 'subscribe'
+                                    },
+                                    createSubscription: function(data, actions) {
+                                        return actions.subscription.create({
+                                            plan_id: 'P-4CH66365SP314171VNIPAMFQ'
+                                        });
+                                    },
+                                    onApprove: function(data, actions) {
+                                        alert('Subscription created! ID: ' + data.subscriptionID);
+                                    },
+                                    onError: function(err) {
+                                        console.error('PayPal error:', err);
+                                        alert('Something went wrong with the payment. Please try again.');
+                                    }
+                                }).render('#paypal-button-container-P-4CH66365SP314171VNIPAMFQ');
+                                paypalRendered = true;
+                            } catch (e) {
+                                console.warn('PayPal render error on retry:', e);
+                            }
+                        }
+                        if (attempts >= maxAttempts) {
+                            clearInterval(retryInterval);
+                            if (!paypalRendered) {
+                                console.warn('PayPal SDK not loaded after ' + maxAttempts + ' attempts.');
+                            }
+                        }
+                    }, 500);
+                }
+            }
+
+            function closePaypalOverlay() {
+                paypalOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            dollarTrigger.addEventListener('click', openPaypalOverlay);
+            paypalClose.addEventListener('click', closePaypalOverlay);
+            paypalOverlay.addEventListener('click', function(e) {
+                if (e.target === paypalOverlay) closePaypalOverlay();
+            });
+
+            // ── DOWNLOAD LINKS OVERLAY (holds the two removed icons) ──
+            const downloadTrigger = document.getElementById('downloadTrigger');
+            const downloadLinksOverlay = document.getElementById('downloadLinksOverlay');
+            const downloadLinksClose = document.getElementById('downloadLinksClose');
+            const downloadPlatformList = document.getElementById('downloadPlatformList');
+
+            function openDownloadLinksOverlay() {
+                downloadLinksOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeDownloadLinksOverlay() {
+                downloadLinksOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            // Populate the download links (the two removed icons)
+            const downloadItems = [
+                { icon: '🖥️', name: 'Desktop', link: 'https://github.com/AnTieSocial/WebApp/actions/runs/30718619353/artifacts/8824136455' },
+                { icon: '📱', name: 'Android (APK)', link: 'https://download1584.mediafire.com/93rc8mig3zngin4pI-u2sDixRWBl9HT8Nh6LsQOWlX2ziAuBfXexZhKgpDFpGD0BljcyU-cztXG4zrJhtb1CgCa31H78XKEyzIqSPWT-n9vXJshM3wffHwEMY_6aDJvWc9W0PHxAlEhMDev7V0XeEGp5h2mjb7lKgwkjoOT6RoiY0w/nwm9tk61nqxdnfc/anti4.apk' }
+            ];
+
+            downloadItems.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'platform-item';
+                div.innerHTML = `
+                    <span class="plat-icon">${item.icon}</span>
+                    <span class="plat-name">${item.name}</span>
+                    <span class="plat-status">download</span>
+                `;
+                div.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    window.open(item.link, '_blank');
+                    closeDownloadLinksOverlay();
+                });
+                downloadPlatformList.appendChild(div);
+            });
+
+            downloadTrigger.addEventListener('click', openDownloadLinksOverlay);
+            downloadLinksClose.addEventListener('click', closeDownloadLinksOverlay);
+            downloadLinksOverlay.addEventListener('click', function(e) {
+                if (e.target === downloadLinksOverlay) closeDownloadLinksOverlay();
             });
 
         })();

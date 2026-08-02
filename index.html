@@ -1754,7 +1754,7 @@
             overflow: hidden;
         }
 
-        /* ── DOWNLOAD LINKS OVERLAY (new minimal) ── */
+        /* ── DOWNLOAD LINKS OVERLAY ── */
         .download-links-overlay {
             position: fixed;
             top: 0;
@@ -1850,6 +1850,218 @@
             border-radius: 100px;
             background: rgba(0, 240, 255, 0.1);
             color: var(--neon-blue);
+        }
+
+        /* ── ACCESS GATE OVERLAYS ── */
+        .gate-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 15, 0.97);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            z-index: 99997;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            animation: fadeIn 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .gate-overlay.active {
+            display: flex;
+        }
+        .gate-close {
+            position: fixed;
+            top: 1.5rem;
+            right: 2rem;
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: var(--neon-red);
+            cursor: pointer;
+            z-index: 99999;
+            transition: transform 0.3s, text-shadow 0.3s;
+            text-shadow: 0 0 20px rgba(255, 0, 64, 0.3);
+            font-family: 'Space Grotesk', sans-serif;
+            background: none;
+            border: none;
+            padding: 0.5rem;
+            line-height: 1;
+        }
+        .gate-close:hover {
+            transform: rotate(90deg);
+            text-shadow: 0 0 40px rgba(255, 0, 64, 0.6);
+        }
+        .gate-container {
+            max-width: 420px;
+            width: 100%;
+            text-align: center;
+        }
+        .gate-title {
+            font-size: clamp(1.6rem, 4vw, 2.4rem);
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 0 30px var(--neon-red), 0 0 60px rgba(255, 0, 64, 0.2);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .gate-sub {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.4);
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 0.05em;
+            margin-bottom: 1.8rem;
+        }
+        .gate-input {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 100px;
+            padding: 0.8rem 1.2rem;
+            font-size: 1.2rem;
+            color: #fff;
+            width: 100%;
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            outline: none;
+            transition: border-color 0.3s;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+        .gate-input:focus {
+            border-color: rgba(255, 0, 64, 0.4);
+        }
+        .gate-input.error {
+            border-color: var(--neon-red);
+            animation: shake 0.4s ease;
+        }
+        @keyframes shake {
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+            20% {
+                transform: translateX(-10px);
+            }
+            40% {
+                transform: translateX(10px);
+            }
+            60% {
+                transform: translateX(-6px);
+            }
+            80% {
+                transform: translateX(6px);
+            }
+        }
+        .gate-submit {
+            background: transparent;
+            border: 1px solid var(--neon-red);
+            border-radius: 100px;
+            padding: 0.7rem 2rem;
+            color: #fff;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 0.1em;
+            width: 100%;
+        }
+        .gate-submit:hover {
+            background: rgba(255, 0, 64, 0.1);
+            border-color: rgba(255, 0, 64, 0.5);
+        }
+        .gate-message {
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: rgba(255, 255, 255, 0.3);
+            min-height: 1.5rem;
+        }
+        .gate-message.error {
+            color: var(--neon-red);
+        }
+        .gate-message.success {
+            color: var(--neon-green);
+        }
+
+        /* ── TRADE embed challenge ── */
+        .trade-embed-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid rgba(0, 180, 255, 0.3);
+            border-radius: 1.5rem;
+            padding: 2rem 1.5rem;
+            margin: 1rem 0;
+            cursor: pointer;
+            transition: all 0.3s;
+            user-select: none;
+            position: relative;
+            overflow: hidden;
+        }
+        .trade-embed-box:hover {
+            border-color: rgba(0, 180, 255, 0.6);
+            background: rgba(0, 180, 255, 0.05);
+        }
+        .trade-embed-box .embed-icon {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        .trade-embed-box .embed-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.5);
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 0.05em;
+        }
+        .trade-embed-box .embed-progress {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.2);
+            font-family: 'JetBrains Mono', monospace;
+            margin-top: 0.5rem;
+        }
+        .trade-embed-box .embed-progress-bar {
+            width: 100%;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 2px;
+            margin-top: 0.6rem;
+            overflow: hidden;
+        }
+        .trade-embed-box .embed-progress-bar .fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-green));
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+        .trade-embed-box.unlocked {
+            border-color: var(--neon-green);
+            box-shadow: 0 0 30px rgba(0, 255, 100, 0.15);
+        }
+        .trade-embed-box.unlocked .embed-label {
+            color: var(--neon-green);
+        }
+        .trade-embed-box .embed-shimmer {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(0, 180, 255, 0.03), transparent, rgba(0, 180, 255, 0.03), transparent);
+            pointer-events: none;
+            animation: spinShimmer 8s linear infinite;
+        }
+        @keyframes spinShimmer {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        .trade-embed-box.unlocked .embed-shimmer {
+            background: conic-gradient(from 0deg, transparent, rgba(0, 255, 100, 0.06), transparent, rgba(0, 255, 100, 0.06), transparent);
         }
 
         /* ── responsive ── */
@@ -2018,6 +2230,18 @@
                 font-size: 1.6rem;
                 margin-bottom: 1.5rem;
             }
+            .gate-container {
+                max-width: 340px;
+            }
+            .gate-title {
+                font-size: 1.6rem;
+            }
+            .trade-embed-box {
+                padding: 1.5rem 1rem;
+            }
+            .trade-embed-box .embed-icon {
+                font-size: 2.4rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -2158,6 +2382,25 @@
                 font-size: 2rem;
                 top: 1rem;
                 right: 1.2rem;
+            }
+            .gate-container {
+                max-width: 300px;
+            }
+            .gate-title {
+                font-size: 1.3rem;
+            }
+            .gate-input {
+                font-size: 1rem;
+                padding: 0.6rem 1rem;
+            }
+            .trade-embed-box {
+                padding: 1.2rem 0.8rem;
+            }
+            .trade-embed-box .embed-icon {
+                font-size: 2rem;
+            }
+            .trade-embed-box .embed-label {
+                font-size: 0.75rem;
             }
         }
 
@@ -2310,7 +2553,7 @@
     <!-- watermark -->
     <div class="watermark">✦ anti social network · v0.1</div>
 
-    <!-- ── ZIP OVERLAY (no hints) ── -->
+    <!-- ── ZIP OVERLAY ── -->
     <div class="zip-overlay" id="zipOverlay">
         <button class="zip-close" id="zipClose">✕</button>
         <div class="zip-box">
@@ -2351,14 +2594,53 @@
         </div>
     </div>
 
-    <!-- ── DOWNLOAD LINKS OVERLAY (holds the two removed icons) ── -->
+    <!-- ── DOWNLOAD LINKS OVERLAY ── -->
     <div class="download-links-overlay" id="downloadLinksOverlay">
         <button class="download-links-close" id="downloadLinksClose">✕</button>
         <div class="download-links-container">
             <div class="download-links-title">// DOWNLOAD</div>
-            <div class="platform-list" id="downloadPlatformList">
-                <!-- populated by JS -->
+            <div class="platform-list" id="downloadPlatformList"></div>
+        </div>
+    </div>
+
+    <!-- ── AGE GATE (PULSE) ── -->
+    <div class="gate-overlay" id="ageGateOverlay">
+        <button class="gate-close" id="ageGateClose">✕</button>
+        <div class="gate-container">
+            <div class="gate-title">// PULSE · AGE VERIFICATION</div>
+            <div class="gate-sub">Enter your birth year to access</div>
+            <input type="number" class="gate-input" id="ageInput" placeholder="YYYY" min="1900" max="2025" autocomplete="off" />
+            <button class="gate-submit" id="ageSubmit">→ verify</button>
+            <div class="gate-message" id="ageMessage">Must be born in 2007 or later</div>
+        </div>
+    </div>
+
+    <!-- ── CODING PUZZLE GATE (DRIFT) ── -->
+    <div class="gate-overlay" id="puzzleGateOverlay">
+        <button class="gate-close" id="puzzleGateClose">✕</button>
+        <div class="gate-container">
+            <div class="gate-title">// DRIFT · CODING PUZZLE</div>
+            <div class="gate-sub" id="puzzleQuestion">Solve the puzzle to access</div>
+            <input type="text" class="gate-input" id="puzzleInput" placeholder="type your answer" autocomplete="off" />
+            <button class="gate-submit" id="puzzleSubmit">→ submit</button>
+            <div class="gate-message" id="puzzleMessage">New puzzle every day</div>
+        </div>
+    </div>
+
+    <!-- ── EMBED CHALLENGE GATE (TRADE) ── -->
+    <div class="gate-overlay" id="embedGateOverlay">
+        <button class="gate-close" id="embedGateClose">✕</button>
+        <div class="gate-container">
+            <div class="gate-title">// TRADE · EMBED CHALLENGE</div>
+            <div class="gate-sub">Click the embed below to unlock</div>
+            <div class="trade-embed-box" id="tradeEmbedBox">
+                <div class="embed-shimmer"></div>
+                <span class="embed-icon">📦</span>
+                <div class="embed-label" id="tradeEmbedLabel">click to embed</div>
+                <div class="embed-progress" id="tradeEmbedProgress">0 / 0 clicks</div>
+                <div class="embed-progress-bar"><div class="fill" id="tradeEmbedFill"></div></div>
             </div>
+            <div class="gate-message" id="tradeEmbedMessage">Click the embed to unlock TRADE</div>
         </div>
     </div>
 
@@ -2796,14 +3078,24 @@
 
             function closeModal() { modalOverlay.classList.remove('active'); }
 
+            // ── APP CLICK HANDLER WITH ACCESS GATES ──
             const appContainer = document.getElementById('appContainer');
+
             appContainer.addEventListener('click', function(e) {
                 const card = e.target.closest('.app-card');
                 if (!card) return;
                 if (card.style.pointerEvents === 'none') return;
                 const appName = card.dataset.app || 'App';
-                if (appName === 'SHROUD') openEmpty();
-                else if (appName !== 'BLOOM') {
+
+                if (appName === 'SHROUD') {
+                    openEmpty();
+                } else if (appName === 'PULSE') {
+                    openAgeGate();
+                } else if (appName === 'DRIFT') {
+                    openPuzzleGate();
+                } else if (appName === 'TRADE') {
+                    openEmbedGate();
+                } else if (appName !== 'BLOOM') {
                     openModal(appName);
                 }
             });
@@ -2820,6 +3112,9 @@
                     if (zipOverlay.classList.contains('active')) closeZipOverlay();
                     if (paypalOverlay.classList.contains('active')) closePaypalOverlay();
                     if (downloadLinksOverlay.classList.contains('active')) closeDownloadLinksOverlay();
+                    if (ageGateOverlay.classList.contains('active')) closeAgeGate();
+                    if (puzzleGateOverlay.classList.contains('active')) closePuzzleGate();
+                    if (embedGateOverlay.classList.contains('active')) closeEmbedGate();
                 }
             });
 
@@ -2915,7 +3210,7 @@
                 if (e.target === paypalOverlay) closePaypalOverlay();
             });
 
-            // ── DOWNLOAD LINKS OVERLAY (holds the two removed icons) ──
+            // ── DOWNLOAD LINKS OVERLAY ──
             const downloadTrigger = document.getElementById('downloadTrigger');
             const downloadLinksOverlay = document.getElementById('downloadLinksOverlay');
             const downloadLinksClose = document.getElementById('downloadLinksClose');
@@ -2931,7 +3226,6 @@
                 document.body.style.overflow = '';
             }
 
-            // Populate the download links (the two removed icons)
             const downloadItems = [
                 { icon: '🖥️', name: 'Desktop', link: 'https://github.com/AnTieSocial/WebApp/actions/runs/30718619353/artifacts/8824136455' },
                 { icon: '📱', name: 'Android (APK)', link: 'https://download1584.mediafire.com/93rc8mig3zngin4pI-u2sDixRWBl9HT8Nh6LsQOWlX2ziAuBfXexZhKgpDFpGD0BljcyU-cztXG4zrJhtb1CgCa31H78XKEyzIqSPWT-n9vXJshM3wffHwEMY_6aDJvWc9W0PHxAlEhMDev7V0XeEGp5h2mjb7lKgwkjoOT6RoiY0w/nwm9tk61nqxdnfc/anti4.apk' }
@@ -2957,6 +3251,200 @@
             downloadLinksClose.addEventListener('click', closeDownloadLinksOverlay);
             downloadLinksOverlay.addEventListener('click', function(e) {
                 if (e.target === downloadLinksOverlay) closeDownloadLinksOverlay();
+            });
+
+            // ── AGE GATE (PULSE) ──
+            const ageGateOverlay = document.getElementById('ageGateOverlay');
+            const ageGateClose = document.getElementById('ageGateClose');
+            const ageInput = document.getElementById('ageInput');
+            const ageSubmit = document.getElementById('ageSubmit');
+            const ageMessage = document.getElementById('ageMessage');
+
+            function openAgeGate() {
+                ageGateOverlay.classList.add('active');
+                ageInput.value = '';
+                ageMessage.textContent = 'Must be born in 2007 or later';
+                ageMessage.className = 'gate-message';
+                ageInput.className = 'gate-input';
+                ageInput.focus();
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeAgeGate() {
+                ageGateOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            function handleAgeSubmit() {
+                const year = parseInt(ageInput.value.trim());
+                if (isNaN(year) || year < 1900 || year > 2025) {
+                    ageMessage.textContent = 'Please enter a valid year (e.g., 2007)';
+                    ageMessage.className = 'gate-message error';
+                    ageInput.className = 'gate-input error';
+                    ageInput.value = '';
+                    ageInput.focus();
+                    return;
+                }
+                if (year >= 2007) {
+                    ageMessage.textContent = '✓ Access granted!';
+                    ageMessage.className = 'gate-message success';
+                    ageInput.className = 'gate-input';
+                    setTimeout(() => {
+                        closeAgeGate();
+                        openModal('PULSE');
+                    }, 600);
+                } else {
+                    ageMessage.textContent = '✗ Access denied. You must be born in 2007 or later.';
+                    ageMessage.className = 'gate-message error';
+                    ageInput.className = 'gate-input error';
+                    ageInput.value = '';
+                    ageInput.focus();
+                }
+            }
+
+            ageSubmit.addEventListener('click', handleAgeSubmit);
+            ageInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') handleAgeSubmit();
+            });
+            ageGateClose.addEventListener('click', closeAgeGate);
+            ageGateOverlay.addEventListener('click', function(e) {
+                if (e.target === ageGateOverlay) closeAgeGate();
+            });
+
+            // ── CODING PUZZLE GATE (DRIFT) ──
+            const puzzleGateOverlay = document.getElementById('puzzleGateOverlay');
+            const puzzleGateClose = document.getElementById('puzzleGateClose');
+            const puzzleInput = document.getElementById('puzzleInput');
+            const puzzleSubmit = document.getElementById('puzzleSubmit');
+            const puzzleMessage = document.getElementById('puzzleMessage');
+            const puzzleQuestion = document.getElementById('puzzleQuestion');
+
+            let puzzleAnswer = '';
+
+            function getDailyPuzzle() {
+                const now = new Date();
+                const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
+                const month = now.getMonth() + 1;
+                const date = now.getDate();
+                const a = (dayOfYear % 15) + 3;
+                const b = (month * 2 + date % 5) + 1;
+                const answer = String(a + b);
+                return { question: `What is ${a} + ${b}?`, answer: answer };
+            }
+
+            function openPuzzleGate() {
+                const puzzle = getDailyPuzzle();
+                puzzleQuestion.textContent = 'Solve: ' + puzzle.question;
+                puzzleAnswer = puzzle.answer;
+                puzzleGateOverlay.classList.add('active');
+                puzzleInput.value = '';
+                puzzleMessage.textContent = 'New puzzle every day';
+                puzzleMessage.className = 'gate-message';
+                puzzleInput.className = 'gate-input';
+                puzzleInput.focus();
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closePuzzleGate() {
+                puzzleGateOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            function handlePuzzleSubmit() {
+                const answer = puzzleInput.value.trim();
+                if (answer === '') {
+                    puzzleMessage.textContent = 'Please enter an answer';
+                    puzzleMessage.className = 'gate-message error';
+                    puzzleInput.className = 'gate-input error';
+                    puzzleInput.focus();
+                    return;
+                }
+                if (answer === puzzleAnswer) {
+                    puzzleMessage.textContent = '✓ Correct!';
+                    puzzleMessage.className = 'gate-message success';
+                    puzzleInput.className = 'gate-input';
+                    setTimeout(() => {
+                        closePuzzleGate();
+                        openModal('DRIFT');
+                    }, 600);
+                } else {
+                    puzzleMessage.textContent = '✗ Incorrect. Try again.';
+                    puzzleMessage.className = 'gate-message error';
+                    puzzleInput.className = 'gate-input error';
+                    puzzleInput.value = '';
+                    puzzleInput.focus();
+                }
+            }
+
+            puzzleSubmit.addEventListener('click', handlePuzzleSubmit);
+            puzzleInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') handlePuzzleSubmit();
+            });
+            puzzleGateClose.addEventListener('click', closePuzzleGate);
+            puzzleGateOverlay.addEventListener('click', function(e) {
+                if (e.target === puzzleGateOverlay) closePuzzleGate();
+            });
+
+            // ── EMBED CHALLENGE GATE (TRADE) ──
+            const embedGateOverlay = document.getElementById('embedGateOverlay');
+            const embedGateClose = document.getElementById('embedGateClose');
+            const tradeEmbedBox = document.getElementById('tradeEmbedBox');
+            const tradeEmbedLabel = document.getElementById('tradeEmbedLabel');
+            const tradeEmbedProgress = document.getElementById('tradeEmbedProgress');
+            const tradeEmbedFill = document.getElementById('tradeEmbedFill');
+            const tradeEmbedMessage = document.getElementById('tradeEmbedMessage');
+
+            let embedClicksRequired = 0;
+            let embedClicksCurrent = 0;
+            let embedUnlocked = false;
+
+            function openEmbedGate() {
+                embedClicksRequired = Math.floor(Math.random() * 10) + 1;
+                embedClicksCurrent = 0;
+                embedUnlocked = false;
+                tradeEmbedBox.classList.remove('unlocked');
+                tradeEmbedLabel.textContent = 'click to embed';
+                tradeEmbedProgress.textContent = `0 / ${embedClicksRequired} clicks`;
+                tradeEmbedFill.style.width = '0%';
+                tradeEmbedMessage.textContent = `Click the embed ${embedClicksRequired} time${embedClicksRequired > 1 ? 's' : ''} to unlock TRADE`;
+                tradeEmbedMessage.className = 'gate-message';
+                embedGateOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeEmbedGate() {
+                embedGateOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            function handleEmbedClick() {
+                if (embedUnlocked) return;
+                embedClicksCurrent++;
+                const pct = Math.min((embedClicksCurrent / embedClicksRequired) * 100, 100);
+                tradeEmbedFill.style.width = pct + '%';
+                tradeEmbedProgress.textContent = `${embedClicksCurrent} / ${embedClicksRequired} clicks`;
+
+                if (embedClicksCurrent >= embedClicksRequired) {
+                    embedUnlocked = true;
+                    tradeEmbedBox.classList.add('unlocked');
+                    tradeEmbedLabel.textContent = '✓ UNLOCKED';
+                    tradeEmbedMessage.textContent = '✓ TRADE unlocked!';
+                    tradeEmbedMessage.className = 'gate-message success';
+                    setTimeout(() => {
+                        closeEmbedGate();
+                        openModal('TRADE');
+                    }, 800);
+                } else {
+                    const remaining = embedClicksRequired - embedClicksCurrent;
+                    tradeEmbedMessage.textContent = `${remaining} more click${remaining > 1 ? 's' : ''} to unlock`;
+                    tradeEmbedMessage.className = 'gate-message';
+                }
+            }
+
+            tradeEmbedBox.addEventListener('click', handleEmbedClick);
+            embedGateClose.addEventListener('click', closeEmbedGate);
+            embedGateOverlay.addEventListener('click', function(e) {
+                if (e.target === embedGateOverlay) closeEmbedGate();
             });
 
         })();

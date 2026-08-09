@@ -1,0 +1,43 @@
+
+---
+
+## 2. `CHANGELOG.md` – Version History
+
+```markdown
+# Changelog
+
+All notable changes to **Anti Social Network** (landing page and apps) will be documented here.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+---
+
+## [0.1.0] – 2026-08-09
+
+### Added
+- **Initial launch** of the Anti Social Network landing page.
+- **Five apps** showcased: SHROUD, DRIFT, TRADE, PULSE, BLOOM, plus SECRET teaser.
+- **Interactive overlays**:
+  - FAQ with four questions about the project’s ethos.
+  - Build‑your‑own‑social‑media guide (click the `+`).
+  - Download overlay with direct links for Desktop and Android.
+  - PayPal subscription integration (dollar sign in top‑right).
+- **Access gates** for three apps:
+  - **BLOOM** – Florida ZIP code challenge.
+  - **DRIFT** – daily coding puzzle (numeric addition).
+  - **PULSE** – age verification (born in 2007 or later).
+  - **TRADE** – embed click challenge (random clicks to unlock).
+- **Glitch‑themed visual effects**: scanlines, vignette, animated particles, neon glitch text.
+
+### Known Issues
+- macOS, Linux, and iOS download links are placeholders – only Windows and Android APKs are available.
+- SHROUD and SECRET are not yet downloadable – they are placeholders for future releases.
+
+---
+
+## [0.0.1] – 2026-07-15
+
+### Added (Prototype)
+- Internal prototype of the landing page.
+- Basic card layout with placeholder icons.
